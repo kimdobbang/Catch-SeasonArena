@@ -1,0 +1,115 @@
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+app.use(cors());
+app.use(express.static("public"));
+
+// <<게임방 관리>>
+// 방을 관리할 자료구조 (Map)
+// rooms = <roomCode, room = {players: Map<nickname, player>, isStarted : false}> // userRoom = <nickname, roomCode>
+const rooms = new Map();
+const userRoom = new Map();
+
+// 방을 생성하거나 기존 방에 플레이어 추가
+function joinPlayer(roomCode, socket, playerName, profileImage) {
+  // 플레이어 객체 생성
+  const player = {
+    socketId: socket.id,
+    nickname: playerName,
+    profileImage: profileImage,
+    weaponImage: "weapon", // 나중에 바꿔야 됨
+    x: 100,
+    y: 200,
+    hp: 100,
+    speed: 1,
+    attackPower: 1,
+    knockBack: 1,
+    reach: 1,
+    isAttack: false,
+  };
+
+  if (!rooms.has(roomCode)) {
+    setTimeout(() => {
+      if (!rooms.get(roomCode).isStarted) {
+        io.in(roomCode).emit("gameStart");
+        console.log(`( 게임 시작 ) ${roomCode}번 방 게임 시작`);
+        rooms.get(roomCode).isStarted = true;
+      }
+    }, 10000);
+    const tempRoom = { players: new Map(), isStarted: false };
+    tempRoom.players.set(player.nickname, player);
+    rooms.set(roomCode, tempRoom);
+    userRoom.set(player.nickname, roomCode); // 유저의 방코드 매핑
+
+    console.log(`( 방 생성 ) 방 번호 : ${roomCode}`);
+  } else {
+    const room = rooms.get(roomCode);
+    room.players.set(player.nickname, player); // 해당 방에 플레이어 추가
+    userRoom.set(player.nickname, roomCode); // 유저의 방코드 매핑
+
+    if (room.players.size == 2 && !room.isStarted) {
+      io.in(roomCode).emit("gameStart");
+      room.isStarted = true;
+    }
+    console.log(
+      `( 방 입장 ) 닉네임 : ${player.nickname}, 방 번호 : ${roomCode}`
+    );
+  }
+}
+
+// <<게임>>
+io.on("connection", (socket) => {
+  console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
+
+  socket.on("joinRoom", ({ roomCode, playerName, profileImage }) => {
+    socket.join(roomCode);
+    joinPlayer(roomCode, socket, playerName, profileImage);
+
+    console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
+  });
+
+  socket.on("disconnect", () => {
+    rooms.forEach((room, roomCode) => {
+      room.players.forEach((player, nickname) => {
+        if (player.socketId === socket.id) {
+          room.players.delete(nickname);
+          console.log(
+            `( 연결 종료 ) 닉네임 : ${nickname}, 방 코드 : ${roomCode}`
+          );
+          if (room.players.size === 0) {
+            rooms.delete(roomCode);
+            console.log(
+              `( 방 삭제 ) ${roomCode} 방의 플레이어가 존재하지 않습니다.`
+            );
+          }
+        }
+      });
+    });
+  });
+
+  socket.on("getPlayersInfo", (roomCode) => {
+    const playersMap = rooms.get(roomCode).players;
+
+    const players = Object.fromEntries(playersMap);
+
+    io.in(roomCode).emit("createPlayers", players);
+    console.log("찍을거임" + players.size);
+  });
+});
+
+server.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});
+
+// ============================================================================ //

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiplayer Game</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser3-rex-plugins/dist/rexvirtualjoystickplugin.min.js"></script>
+    <script src="./client.js"></script>
+  </head>
+  <body>
+    <!-- 모달 및 오버레이 -->
+    <div id="modal-overlay"></div>
+    <div id="modal">
+      <h2>Enter Room Code and Player Name</h2>
+      <input type="text" id="roomCode" placeholder="Enter Room Code" />
+      <input type="text" id="playerName" placeholder="Enter Player Name" />
+      <input type="text" id="profileImage" placeholder="Enter Profile Image" />
+      <button id="joinRoomButton">Join Room</button>
+    </div>
+
+    <script>
+      // 참가 버튼을 클릭했을 때 모달을 닫고 게임 시작
+      document
+        .getElementById("joinRoomButton")
+        .addEventListener("click", () => {
+          const roomCode = document.getElementById("roomCode").value;
+          const playerName = document.getElementById("playerName").value;
+          const profileImage = document.getElementById("profileImage").value;
+
+          console.log(`Room code entered: ${roomCode}`);
+          console.log(`Player name entered: ${playerName}`);
+
+          joinRoom(roomCode, playerName, profileImage); // 입력받은 roomCode를 전달
+
+          // 모달과 오버레이를 숨기고 게임 화면 표시
+          document.getElementById("modal").style.display = "none";
+          document.getElementById("modal-overlay").style.display = "none";
+        });
+    </script>
+  </body>
+</html>
