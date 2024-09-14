@@ -17,9 +17,11 @@ app.use(express.static("public"));
 
 // <<게임방 관리>>
 // 방을 관리할 자료구조 (Map)
-// rooms = <roomCode, room = {players: Map<nickname, player>, isStarted : false}> // userRoom = <nickname, roomCode>
+// rooms = <roomCode, room = {players: Map<socketId, player>, isStarted : false}> // userRoom = <socketId, roomCode>
 const rooms = new Map();
 const userRoom = new Map();
+const MAP_WIDTH = 1000;
+const MAP_HEIGHT = 1000;
 
 // 방을 생성하거나 기존 방에 플레이어 추가
 function joinPlayer(roomCode, socket, playerName, profileImage) {
@@ -31,12 +33,16 @@ function joinPlayer(roomCode, socket, playerName, profileImage) {
     weaponImage: "weapon", // 나중에 바꿔야 됨
     x: 100,
     y: 200,
+    velocityX: 0,
+    velocityY: 0,
+    direction: Math.PI, // 라디안
     hp: 100,
     speed: 1,
     attackPower: 1,
     knockBack: 1,
     reach: 1,
     isAttack: false,
+    canMove: true,
   };
 
   if (!rooms.has(roomCode)) {
@@ -48,15 +54,15 @@ function joinPlayer(roomCode, socket, playerName, profileImage) {
       }
     }, 10000);
     const tempRoom = { players: new Map(), isStarted: false };
-    tempRoom.players.set(player.nickname, player);
+    tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
-    userRoom.set(player.nickname, roomCode); // 유저의 방코드 매핑
+    userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
     console.log(`( 방 생성 ) 방 번호 : ${roomCode}`);
   } else {
     const room = rooms.get(roomCode);
-    room.players.set(player.nickname, player); // 해당 방에 플레이어 추가
-    userRoom.set(player.nickname, roomCode); // 유저의 방코드 매핑
+    room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
+    userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
     if (room.players.size == 2 && !room.isStarted) {
       io.in(roomCode).emit("gameStart");
@@ -81,11 +87,11 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     rooms.forEach((room, roomCode) => {
-      room.players.forEach((player, nickname) => {
+      room.players.forEach((player, socketId) => {
         if (player.socketId === socket.id) {
-          room.players.delete(nickname);
+          room.players.delete(socketId);
           console.log(
-            `( 연결 종료 ) 닉네임 : ${nickname}, 방 코드 : ${roomCode}`
+            `( 연결 종료 ) 소켓ID : ${socketId}, 방 코드 : ${roomCode}`
           );
           if (room.players.size === 0) {
             rooms.delete(roomCode);
@@ -98,15 +104,58 @@ io.on("connection", (socket) => {
     });
   });
 
+  // <<플레이어 정보요청>>
   socket.on("getPlayersInfo", (roomCode) => {
     const playersMap = rooms.get(roomCode).players;
 
     const players = Object.fromEntries(playersMap);
 
-    io.in(roomCode).emit("createPlayers", players);
-    console.log("찍을거임" + players.size);
+    io.in(socket.id).emit("createPlayers", players);
+  });
+
+  // <<플레이어 움직임 & 정지 구현>>
+  socket.on("playerMovement", ({ angle, roomCode }) => {
+    const player = rooms.get(roomCode).players.get(socket.id);
+
+    if (player && player.canMove) {
+      angle = angle * (Math.PI / 180);
+      player.velocityX = Math.cos(angle) * player.speed * 5.5;
+      player.velocityY = Math.sin(angle) * player.speed * 5.5;
+
+      player.direction = angle; // 무기 각도 업데이트
+    }
+  });
+
+  socket.on("stopMovement", ({ roomCode }) => {
+    const player = rooms.get(roomCode).players.get(socket.id);
+
+    if (player) {
+      player.velocityX = 0;
+      player.velocityY = 0;
+    }
   });
 });
+
+setInterval(() => {
+  rooms.forEach((room, roomCode) => {
+    if (room.isStarted) {
+      const playersMap = room.players;
+
+      playersMap.forEach((player, key) => {
+        if (player.canMove) {
+          player.x += player.velocityX;
+          player.y += player.velocityY;
+        }
+        player.x = Math.max(0, Math.min(MAP_WIDTH, player.x));
+        player.y = Math.max(0, Math.min(MAP_HEIGHT, player.y));
+      });
+
+      const players = Object.fromEntries(playersMap);
+
+      io.in(roomCode).emit("stateUpdate", players);
+    }
+  });
+}, 10);
 
 server.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
