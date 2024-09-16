@@ -1,0 +1,217 @@
+.element {
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.element .overlap-group-wrapper {
+  background-color: #ffffff;
+  height: 800px;
+  width: 360px;
+}
+
+.element .overlap-group {
+  height: 801px;
+  position: relative;
+  top: -1px;
+}
+
+.element .status {
+  height: 801px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 360px;
+}
+
+.element .screenshot {
+  height: 40px;
+  left: 0;
+  position: absolute;
+  top: 761px;
+  width: 360px;
+}
+
+.element .img {
+  height: 34px;
+  left: 0;
+  position: absolute;
+  top: 1px;
+  width: 360px;
+}
+
+.element .text-wrapper {
+  color: #999999;
+  font-family: var(--pretendard-b2-medium-font-family);
+  font-size: var(--pretendard-b2-medium-font-size);
+  font-style: var(--pretendard-b2-medium-font-style);
+  font-weight: var(--pretendard-b2-medium-font-weight);
+  left: 266px;
+  letter-spacing: var(--pretendard-b2-medium-letter-spacing);
+  line-height: var(--pretendard-b2-medium-line-height);
+  position: absolute;
+  top: 438px;
+  width: 56px;
+}
+
+.element .frame {
+  background-color: #fee500;
+  border-radius: 21px;
+  height: 45px;
+  left: 40px;
+  position: absolute;
+  top: 588px;
+  width: 280px;
+}
+
+.element .icon-kakao {
+  height: 21px !important;
+  left: 16px !important;
+  position: absolute !important;
+  top: 12px !important;
+  width: 22px !important;
+}
+
+.element .div {
+  color: #191919;
+  font-family: var(--pretendard-b2-medium-font-family);
+  font-size: var(--pretendard-b2-medium-font-size);
+  font-style: var(--pretendard-b2-medium-font-style);
+  font-weight: var(--pretendard-b2-medium-font-weight);
+  left: 77px;
+  letter-spacing: var(--pretendard-b2-medium-letter-spacing);
+  line-height: var(--pretendard-b2-medium-line-height);
+  position: absolute;
+  top: 12px;
+  width: 139px;
+}
+
+.element .frame-2 {
+  background-color: #ffffff;
+  border: 1px solid;
+  border-color: #999999;
+  border-radius: 21px;
+  height: 41px;
+  left: 40px;
+  position: absolute;
+  top: 657px;
+  width: 280px;
+}
+
+.element .icon-google {
+  height: 22px !important;
+  left: 15px !important;
+  position: absolute !important;
+  top: 8px !important;
+  width: 22px !important;
+}
+
+.element .text-wrapper-2 {
+  color: #191919;
+  font-family: var(--pretendard-b2-medium-font-family);
+  font-size: var(--pretendard-b2-medium-font-size);
+  font-style: var(--pretendard-b2-medium-font-style);
+  font-weight: var(--pretendard-b2-medium-font-weight);
+  left: 92px;
+  letter-spacing: var(--pretendard-b2-medium-letter-spacing);
+  line-height: var(--pretendard-b2-medium-line-height);
+  position: absolute;
+  top: 8px;
+  width: 93px;
+}
+
+.element .div-wrapper {
+  background-color: #f29627;
+  border-radius: 21px;
+  height: 41px;
+  left: 42px;
+  position: absolute;
+  top: 522px;
+  width: 280px;
+}
+
+.element .text-wrapper-3 {
+  color: #ffffff;
+  font-family: var(--pretendard-b2-medium-font-family);
+  font-size: var(--pretendard-b2-medium-font-size);
+  font-style: var(--pretendard-b2-medium-font-style);
+  font-weight: var(--pretendard-b2-medium-font-weight);
+  left: 93px;
+  letter-spacing: var(--pretendard-b2-medium-letter-spacing);
+  line-height: var(--pretendard-b2-medium-line-height);
+  position: absolute;
+  text-align: center;
+  top: 11px;
+  width: 93px;
+}
+
+.element .lyra-icon-sleaves {
+  height: 47px;
+  left: 66px;
+  position: absolute;
+  top: 121px;
+  width: 47px;
+}
+
+.element .img-2 {
+  height: 108px;
+  left: 40px;
+  object-fit: cover;
+  position: absolute;
+  top: 160px;
+  width: 272px;
+}
+
+.element .group {
+  height: 81px;
+  left: 41px;
+  position: absolute;
+  top: 344px;
+  width: 283px;
+}
+
+.element .text-wrapper-4 {
+  color: #191919;
+  font-family: var(--pretendard-b2-medium-font-family);
+  font-size: var(--pretendard-b2-medium-font-size);
+  font-style: var(--pretendard-b2-medium-font-style);
+  font-weight: var(--pretendard-b2-medium-font-weight);
+  left: 8px;
+  letter-spacing: var(--pretendard-b2-medium-letter-spacing);
+  line-height: var(--pretendard-b2-medium-line-height);
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .text-wrapper-5 {
+  color: #191919;
+  font-family: var(--pretendard-b2-medium-font-family);
+  font-size: var(--pretendard-b2-medium-font-size);
+  font-style: var(--pretendard-b2-medium-font-style);
+  font-weight: var(--pretendard-b2-medium-font-weight);
+  left: 8px;
+  letter-spacing: var(--pretendard-b2-medium-letter-spacing);
+  line-height: var(--pretendard-b2-medium-line-height);
+  position: absolute;
+  top: 55px;
+  white-space: nowrap;
+}
+
+.element .vector {
+  height: 2px;
+  left: 1px;
+  position: absolute;
+  top: 25px;
+  width: 278px;
+}
+
+.element .vector-2 {
+  height: 2px;
+  left: 0;
+  position: absolute;
+  top: 80px;
+  width: 278px;
+}
