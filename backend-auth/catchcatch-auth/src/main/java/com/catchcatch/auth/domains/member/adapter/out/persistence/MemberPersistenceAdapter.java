@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class MemberPersistenceAdapter implements SaveMemberPort, ExistsMemberPort {
+public class MemberPersistenceAdapter implements SaveMemberPort, ExistsMemberPort, LoadMemberPort {
 
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
@@ -26,5 +26,12 @@ public class MemberPersistenceAdapter implements SaveMemberPort, ExistsMemberPor
     @Override
     public void save(Member member) {
         memberRepository.save(memberMapper.toEntity(member));
+    }
+
+    @Override
+    public Member loadByEmailAndIsDeleted(String email, boolean isDeleted) {
+        MemberEntity memberEntity = memberRepository.findByEmailAndIsDeleted(email, isDeleted)
+                .orElseThrow(() -> new ExceptionResponse(CustomException.NOT_FOUND_MEMBER_EXCEPTION));
+        return memberMapper.toDomain(memberEntity);
     }
 }
