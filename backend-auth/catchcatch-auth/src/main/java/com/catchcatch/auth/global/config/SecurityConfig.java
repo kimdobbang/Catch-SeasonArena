@@ -1,0 +1,68 @@
+package com.catchcatch.auth.global.config;
+
+import com.catchcatch.auth.global.security.auth.repository.RefreshTokenRepository;
+import com.catchcatch.auth.global.security.exceptionHandler.CustomExceptionHandler;
+import com.catchcatch.auth.global.security.jwt.JwtAuthenticationFilter;
+import com.catchcatch.auth.global.security.jwt.JwtAuthorizationFilter;
+import com.catchcatch.auth.global.security.jwt.JwtTokenProvider;
+import com.catchcatch.auth.global.util.HttpResponseUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@RequiredArgsConstructor
+@EnableWebSecurity
+public class SecurityConfig {
+
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectMapper objectMapper;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtTokenProvider, objectMapper, refreshTokenRepository);
+        filter.setFilterProcessesUrl("/api/auth/login");
+        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+        return filter;
+    }
+
+    @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter(){
+        return new JwtAuthorizationFilter(jwtTokenProvider);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomExceptionHandler customExceptionHandler) throws Exception {
+        http.csrf((csrf) -> csrf.disable());
+        http.formLogin((formLogin) -> formLogin.disable());
+        http.httpBasic((httpBasic) -> httpBasic.disable());
+        http.cors(Customizer.withDefaults());
+
+        http.authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated());
+
+        http.exceptionHandling((handle) -> handle.authenticationEntryPoint(customExceptionHandler));
+        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        http.addFilterAt(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.sessionManagement((session) ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return http.build();
+    }
+}
