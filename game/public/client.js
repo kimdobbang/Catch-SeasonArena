@@ -9,9 +9,7 @@ function startGame() {
 }
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io", {
-  path: "/game/socket.io",
-});
+const socket = io("https://j11b106.p.ssafy.io");
 
 // <<게임 시작>>
 socket.on("gameStart", () => {
