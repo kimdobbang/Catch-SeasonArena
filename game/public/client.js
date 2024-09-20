@@ -3,15 +3,17 @@ function joinRoom(roomCode, playerName, profileImage) {
   ROOMCODE = roomCode;
   socket.emit("joinRoom", { roomCode, playerName, profileImage });
 }
+
 function startGame() {
-  new Phaser.Game(config); // Phaser 게임 생성
+  new Phaser.Game(config); // Phaser 게임게임 시작
   setTimeout(() => (gameStarted = true), 3000);
 }
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("https://j11b106.p.ssafy.io");
+const socket = io("http://192.168.31.171:3000");
 
-// <<게임 시작>>
+// 게임 시작
 socket.on("gameStart", () => {
   console.log("게임시작");
   startGame();
@@ -51,18 +53,16 @@ const config = {
 
 // <<전역변수 선언>>
 let ROOMCODE;
-
 let gameStarted = false;
 let playerGroup;
-
-let clientPlayers = {};
-let clientWeapons = {};
+let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking}
 
 function preload() {
   this.load.image("player1", "./assets/player1.png");
   this.load.image("player2", "./assets/player2.png");
   this.load.image("player3", "./assets/player3.png");
   this.load.image("player4", "./assets/player4.png");
+  this.load.image("weapon", "./assets/sword.png");
 }
 
 function create() {
@@ -74,16 +74,13 @@ function create() {
   const MAP_WIDTH = 1000;
   const MAP_HEIGHT = 1000;
 
-  scene.physics.world.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
+  scene.physics.world.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT); // 월드 경계 설정
+  scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT); // 카메라 경계 설정
 
-  scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT);
-
+  // 플레이어끼리 충돌 설정
   this.physics.add.collider(playerGroup, playerGroup, (player1, player2) => {
-    // 충돌 후에도 속도를 0으로 설정하여 플레이어가 밀리지 않도록 설정
-    player1.setVelocity(0, 0);
+    player1.setVelocity(0, 0); // 충돌 후 속도를 0으로 설정
     player2.setVelocity(0, 0);
-
-    // 플레이어 간의 위치 조정 없이 서로 충돌한 상태로 유지
   });
 
   // <<조이스틱>>
@@ -117,12 +114,9 @@ function create() {
     thumb.y = base.y + distance * Math.sin(angle);
 
     if (gameStarted && joystick.force > 0) {
-      socket.emit("playerMovement", {
-        angle: joystick.angle,
-        roomCode: ROOMCODE,
-      });
+      socket.emit("playerMovement", joystick.angle);
     } else if (gameStarted && joystick.force === 0) {
-      socket.emit("stopMovement", { roomCode: ROOMCODE });
+      socket.emit("stopMovement");
     }
   });
 
@@ -133,8 +127,15 @@ function create() {
     .setScrollFactor(0);
 
   attackButton.on("pointerdown", () => {
-    if (gameStarted) {
-      socket.emit("playerAttack");
+    if (gameStarted && !clientPlayers[socket.id].isAttacking) {
+      // 플레이어가 공격할 때 애니메이션 시작
+      animateWeaponAttack(
+        clientPlayers[socket.id].weapon,
+        clientPlayers[socket.id].player,
+        clientPlayers[socket.id].player.rotation + Math.PI / 2, // 현재 플레이어의 각도
+        clientPlayers[socket.id]
+      );
+      socket.emit("playerAttack", ROOMCODE);
     }
   });
 
@@ -144,18 +145,60 @@ function create() {
     createPlayer(scene, players);
   });
 
-  // <<60fps로 상태 업데이트 받기>>
+  // <<다른 플레이어의 공격 이벤트 받기>>
+  socket.on("playerAttacked", ({ attackerId, angle }) => {
+    animateWeaponAttack(
+      clientPlayers[attackerId].weapon,
+      clientPlayers[attackerId].player,
+      clientPlayers[attackerId].player.rotation + Math.PI / 2, // 현재 플레이어의 각도
+      clientPlayers[attackerId]
+    );
+  });
+
+  // <<플레이어 죽음 구현>>
+  socket.on("playerDeath", (socketId) => {
+    const deadPlayer = clientPlayers[socketId];
+
+    if (deadPlayer) {
+      deadPlayer.player.destroy();
+      deadPlayer.weapon.destroy();
+      deadPlayer.nickname.destroy();
+      deadPlayer.hpBar.destroy();
+
+      delete clientPlayers[socketId];
+    }
+
+    if (socketId === socket.id) {
+      const gameOverText = scene.add.text(
+        scene.cameras.main.width / 2,
+        scene.cameras.main.height / 2,
+        "Game Over",
+        {
+          fontSize: "64px",
+          fill: "#ffffff",
+        }
+      );
+      gameOverText.setOrigin(0.5, 0.5); // 중앙 정렬
+    }
+  });
+
+  // <<100fps로 상태 업데이트 받기>>
   socket.on("stateUpdate", (players) => {
     Object.keys(players).forEach((key) => {
       if (clientPlayers[key]) {
+        // 플레이어 위치 업데이트
         clientPlayers[key].player.x = players[key].x;
         clientPlayers[key].player.y = players[key].y;
 
-        updateWeapon(
-          clientPlayers[key].weapon,
-          players[key],
-          players[key].direction
-        );
+        // 플레이어가 공격중이 아니면 무기 업데이트
+        if (!clientPlayers[key].isAttacking) {
+          updateWeapon(
+            clientPlayers[key].weapon,
+            clientPlayers[key].player,
+            players[key].direction,
+            false
+          );
+        }
 
         // 닉네임 위치 업데이트
         clientPlayers[key].nickname.setPosition(
@@ -171,7 +214,7 @@ function create() {
           players[key].y - 50,
           50 * (players[key].hp / 100),
           5
-        ); // 체력 비율에 따라 체력바 길이 조정
+        );
       }
     });
   });
@@ -181,17 +224,16 @@ function update() {}
 
 // ============================================================================ //
 
+// <<플레이어 생성 및 설정>>
 function createPlayer(scene, players) {
   Object.keys(players).forEach((key) => {
     let player = players[key];
     clientPlayers[player.socketId] = {};
 
     // 무기 생성
-    const weapon = scene.add.graphics();
-    weapon.lineStyle(5, 0xffffff, 1);
-    weapon.strokeLineShape(
-      new Phaser.Geom.Line(player.x, player.y, player.x + 50, player.y)
-    );
+    const weapon = scene.add
+      .image(player.x + 50, player.y, "weapon")
+      .setScale(0.1);
     clientPlayers[player.socketId].weapon = weapon;
 
     // 플레이어 생성
@@ -201,16 +243,14 @@ function createPlayer(scene, players) {
     clientPlayers[player.socketId].player.setCollideWorldBounds(true);
     clientPlayers[player.socketId].player.setCircle(
       clientPlayers[player.socketId].player.width * 0.3
-    ); // 충돌 영역을 원형으로 설정하고 크기 축소
-    clientPlayers[player.socketId].player.body.pushable = false; // 다른 객체에 의해 밀리지 않도록 설정
+    );
+    clientPlayers[player.socketId].player.body.pushable = false;
     playerGroup.add(clientPlayers[player.socketId].player);
 
-    // 체력바
+    // 체력바 생성
     const hpBar = scene.add.graphics();
     const hpBarWidth = 50;
     const hpBarHeight = 5;
-
-    // 체력바 초기 렌더링
     hpBar.fillStyle(0x00ff00, 1);
     hpBar.fillRect(
       player.x - hpBarWidth / 2,
@@ -218,7 +258,6 @@ function createPlayer(scene, players) {
       hpBarWidth * (player.hp / 100),
       hpBarHeight
     );
-
     clientPlayers[player.socketId].hpBar = hpBar;
 
     // 닉네임 텍스트 생성
@@ -229,9 +268,12 @@ function createPlayer(scene, players) {
         align: "center",
       })
       .setOrigin(0.5);
-
     clientPlayers[player.socketId].nickname = nickname;
 
+    // 공격중인지 여부 (초기세팅 false)
+    clientPlayers[player.socketId].isAttacking = false;
+
+    // 카메라 따라가기 구현
     if (socket.id === player.socketId) {
       console.log("camera follow" + player.socketId);
       scene.cameras.main.startFollow(
@@ -244,60 +286,46 @@ function createPlayer(scene, players) {
   });
 }
 
-// <<무기 업데이트 (나중에 무기 이미지 넣을 때 바꿔야 함)>>
-function updateWeapon(weapon, player, angle) {
-  weapon.clear();
+// <<무기 업데이트>>
+function updateWeapon(weapon, player, angle, attack) {
+  // 무기의 새로운 위치 계산 (플레이어의 중심에서 50만큼 떨어진 위치)
+  weapon.x = player.x + 50 * Math.cos(angle - Math.PI / 2);
+  weapon.y = player.y + 50 * Math.sin(angle - Math.PI / 2);
 
-  const batColor = 0x996633; // 야구방망이 색상 (갈색)
-  weapon.fillStyle(batColor, 1);
+  // 무기를 회전시켜서 플레이어와 함께 회전하는 것처럼 보이게
+  weapon.setRotation(angle - Math.PI / 2);
 
-  const offsetDistance = 40; // 플레이어 중심에서 무기가 떨어진 거리
-  const adjustedAngle = angle - Math.PI / 2; // 무기 끝점을 -90도 (PI / 2 라디안) 조정
+  // 플레이어 회전
+  if (!attack) {
+    player.setRotation(angle - Math.PI / 2);
+  }
+}
 
-  // 무기의 시작점은 플레이어 위치에서 약간 떨어진 지점
-  const startX = player.x + offsetDistance * Math.cos(adjustedAngle);
-  const startY = player.y + offsetDistance * Math.sin(adjustedAngle);
+// <<무기 공격 애니메이션>>
+function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
+  clientPlayer.isAttacking = true; // 공격 시작
+  const duration = 300; // 애니메이션 지속 시간 (300ms)
+  const startAngle = initialAngle; // 공격 시작 각도
+  const endAngle = initialAngle + Math.PI; // 공격 끝 각도
 
-  // 야구방망이의 길이와 두께 설정
-  const batLength = 60; // 야구방망이의 길이
-  const batThicknessStart = 8; // 방망이 손잡이 부분 두께
-  const batThicknessEnd = 16; // 방망이 끝부분의 두께
+  let currentAngle = startAngle;
+  const angleStep = (endAngle - startAngle) / (duration / 10); // 10ms마다 각도 변경
 
-  // 무기 끝점은 시작점에서 각도에 따라 계산
-  const endX = startX + batLength * Math.cos(adjustedAngle);
-  const endY = startY + batLength * Math.sin(adjustedAngle);
+  function animate() {
+    // 무기와 플레이어의 회전과 위치 업데이트
+    updateWeapon(weapon, player, currentAngle, true);
 
-  // 두께가 있는 직사각형을 그리기 위한 회전각도 계산
-  const halfThicknessStart = batThicknessStart / 2;
-  const halfThicknessEnd = batThicknessEnd / 2;
+    // 계속해서 애니메이션 실행
+    if (currentAngle < endAngle) {
+      currentAngle += angleStep; // 각도를 점진적으로 증가
+      setTimeout(animate, 10); // 10ms 후에 다시 실행
+    } else {
+      // 애니메이션이 끝나면 무기를 원래 상태로 초기화
+      updateWeapon(weapon, player, initialAngle, true);
+      clientPlayer.isAttacking = false; // 공격 끝
+    }
+  }
 
-  // 사각형의 네 꼭짓점을 계산하여 직사각형을 회전시켜서 그리기
-  const points = [
-    {
-      x: startX - halfThicknessStart * Math.sin(adjustedAngle),
-      y: startY + halfThicknessStart * Math.cos(adjustedAngle),
-    },
-    {
-      x: endX - halfThicknessEnd * Math.sin(adjustedAngle),
-      y: endY + halfThicknessEnd * Math.cos(adjustedAngle),
-    },
-    {
-      x: endX + halfThicknessEnd * Math.sin(adjustedAngle),
-      y: endY - halfThicknessEnd * Math.cos(adjustedAngle),
-    },
-    {
-      x: startX + halfThicknessStart * Math.sin(adjustedAngle),
-      y: startY - halfThicknessStart * Math.cos(adjustedAngle),
-    },
-  ];
-
-  // 야구방망이 모양 그리기
-  weapon.beginPath();
-  weapon.moveTo(points[0].x, points[0].y);
-  points.forEach((point, index) => {
-    const nextIndex = (index + 1) % points.length;
-    weapon.lineTo(points[nextIndex].x, points[nextIndex].y);
-  });
-  weapon.closePath();
-  weapon.fillPath();
+  // 애니메이션 시작
+  animate();
 }
