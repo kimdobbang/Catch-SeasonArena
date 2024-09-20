@@ -1,7 +1,8 @@
 package com.catchcatch.auth.domains.member.adapter.out.persistence;
 
-import com.catchcatch.auth.domains.member.domain.Member;
+import com.catchcatch.auth.domains.member.domain.SignUpMember;
 import com.catchcatch.auth.domains.member.domain.Role;
+import com.catchcatch.auth.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,17 +13,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "member")
-public class MemberEntity {
+public class MemberEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = true)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "role", nullable = false)
@@ -47,20 +48,17 @@ public class MemberEntity {
         this.password = password;
         this.role = role;
         this.nickname = nickname;
-        this.rating = rating;
-        this.avatar = avatar;
-        this.isDeleted = isDeleted;
+        this.rating = 0;
+        this.avatar = "기본 아바타";
+        this.isDeleted = false;
     }
 
-    public static MemberEntity createMember(Member member) {
+    public static MemberEntity createMember(SignUpMember member) {
         return MemberEntity.builder()
                 .email(member.getEmail())
-                .password(member.getPassword())
+                .password(member.getPassword().getPassword())
                 .role(member.getRole())
-                .nickname(member.getNickname())
-                .rating(member.getRating())
-                .avatar(member.getAvatar())
-                .isDeleted(member.getIsDeleted())
+                .nickname(member.getNickname().getNickname())
                 .build();
     }
 }

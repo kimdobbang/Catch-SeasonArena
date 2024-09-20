@@ -1,7 +1,7 @@
 package com.catchcatch.auth.global.security.jwt;
 
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.LoginRequestDto;
-import com.catchcatch.auth.domains.member.domain.Member;
+import com.catchcatch.auth.domains.member.domain.SignUpMember;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
 import com.catchcatch.auth.global.security.auth.PrincipalDetails;
@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
+        SignUpMember member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
         String email = member.getEmail();
 
         String accessToken = jwtTokenProvider.generateAccessToken(member);
@@ -64,10 +64,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         refreshTokenRepository.saveByUserId(email, refreshToken);
 
+        String jsonResponse = "{"
+                + "\"data\": {"
+                + "\"msg\": \"로그인완료했습니다.\","
+                + "\"code\": \"SUCCESS_LOGIN\","
+                + "\"status\": 200"
+                + "}"
+                + "}";
+
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(createCookie("refreshToken", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("Login Success");
+        response.getWriter().write(jsonResponse);
     }
 
     private Cookie createCookie(String key, String value){
