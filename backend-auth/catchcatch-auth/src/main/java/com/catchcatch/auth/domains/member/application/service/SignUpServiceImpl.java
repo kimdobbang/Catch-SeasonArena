@@ -33,16 +33,7 @@ public class SignUpServiceImpl implements SignUpUseCase {
             throw new ExceptionResponse(CustomException.DUPLICATED_EMAIL_EXCEPTION);
         }
 
-        Member member = Member.createMember(
-                0L,
-                requestDto.email(),
-                passwordEncoder.encode(requestDto.password()),
-                Role.ROLE_USER,
-                requestDto.email(),
-                0,
-                "아바타",
-                false
-        );
+        Member member = Member.createSignUpMember(requestDto);
 
         saveMemberPort.save(member);
     }
