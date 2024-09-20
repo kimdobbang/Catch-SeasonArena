@@ -8,7 +8,8 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
-
+    "allowJs": true,
+    "checkJs": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
