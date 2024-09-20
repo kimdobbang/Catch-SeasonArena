@@ -33,7 +33,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private ObjectMapper objectMapper;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    //로그인 요청 시 실행
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
@@ -51,7 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
-        long memberId = member.getMemberId();
+        String email = member.getEmail();
 
         String accessToken = jwtTokenProvider.generateAccessToken(member);
         String refreshToken = jwtTokenProvider.generateRefreshToken(member);
@@ -59,11 +58,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("BACK-AUTH:ACCESS_TOKEN : {}", accessToken);
         log.info("BACK-AUTH:REFRESH_TOKEN : {}", refreshToken);
 
-        if(refreshTokenRepository.existsByUserId(memberId)){
-            refreshTokenRepository.deleteByUserId(memberId);
+        if(refreshTokenRepository.existsByUserId(email)){
+            refreshTokenRepository.deleteByUserId(email);
         }
 
-        refreshTokenRepository.saveByUserId(memberId, refreshToken);
+        refreshTokenRepository.saveByUserId(email, refreshToken);
 
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(createCookie("refreshToken", refreshToken));
