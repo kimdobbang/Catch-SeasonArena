@@ -16,7 +16,7 @@ public enum CustomException {
 
     ACCESS_DENIEND_EXCEPTION(403,"AccessDeniendException","권한이 없습니다");
 
-    private int statusNum;
+    private Integer statusNum;
     private String errorCode;
     private String errorMessage;
 }
