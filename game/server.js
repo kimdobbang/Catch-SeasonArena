@@ -20,14 +20,18 @@ const io = new Server(server, {
 app.use(cors());
 app.use("/game", express.static(path.join(__dirname, "public")));
 
-// <<게임방 관리>>
 // 방을 관리할 자료구조 (Map)
-// rooms = <roomCode, room = {players: Map<socketId, player>, isStarted : false}> // userRoom = <socketId, roomCode>
-const rooms = new Map();
-const userRoom = new Map();
+const rooms = new Map(); // rooms = <roomCode, room = {players: Map<socketId, player>, isStarted : false}>
+const userRoom = new Map(); // userRoom = <socketId, roomCode>
+
+// 전역변수 관리
 const MAP_WIDTH = 1000;
 const MAP_HEIGHT = 1000;
+const WEAPON_LENGTH = 100;
+const KNOCKBACK_FORCE = 100;
+const KNOCKBACK_DURATION = 100; // 100ms
 
+// <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
 function joinPlayer(roomCode, socket, playerName, profileImage) {
   // 플레이어 객체 생성
@@ -40,13 +44,12 @@ function joinPlayer(roomCode, socket, playerName, profileImage) {
     y: 200,
     velocityX: 0,
     velocityY: 0,
-    direction: Math.PI, // 라디안
+    direction: Math.PI / 2, // 라디안
     hp: 100,
     speed: 1,
     attackPower: 1,
     knockBack: 1,
     reach: 1,
-    isAttack: false,
     canMove: true,
   };
 
@@ -83,6 +86,7 @@ function joinPlayer(roomCode, socket, playerName, profileImage) {
 io.on("connection", (socket) => {
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
+  // 게임방 참여
   socket.on("joinRoom", ({ roomCode, playerName, profileImage }) => {
     socket.join(roomCode);
     joinPlayer(roomCode, socket, playerName, profileImage);
@@ -90,6 +94,7 @@ io.on("connection", (socket) => {
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
   });
 
+  // 게임 연결 종료
   socket.on("disconnect", () => {
     rooms.forEach((room, roomCode) => {
       room.players.forEach((player, socketId) => {
@@ -111,32 +116,46 @@ io.on("connection", (socket) => {
 
   // <<플레이어 정보요청>>
   socket.on("getPlayersInfo", (roomCode) => {
-    const playersMap = rooms.get(roomCode).players;
-
+    const playersMap = getAllPlayers(roomCode);
     const players = Object.fromEntries(playersMap);
 
     io.in(socket.id).emit("createPlayers", players);
   });
 
   // <<플레이어 움직임 & 정지 구현>>
-  socket.on("playerMovement", ({ angle, roomCode }) => {
-    const player = rooms.get(roomCode).players.get(socket.id);
+  socket.on("playerMovement", (angle) => {
+    const player = getPlayer(socket.id);
 
     if (player && player.canMove) {
       angle = angle * (Math.PI / 180);
       player.velocityX = Math.cos(angle) * player.speed * 5.5;
       player.velocityY = Math.sin(angle) * player.speed * 5.5;
-
-      player.direction = angle; // 무기 각도 업데이트
+      player.direction = angle;
     }
   });
 
-  socket.on("stopMovement", ({ roomCode }) => {
-    const player = rooms.get(roomCode).players.get(socket.id);
+  socket.on("stopMovement", () => {
+    const player = getPlayer(socket.id);
 
     if (player) {
       player.velocityX = 0;
       player.velocityY = 0;
+    }
+  });
+
+  // <<플레이어 공격 기능>>
+  socket.on("playerAttack", (roomCode) => {
+    const players = getAllPlayers(roomCode);
+    const attacker = getPlayer(socket.id);
+    if (attacker) {
+      // 공격 범위 내 플레이어 감지
+      checkAttackRange(attacker, players, roomCode);
+
+      // 모든 클라이언트에게 공격 이벤트 전송
+      io.in(roomCode).emit("playerAttacked", {
+        attackerId: attacker.socketId,
+        angle: attacker.direction,
+      });
     }
   });
 });
@@ -146,7 +165,8 @@ setInterval(() => {
     if (room.isStarted) {
       const playersMap = room.players;
 
-      playersMap.forEach((player, key) => {
+      playersMap.forEach((player, socketId) => {
+        // 플레이어 이동 반영
         if (player.canMove) {
           player.x += player.velocityX;
           player.y += player.velocityY;
@@ -167,3 +187,80 @@ server.listen(3000, () => {
 });
 
 // ============================================================================ //
+
+// <<socket.id로 플레이어를 불러오는 함수>>
+function getPlayer(socketId) {
+  let roomCode = userRoom.get(socketId);
+  return rooms.get(roomCode).players.get(socketId);
+}
+
+// <<roomCode로 플레이어들을 불러오는 함수>>
+function getAllPlayers(roomCode) {
+  return rooms.get(roomCode).players;
+}
+
+// <<공격 범위 내의 플레이어들을 감지하는 함수>>
+function checkAttackRange(attacker, players, roomCode) {
+  const attackerAngle = normalizeAngle(attacker.direction);
+
+  players.forEach((target, socketId) => {
+    if (target.socketId !== attacker.socketId) {
+      const dx = target.x - attacker.x;
+      const dy = target.y - attacker.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance <= WEAPON_LENGTH * attacker.reach) {
+        const angleToTarget = Math.atan2(dy, dx);
+        const normalizedAngleToTarget = normalizeAngle(angleToTarget);
+        const angleDiff = Math.abs(
+          normalizeAngle(attackerAngle - normalizedAngleToTarget)
+        );
+
+        if (angleDiff <= Math.PI / 2) {
+          applyKnockback(attacker, target, dx, dy); // 타격 효과 적용 (넉백 또는 피해)
+          applyDamage(attacker, target, roomCode); // 타격 시 체력 감소
+        }
+      }
+    }
+  });
+}
+
+// 각도를 -PI ~ PI 범위로 정규화
+function normalizeAngle(angle) {
+  angle = angle % (2 * Math.PI);
+  if (angle > Math.PI) angle -= 2 * Math.PI;
+  if (angle < -Math.PI) angle += 2 * Math.PI;
+  return angle;
+}
+
+// 넉백 적용 함수
+function applyKnockback(attacker, target, dx, dy) {
+  const angle = Math.atan2(dy, dx);
+  const knockbackX = Math.cos(angle) * KNOCKBACK_FORCE * attacker.knockBack;
+  const knockbackY = Math.sin(angle) * KNOCKBACK_FORCE * attacker.knockBack;
+
+  // 타겟에 넉백 적용
+  target.velocityX += knockbackX;
+  target.velocityY += knockbackY;
+  target.x += target.velocityX;
+  target.y += target.velocityY;
+
+  target.canMove = false;
+
+  setTimeout(() => {
+    target.velocityX = 0;
+    target.velocityY = 0;
+    target.canMove = true;
+  }, KNOCKBACK_DURATION);
+}
+
+// 체력 감소 및 사망 처리 함수
+function applyDamage(attacker, target, roomCode) {
+  const damage = 20 * attacker.attackPower;
+  target.hp -= damage;
+
+  if (target.hp <= 0) {
+    getAllPlayers(roomCode).delete(target.socketId);
+    io.in(roomCode).emit("playerDeath", target.socketId);
+  }
+}
