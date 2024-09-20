@@ -30,11 +30,10 @@ public class SignUpController {
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto requestDto){
         signUpUseCase.singUp(requestDto);
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("msg", SuccessSignUpMessage.SUCCESS_SIGN_UP.getMessage());
-        data.put("code", SuccessSignUpMessage.SUCCESS_SIGN_UP);
-        data.put("status", 200);
-        ResponseEntity<?> response = responseUtil.createResponse(data);
+        ResponseEntity<?> response = responseUtil.createResponse(
+                SuccessSignUpMessage.SUCCESS_SIGN_UP.getMessage(),
+                SuccessSignUpMessage.SUCCESS_SIGN_UP,
+                200);
 
         log.info("BACK-AUTH:SIGN-UP request: {}", requestDto);
         log.info("BACK-AUTH:SIGN-UP response: {}", response);
