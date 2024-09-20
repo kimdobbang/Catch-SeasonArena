@@ -33,7 +33,7 @@ public class SignUpServiceImpl implements SignUpUseCase {
         }
 
         SignUpMember member = SignUpMember.createSignUpMember(requestDto);
-        member.getPassword().changeEncodePassword(passwordEncoder.encode(requestDto.password()));
+        member.changeEncodePassword(passwordEncoder.encode(requestDto.password()));
         saveMemberPort.save(member);
     }
 }

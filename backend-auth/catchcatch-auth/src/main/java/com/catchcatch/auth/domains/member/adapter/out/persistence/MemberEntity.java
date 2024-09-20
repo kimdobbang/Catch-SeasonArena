@@ -56,9 +56,9 @@ public class MemberEntity extends BaseTimeEntity {
     public static MemberEntity createMember(SignUpMember member) {
         return MemberEntity.builder()
                 .email(member.getEmail())
-                .password(member.getPassword().getPassword())
+                .password(member.getPassword())
                 .role(member.getRole())
-                .nickname(member.getNickname().getNickname())
+                .nickname(member.getNickname())
                 .build();
     }
 }
