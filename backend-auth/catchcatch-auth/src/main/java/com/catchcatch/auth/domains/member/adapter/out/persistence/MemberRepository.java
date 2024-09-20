@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
-    boolean existsByEmailAndIsDeleted(String email, boolean isDeleted);
-    Optional<MemberEntity> findByEmailAndIsDeleted(String email, boolean isDeleted);
+    Boolean existsByEmailAndIsDeleted(String email, Boolean isDeleted);
+    Optional<MemberEntity> findByEmailAndIsDeleted(String email, Boolean isDeleted);
 }
