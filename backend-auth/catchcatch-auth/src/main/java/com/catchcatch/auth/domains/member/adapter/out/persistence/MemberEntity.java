@@ -1,13 +1,15 @@
 package com.catchcatch.auth.domains.member.adapter.out.persistence;
 
+import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.domains.member.domain.Role;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "member")
 public class MemberEntity {
@@ -24,22 +26,23 @@ public class MemberEntity {
     private String password;
 
     @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "nickname", nullable = false)
     private String nickname;
 
     @Column(name = "rating", nullable = false)
-    private int rating;
+    private Integer rating;
 
     @Column(name = "avatar", nullable = false)
     private String avatar;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Builder
-    private MemberEntity(String email, String password, Role role, String nickname, int rating, String avatar, boolean isDeleted) {
+    private MemberEntity(String email, String password, Role role, String nickname, Integer rating, String avatar, Boolean isDeleted) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -49,15 +52,15 @@ public class MemberEntity {
         this.isDeleted = isDeleted;
     }
 
-    public static MemberEntity createMember(String email, String password, Role role, String nickname, int rating, String avatar, boolean isDeleted) {
+    public static MemberEntity createMember(Member member) {
         return MemberEntity.builder()
-                .email(email)
-                .password(password)
-                .role(role)
-                .nickname(nickname)
-                .rating(rating)
-                .avatar(avatar)
-                .isDeleted(isDeleted)
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .role(member.getRole())
+                .nickname(member.getNickname())
+                .rating(member.getRating())
+                .avatar(member.getAvatar())
+                .isDeleted(member.getIsDeleted())
                 .build();
     }
 }
