@@ -16,22 +16,21 @@ import org.springframework.stereotype.Component;
 public class MemberPersistenceAdapter implements SaveMemberPort, ExistsMemberPort, LoadMemberPort {
 
     private final MemberRepository memberRepository;
-    private final MemberMapper memberMapper;
 
     @Override
-    public boolean existsByEmailAndIsDeleted(String email, boolean isDeleted) {
+    public Boolean existsByEmailAndIsDeleted(String email, Boolean isDeleted) {
         return memberRepository.existsByEmailAndIsDeleted(email, isDeleted);
     }
 
     @Override
     public void save(Member member) {
-        memberRepository.save(memberMapper.toEntity(member));
+        memberRepository.save(MemberEntity.createMember(member));
     }
 
     @Override
-    public Member loadByEmailAndIsDeleted(String email, boolean isDeleted) {
+    public Member loadByEmailAndIsDeleted(String email, Boolean isDeleted) {
         MemberEntity memberEntity = memberRepository.findByEmailAndIsDeleted(email, isDeleted)
                 .orElseThrow(() -> new ExceptionResponse(CustomException.NOT_FOUND_MEMBER_EXCEPTION));
-        return memberMapper.toDomain(memberEntity);
+        return Member.createMemberMapper(memberEntity);
     }
 }
