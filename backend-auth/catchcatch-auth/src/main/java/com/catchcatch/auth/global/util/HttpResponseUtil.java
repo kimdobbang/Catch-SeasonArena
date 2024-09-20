@@ -16,7 +16,11 @@ public class HttpResponseUtil {
         data.put("msg", msg);
         data.put("code", code);
         data.put("status", status);
-        return ResponseEntity.ok().body(data);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", data);
+
+        return ResponseEntity.ok().body(response);
     }
 
     public ResponseEntity<Map<String, Object>> errorResponse(HttpStatus status, Object o){
