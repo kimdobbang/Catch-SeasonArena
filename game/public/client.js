@@ -120,6 +120,9 @@ function create() {
     }
   });
 
+  // 멀티터치 가능하게 설정
+  this.input.addPointer(1);
+
   // <<공격 버튼>>
   const attackButton = this.add
     .circle(300, 700, 50, 0xff0000)
