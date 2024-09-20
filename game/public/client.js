@@ -10,8 +10,8 @@ function startGame() {
 }
 
 // <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
-const socket = io("http://192.168.31.171:3000");
+const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("http://192.168.31.171:3000");
 
 // 게임 시작
 socket.on("gameStart", () => {
