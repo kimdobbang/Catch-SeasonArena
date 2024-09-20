@@ -15,9 +15,7 @@ public class WithMockSecurityContext implements WithSecurityContextFactory<WithM
     @Override
     public SecurityContext createSecurityContext(WithMockAuthUser mockAuthUser) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Member member = Member.createMember(1L, mockAuthUser.email(),
-                "password", mockAuthUser.role(), "nickname",
-                0, "avatar", false);
+        Member member = Member.createSignUpMember(new SignUpRequestDto("email@ssafy.com", "1234"));
         PrincipalDetails memberDetails = new PrincipalDetails(member);
         Authentication auth = new UsernamePasswordAuthenticationToken(memberDetails, null, memberDetails.getAuthorities());
         context.setAuthentication(auth);
