@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { PrimaryButton } from "@/shared/components/atoms/buttons/PrimaryButton";
 
 export const NotPwaPage = () => {
-  const navigate = useNavigate();
-
   const goToGame = () => {
-    navigate("/game"); // Navigate to the /game route
+    window.location.href = "/game";
   };
   return (
     <div>
@@ -14,6 +12,12 @@ export const NotPwaPage = () => {
       <button onClick={goToGame} className="bg-catch-main-400">
         버튼 클릭시 GAME으로 이동합니다
       </button>
+      <PrimaryButton color="main" size="small">
+        수집하기
+      </PrimaryButton>
+      <PrimaryButton color="sub" size="big">
+        배낭보러가기
+      </PrimaryButton>
     </div>
   );
 };
