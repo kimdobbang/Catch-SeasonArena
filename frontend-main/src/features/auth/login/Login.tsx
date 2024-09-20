@@ -2,10 +2,7 @@ import config from "@/config";
 import React from "react";
 import ServiceTitle from "@/assets/symbols/ServiceTitle.svg";
 import LoginButton from "@/assets/symbols/DefaultLoginButton.svg";
-import { KakaoLoginButton, GoogleLoginButton } from "@components/index";
-// FSD 아키텍쳐를 활용하여 아래 주석처럼이 아닌 위와 같이 관리 가능
-// import { KakaoLoginButton } from "@/shared/components/atoms/buttons/KakaoLoginButton";
-// import { GoogleLoginButton } from "@/shared/components/atoms/buttons/GoogleLoginButton";
+import { KakaoLoginButton, GoogleLoginButton } from "@components/atoms/index";
 
 export const Login: React.FC = () => {
   const handleOAuthLogin = (provider: "kakao" | "google") => {
