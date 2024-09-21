@@ -9,7 +9,7 @@ import {
   GoogleLoginButton,
   Sleaves,
 } from "@atoms/index";
-import { TextFooter } from "@ui/index";
+import { Copyright } from "@ui/index";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -85,7 +85,7 @@ export const Login: React.FC = () => {
         <KakaoLoginButton onClick={() => handleOAuthLogin("kakao")} />
         <GoogleLoginButton onClick={() => handleOAuthLogin("google")} />
       </div>
-      <TextFooter />
+      <Copyright />
     </div>
   );
 };

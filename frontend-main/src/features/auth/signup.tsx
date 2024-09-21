@@ -6,7 +6,7 @@ import {
   IconTextButton,
   Sleaves,
 } from "@atoms/index";
-import { TextFooter } from "@ui/index";
+import { Copyright } from "@ui/index";
 
 export const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -72,7 +72,7 @@ export const Signup: React.FC = () => {
         />
       </div>
 
-      <TextFooter />
+      <Copyright />
     </div>
   );
 };
