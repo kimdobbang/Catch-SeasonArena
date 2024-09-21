@@ -1,4 +1,4 @@
-import SleavesIcon from "@/assets/icons/Sleave-icon.svg?react";
+import SleavesIcon from "@/assets/icons/sleave-icon.svg?react";
 
 interface SleavesProps {
   width?: string;
