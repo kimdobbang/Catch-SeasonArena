@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      width: {
+        22: "5.5rem", // 5.5rem 너비 추가
+      },
       colors: {
         "catch-tier-bronze": "#9d4900",
         "catch-tier-silver": "#c0c0c0",
@@ -35,7 +38,7 @@ export default {
         medium: "500",
       },
       fontSize: {
-        caption12: ["12px", { lineHeight: "1.5" }],
+        caption1: ["12px", { lineHeight: "1.5" }],
         caption2: ["14px", { lineHeight: "1.5" }],
         body2: ["16px", { lineHeight: "1.5" }],
         body1: ["20px", { lineHeight: "1.5" }],

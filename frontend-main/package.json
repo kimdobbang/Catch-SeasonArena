@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview --port 3000",
-    "gen-pwa": "pwa-assets-generator --preset minimal public/logo.svg"
+    "gen-pwa": "pwa-assets-generator --preset minimal public/logo.svg",
+    "clean": "rm -rf node_modules && npm install"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",

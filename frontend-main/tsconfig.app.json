@@ -6,7 +6,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@components/*": ["./src/shared/components/*"],
+      "@atoms/*": ["./src/shared/components/atoms/*"],
+      "@entities/*": ["./src/shared/components/entities/*"],
       "@ui/*": ["./src/shared/ui/*"]
     },
     "types": ["vite-plugin-svgr/client"],
