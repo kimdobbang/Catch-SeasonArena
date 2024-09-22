@@ -1,6 +1,6 @@
 package com.catchcatch.auth.domains.member.adapter.out.persistence;
 
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.domains.member.domain.Role;
 import com.catchcatch.auth.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -53,7 +53,7 @@ public class MemberEntity extends BaseTimeEntity {
         this.isDeleted = false;
     }
 
-    public static MemberEntity createMember(SignUpMember member) {
+    public static MemberEntity createMemberEntityToMember(Member member) {
         return MemberEntity.builder()
                 .email(member.getEmail())
                 .password(member.getPassword())

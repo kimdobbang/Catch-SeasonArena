@@ -24,7 +24,7 @@ public class MemberPersistenceAdapter implements SaveMemberPort, ExistsMemberPor
 
     @Override
     public void save(Member member) {
-        memberRepository.save(MemberEntity.createMember(member));
+        memberRepository.save(MemberEntity.createMemberEntityToMember(member));
     }
 
     @Override
