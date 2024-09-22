@@ -4,7 +4,7 @@ import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpReques
 import com.catchcatch.auth.domains.member.application.port.in.SignUpUseCase;
 import com.catchcatch.auth.domains.member.application.port.out.ExistsMemberPort;
 import com.catchcatch.auth.domains.member.application.port.out.SaveMemberPort;
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class SignUpServiceImpl implements SignUpUseCase {
             throw new ExceptionResponse(CustomException.DUPLICATED_EMAIL_EXCEPTION);
         }
 
-        SignUpMember member = SignUpMember.createSignUpMember(requestDto);
+        Member member = Member.createSignUpMember(requestDto);
         member.changeEncodePassword(passwordEncoder.encode(requestDto.password()));
         saveMemberPort.save(member);
     }

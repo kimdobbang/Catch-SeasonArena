@@ -1,7 +1,7 @@
 package com.catchcatch.auth.auth;
 
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpRequestDto;
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.global.security.auth.PrincipalDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,7 +14,7 @@ public class WithMockSecurityContext implements WithSecurityContextFactory<WithM
     @Override
     public SecurityContext createSecurityContext(WithMockAuthUser mockAuthUser) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        SignUpMember member = SignUpMember.createSignUpMember(new SignUpRequestDto("email@ssafy.com", "1234"));
+        Member member = Member.createSignUpMember(new SignUpRequestDto("email@ssafy.com", "1234"));
         PrincipalDetails memberDetails = new PrincipalDetails(member);
         Authentication auth = new UsernamePasswordAuthenticationToken(memberDetails, null, memberDetails.getAuthorities());
         context.setAuthentication(auth);

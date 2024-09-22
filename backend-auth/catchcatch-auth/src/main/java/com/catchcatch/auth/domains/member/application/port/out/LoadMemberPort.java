@@ -1,8 +1,8 @@
 package com.catchcatch.auth.domains.member.application.port.out;
 
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 
 public interface LoadMemberPort {
 
-    SignUpMember loadByEmailAndIsDeleted(String email, Boolean isDeleted);
+    Member loadByEmailAndIsDeleted(String email, Boolean isDeleted);
 }

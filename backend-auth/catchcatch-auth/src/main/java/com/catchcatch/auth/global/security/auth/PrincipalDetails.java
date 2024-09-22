@@ -1,6 +1,6 @@
 package com.catchcatch.auth.global.security.auth;
 
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +13,7 @@ import java.util.Collection;
 public class PrincipalDetails implements UserDetails {
 
     @Getter
-    private SignUpMember member;
+    private Member member;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,7 +1,7 @@
 package com.catchcatch.auth.global.security.jwt;
 
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.LoginRequestDto;
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
 import com.catchcatch.auth.global.security.auth.PrincipalDetails;
@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        SignUpMember member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
+        Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
         String email = member.getEmail();
 
         String accessToken = jwtTokenProvider.generateAccessToken(member);
