@@ -10,6 +10,20 @@
   font-style: normal;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: Pretendard;
+}
+
+#root {
+  max-width: 600px; /* 중앙 정렬 및 최대 너비 설정 */
+  margin: 0 auto; /* 수평 중앙 정렬 */
+  background-color: #fff; /* 배경색 설정 */
 }
