@@ -1,5 +1,5 @@
-import { CircleButton } from "@atoms/buttons/circle-button";
-import { SquareButton } from "@atoms/buttons/square-button";
+import { CircleButton } from "@atoms/index";
+import { SquareButton } from "@atoms/index";
 import { useNavigate } from "react-router-dom";
 
 interface TabNoBgProps {
@@ -8,7 +8,7 @@ interface TabNoBgProps {
 export const TabNoBackground: React.FC<TabNoBgProps> = ({ className }) => {
   const navigate = useNavigate();
 
-  const goHome = () => {
+  const goMain = () => {
     navigate("/main");
   };
 
@@ -25,7 +25,7 @@ export const TabNoBackground: React.FC<TabNoBgProps> = ({ className }) => {
       className={`z-10 flex flex-col items-center justify-end h-[170px] ${className}`}
     >
       <div className="flex flex-row items-end w-full justify-evenly">
-        <SquareButton icon="home" onClick={goHome} />
+        <SquareButton icon="home" onClick={goMain} />
         <CircleButton onClick={goCollect} />
         <SquareButton icon="inventory" onClick={goInventory} />
       </div>

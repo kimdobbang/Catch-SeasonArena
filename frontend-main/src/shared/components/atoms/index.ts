@@ -8,6 +8,10 @@ export { DefaultLoginButton } from "./buttons/auth/default-login-button";
 export { KakaoLoginButton } from "./buttons/auth/kakao-login-button";
 export { GoogleLoginButton } from "./buttons/auth/google-login-button";
 export { IconTextButton } from "./buttons/icon-text-button";
+export { PrimaryButton } from "@atoms/buttons/primary-button";
+export { CircleButton } from "@atoms/buttons/circle-button";
+export { SquareButton } from "@atoms/buttons/square-button";
+
 // input
 
 export { InputField } from "./input/input-field";

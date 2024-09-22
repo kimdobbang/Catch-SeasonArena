@@ -1,5 +1,5 @@
 import React from "react";
-import Sword from "@/assets/icons/sword-icon.svg?react";
+import Sword from "@/assets/icons/sword.svg?react";
 
 interface PrimaryButtonProps {
   onClick?: () => void; // 버튼 클릭할때 실행될 함수
