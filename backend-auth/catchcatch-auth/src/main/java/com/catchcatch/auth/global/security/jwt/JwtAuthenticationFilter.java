@@ -58,11 +58,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("BACK-AUTH:ACCESS_TOKEN : {}", accessToken);
         log.info("BACK-AUTH:REFRESH_TOKEN : {}", refreshToken);
 
-        if(refreshTokenRepository.existsByUserId(email)){
-            refreshTokenRepository.deleteByUserId(email);
+        if(refreshTokenRepository.existsByEmail(email)){
+            refreshTokenRepository.deleteByEmail(email);
         }
 
-        refreshTokenRepository.saveByUserId(email, refreshToken);
+        refreshTokenRepository.saveByEmail(email, refreshToken);
 
         String jsonResponse = "{"
                 + "\"data\": {"
