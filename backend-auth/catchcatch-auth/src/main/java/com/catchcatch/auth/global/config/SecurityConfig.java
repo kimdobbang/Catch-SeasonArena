@@ -5,6 +5,9 @@ import com.catchcatch.auth.global.security.exceptionHandler.CustomExceptionHandl
 import com.catchcatch.auth.global.security.jwt.JwtAuthenticationFilter;
 import com.catchcatch.auth.global.security.jwt.JwtAuthorizationFilter;
 import com.catchcatch.auth.global.security.jwt.JwtTokenProvider;
+import com.catchcatch.auth.global.security.oauth.OAuth2Service;
+import com.catchcatch.auth.global.security.oauth.OAuth2SuccessHandler;
+import com.catchcatch.auth.global.security.oauth.OAuthFailHandler;
 import com.catchcatch.auth.global.util.HttpResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,9 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final OAuth2Service oAuth2Service;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuthFailHandler oAuthFailHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -55,8 +61,18 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
 
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/api/auth/members/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated());
+
+        http.oauth2Login((oauth) ->
+                oauth.userInfoEndpoint(c -> c.userService(oAuth2Service))
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler(oAuthFailHandler)
+                        .redirectionEndpoint(
+                                (redirectionEndpointConfig) -> redirectionEndpointConfig.baseUri(("/api/auth/login/oauth2/code/*")))
+                        .authorizationEndpoint((authorizationEndpointConfig) ->
+                                authorizationEndpointConfig.baseUri("/api/auth/oauth2/authorization"))
+        );
 
         http.exceptionHandling((handle) -> handle.authenticationEntryPoint(customExceptionHandler));
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
