@@ -30,4 +30,9 @@ public class RefreshTokenRepository {
     public void deleteByEmail(String email) {
         redisTemplate.delete("auth: "+email);
     }
+
+    public String getByEmail(String email) {
+        ValueOperations<Object, Object> valueOperations = redisTemplate.opsForValue();
+        return (String) valueOperations.get("auth: "+email);
+    }
 }
