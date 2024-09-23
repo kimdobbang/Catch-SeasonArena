@@ -21,7 +21,7 @@ socket.on("gameStart", () => {
 
 const config = {
   type: Phaser.AUTO,
-  width: 500,
+  width: 400,
   height: 800,
   backgroundColor: "#2d2d2d",
   physics: {
@@ -120,9 +120,12 @@ function create() {
     }
   });
 
+  // 멀티터치 가능하게 설정
+  this.input.addPointer(1);
+
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(400, 700, 50, 0xff0000)
+    .circle(300, 700, 50, 0xff0000)
     .setInteractive()
     .setScrollFactor(0);
 
