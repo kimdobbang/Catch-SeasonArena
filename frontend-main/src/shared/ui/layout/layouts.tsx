@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "./header";
-import { TabNoBackground } from "./tab-no-background";
+import { BottomNavBar } from "./bottom-nav-bar";
 
 // 일반 레이아웃
 export const Layout = () => {
@@ -14,7 +14,7 @@ export const Layout = () => {
 // header와 tab이 있는 레이아웃
 export const MainLayout = () => {
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="flex flex-col w-full h-full">
       {/* Header가 맨 위에 고정 */}
       <Header className="w-full" />
 
@@ -25,7 +25,7 @@ export const MainLayout = () => {
 
       {/* TabNoBackground가 맨 아래에 고정 */}
       <div className="w-full ">
-        <TabNoBackground className="w-full " />
+        <BottomNavBar className="w-full " />
       </div>
     </div>
   );

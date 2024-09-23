@@ -8,7 +8,6 @@ import { Ranking } from "@/features/main/ranking";
 import { Avartar } from "@/features/main/avartar";
 import { Collect } from "@/features/collect/collect";
 import { Inventory } from "@/features/inventory/inventory";
-import { DesktopWarningPage } from "@/pages/desktop-warning-page";
 import { RootPage } from "@/pages/root-page";
 
 export const AppRouter = () => {
@@ -39,10 +38,6 @@ export const AppRouter = () => {
         {
           path: "/collect",
           element: <Collect />,
-        },
-        {
-          path: "/desktop-warning",
-          element: <DesktopWarningPage />,
         },
       ],
     },

@@ -8,6 +8,6 @@ export { Copyright } from "./copyright";
 
 // layout
 export { Header } from "./layout/header";
-export { TabNoBackground } from "./layout/tab-no-background";
-export { TabWithBackground } from "./layout/tab-with-background";
+export { BottomNavBar } from "./layout/bottom-nav-bar";
+export { NavBarBackground } from "./layout/nav-bar-background";
 export { Layout, MainLayout, HeaderLayout } from "./layout/layouts";

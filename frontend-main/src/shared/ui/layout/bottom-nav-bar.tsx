@@ -1,11 +1,11 @@
-import { CircleButton } from "@atoms/index";
-import { SquareButton } from "@atoms/index";
+import { BottomNavButton } from "@/shared/components/atoms/buttons/bottom-nav-button";
 import { useNavigate } from "react-router-dom";
 
-interface TabNoBgProps {
+interface BottomNavBarProps {
   className?: string;
 }
-export const TabNoBackground: React.FC<TabNoBgProps> = ({ className }) => {
+
+export const BottomNavBar: React.FC<BottomNavBarProps> = ({ className }) => {
   const navigate = useNavigate();
 
   const goMain = () => {
@@ -25,9 +25,13 @@ export const TabNoBackground: React.FC<TabNoBgProps> = ({ className }) => {
       className={`z-10 flex flex-col items-center justify-end h-[170px] ${className}`}
     >
       <div className="flex flex-row items-end w-full justify-evenly">
-        <SquareButton icon="home" onClick={goMain} />
-        <CircleButton onClick={goCollect} />
-        <SquareButton icon="inventory" onClick={goInventory} />
+        <BottomNavButton shape="square" icon="home" onClick={goMain} />
+        <BottomNavButton shape="circle" icon="camera" onClick={goCollect} />
+        <BottomNavButton
+          shape="square"
+          icon="inventory"
+          onClick={goInventory}
+        />
       </div>
       <div className="flex flex-row items-center w-full gap-4 mt-2 mb-2 text-catch-sub-300 justify-evenly">
         <h2>홈&nbsp;&nbsp;&nbsp;</h2>

@@ -1,8 +1,10 @@
 import Leave from "@/assets/icons/sleave-icon.svg?react";
 
-type TabBackgroundProps = { className: string };
+type NavBarBackgroundProps = { className: string };
 
-export const TabBackground: React.FC<TabBackgroundProps> = ({ className }) => {
+export const NavBarBackground: React.FC<NavBarBackgroundProps> = ({
+  className,
+}) => {
   return (
     <div
       className={`h-[150px] w-full bg-catch-sub-100 rounded-t-[60%] -z-10 ${className}`}
