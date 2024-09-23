@@ -1,10 +1,10 @@
-interface ResultTextProps {
+interface TitleTextProps {
   children?: React.ReactNode;
   color: string;
   className?: string;
 }
 
-export const ResultText: React.FC<ResultTextProps> = ({
+export const TitleText: React.FC<TitleTextProps> = ({
   children,
   color,
   className,
