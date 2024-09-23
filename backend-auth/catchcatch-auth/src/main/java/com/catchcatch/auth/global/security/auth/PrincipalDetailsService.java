@@ -1,7 +1,7 @@
 package com.catchcatch.auth.global.security.auth;
 
 import com.catchcatch.auth.domains.member.application.port.out.LoadMemberPort;
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +18,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        SignUpMember member = loadMemberPort.loadByEmailAndIsDeleted(email, false);
+        Member member = loadMemberPort.loadByEmailAndIsDeleted(email, false);
         return new PrincipalDetails(member);
     }
 }

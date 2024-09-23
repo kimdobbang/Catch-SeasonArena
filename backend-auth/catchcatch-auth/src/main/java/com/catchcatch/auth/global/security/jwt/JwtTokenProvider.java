@@ -1,6 +1,6 @@
 package com.catchcatch.auth.global.security.jwt;
 
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.global.config.JwtValueConfig;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
@@ -27,7 +27,7 @@ public class JwtTokenProvider {
 
     private final PrincipalDetailsService principalDetailsService;
 
-    public String generateAccessToken(SignUpMember member) {
+    public String generateAccessToken(Member member) {
         Date date = new Date();
         Date expireDate = new Date(date.getTime() + config.getAccessExpirationTime());
 
@@ -39,7 +39,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(SignUpMember member) {
+    public String generateRefreshToken(Member member) {
         Date date = new Date();
         Date expireDate = new Date(date.getTime() + config.getRefreshExpirationTime());
 

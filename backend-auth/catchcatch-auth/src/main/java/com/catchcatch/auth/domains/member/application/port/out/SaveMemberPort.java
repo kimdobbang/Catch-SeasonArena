@@ -1,8 +1,8 @@
 package com.catchcatch.auth.domains.member.application.port.out;
 
-import com.catchcatch.auth.domains.member.domain.SignUpMember;
+import com.catchcatch.auth.domains.member.domain.Member;
 
 public interface SaveMemberPort {
 
-    void save(SignUpMember member);
+    void save(Member member);
 }

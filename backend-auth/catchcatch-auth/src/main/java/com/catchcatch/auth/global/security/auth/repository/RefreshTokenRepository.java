@@ -17,22 +17,17 @@ public class RefreshTokenRepository {
     @Value("${jwt.refresh.token.expire}")
     private long refreshTokenExpire;
 
-    public void saveByUserId(String email, String refreshToken) {
+    public void saveByEmail(String email, String refreshToken) {
         ValueOperations<Object, Object> valueOperations = redisTemplate.opsForValue();
         valueOperations.set("auth: "+email, refreshToken, Duration.ofHours(refreshTokenExpire));
     }
 
-    public String findByUserId(String email) {
-        ValueOperations<Object, Object> valueOperations = redisTemplate.opsForValue();
-        return String.valueOf(valueOperations.get("auth: "+email));
-    }
-
-    public boolean existsByUserId(String email) {
+    public boolean existsByEmail(String email) {
         ValueOperations<Object, Object> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get("auth: "+email) != null;
     }
 
-    public void deleteByUserId(String email) {
+    public void deleteByEmail(String email) {
         redisTemplate.delete("auth: "+email);
     }
 }

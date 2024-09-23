@@ -2,29 +2,34 @@ package com.catchcatch.auth.domains.member.domain;
 
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpRequestDto;
 import com.catchcatch.auth.domains.member.adapter.out.persistence.MemberEntity;
-import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.security.core.parameters.P;
 
 @Getter
-public class SignUpMember {
+public class Member {
 
+    private Long memberId;
     private String email;
     private String password;
     private Role role;
     private String nickname;
+    private Integer rating;
+    private String avatar;
+    private Boolean isDeleted;
 
     @Builder
-    private SignUpMember(String email, String password, Role role, String nickname) {
+    private Member(String email, String password, Role role, String nickname) {
         this.email = email;
         this.password = password;
         this.role = role;
         this.nickname = nickname;
+        this.rating = 0;
+        this.avatar = "기본 아바타";
+        this.isDeleted = false;
     }
 
-    public static SignUpMember createMemberMapper(MemberEntity memberEntity) {
-        return SignUpMember.builder()
+    public static Member createMemberToEntity(MemberEntity memberEntity) {
+        return Member.builder()
                 .email(memberEntity.getEmail())
                 .password(memberEntity.getPassword())
                 .role(memberEntity.getRole())
@@ -32,8 +37,8 @@ public class SignUpMember {
                 .build();
     }
 
-    public static SignUpMember createSignUpMember(SignUpRequestDto signUpRequestDto) {
-        return SignUpMember.builder()
+    public static Member createSignUpMember(SignUpRequestDto signUpRequestDto) {
+        return Member.builder()
                 .email(signUpRequestDto.email())
                 .password(signUpRequestDto.password())
                 .role(Role.ROLE_USER)
