@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
@@ -40,10 +41,15 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         log.info("refresh token : {}", refreshToken);
         log.info("access token : {}", accessToken);
 
+        String redirectUrl = UriComponentsBuilder.
+                fromUriString("https://j11b106.p.ssafy.io/")
+                .build()
+                .toString();
+
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(createCookie("refreshToken", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
-        response.sendRedirect("https://j11b106.p.ssafy.io/");
+        response.sendRedirect(redirectUrl);
     }
 
     private Cookie createCookie(String key, String value){
