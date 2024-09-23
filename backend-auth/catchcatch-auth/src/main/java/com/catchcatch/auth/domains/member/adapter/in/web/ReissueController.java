@@ -1,0 +1,41 @@
+package com.catchcatch.auth.domains.member.adapter.in.web;
+
+import com.catchcatch.auth.domains.member.adapter.in.web.message.SuccessReissueMessage;
+import com.catchcatch.auth.domains.member.application.port.in.ReissueUseCase;
+import com.catchcatch.auth.global.util.HttpResponseUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@Slf4j
+public class ReissueController {
+
+    private final ReissueUseCase reissueUseCase;
+    private final HttpResponseUtil responseUtil;
+
+    @GetMapping("/reissue")
+    public ResponseEntity<?> reissue(
+            @CookieValue(value = "refreshToken", required = false) Cookie coookie,
+            HttpServletResponse response
+    ) {
+        String accessToken = reissueUseCase.reissue(coookie);
+        log.info("BACK-AUTH:REISSUE new accessToken: {}", accessToken);
+
+        response.setHeader("Authorization", "Bearer " + accessToken);
+
+        ResponseEntity<?> responseReissue = responseUtil.createResponse(
+                SuccessReissueMessage.SUCCESS_REISSUE.getMessage(),
+                SuccessReissueMessage.SUCCESS_REISSUE,
+                200);
+
+        log.info("BACK-AUTH:REISSUE response: {}", responseReissue);
+
+        return responseReissue;
+    }
+}
