@@ -2,6 +2,7 @@ package com.catchcatchrank.global.kafka.consumer;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
 import com.catchcatchrank.domains.rank.application.port.in.SaveRankService;
@@ -16,9 +17,10 @@ public class KafkaConsumer {
 
 	private final SaveRankService saveRankService;
 
-	@KafkaListener(topics = "rank")
+	@KafkaListener(topics = "init_rank")
+	@Transactional
 	public void listen(KafkaRankEntity rank) {
-		log.info("rank-server rank 발행 : {}" , rank.toString());
+		log.info("rank-server rank 커슘 : {}" , rank.toString());
 		saveRankService.saveRank(rank);
 	}
 }
