@@ -17,3 +17,16 @@ export { InputField } from "./input/input-field";
 
 // UI 꾸미기 요소들
 export { Leave } from "./symbols/leave"; // 작은 나뭇잎
+
+// tag
+export { ItemTypeTag } from "./symbols/tag/item-type-tag";
+export { NewItemTag } from "./symbols/tag/new-item-tag";
+export { CircleTag } from "./symbols/tag/circle-tag";
+
+// text
+export { TitleText } from "@atoms/texts/title-text";
+export { Body1Text } from "@atoms/texts/body1-text";
+export { Body2Text } from "@atoms/texts/body2-text";
+export { Caption1Text } from "@atoms/texts/caption1-text";
+export { Caption2Text } from "@atoms/texts/caption2-text";
+export { Sub2Text } from "@atoms/texts/sub2-text";
