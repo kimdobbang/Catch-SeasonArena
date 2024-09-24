@@ -59,7 +59,7 @@ public class ChangeNicknameControllerTest {
         BDDMockito.given(changeNicknameUseCase.changeNickname(requestDto))
                 .willReturn(responseDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/auth/members/nickname")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/main/members/nickname")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
