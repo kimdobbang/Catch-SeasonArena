@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
 import com.catchcatchrank.domains.rank.adapter.out.redis.RankRepositoryAdapter;
-import com.catchcatchrank.domains.rank.adapter.out.redis.RedisRankEntity;
 import com.catchcatchrank.domains.rank.application.port.in.SaveRankService;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
