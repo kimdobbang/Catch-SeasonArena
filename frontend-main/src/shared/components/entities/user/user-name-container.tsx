@@ -2,12 +2,12 @@ import TierSilver from "@/assets/icons/tier-silver.svg?react";
 import Pencil from "@/assets/icons/pencil.svg?react";
 import { Body2Text } from "../../atoms";
 
-interface UserNameBoxProps {
+interface UserNameContainerProps {
   nickname: string;
   rating: number;
   className?: string;
 }
-export const UserNameBox: React.FC<UserNameBoxProps> = ({
+export const UserNameContainer: React.FC<UserNameContainerProps> = ({
   nickname = "닉네임",
   rating = 800,
   className,
