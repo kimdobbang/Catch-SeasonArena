@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
+import com.catchcatchrank.domains.rank.adapter.out.redis.RankRepositoryAdapter;
+import com.catchcatchrank.domains.rank.adapter.out.redis.RedisRankEntity;
 import com.catchcatchrank.domains.rank.application.port.in.SaveRankService;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
@@ -16,9 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SaveRankServiceImpl implements SaveRankService {
 
+	private final RankRepositoryAdapter rankRepositoryAdapter;
+
+	@Transactional
 	@Override
 	public void saveRank(KafkaRankEntity kafkaRankEntity) {
 		Rank rank = KafkaRankEntity.rankEntityToRank(kafkaRankEntity);
-
+		rankRepositoryAdapter.saveUserScore(rank);
 	}
 }
