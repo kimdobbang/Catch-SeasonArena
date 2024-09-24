@@ -15,7 +15,7 @@
     <div id="modal">
       <h2>Enter Room Code and Player Name</h2>
       <input type="text" id="roomCode" placeholder="Enter Room Code" />
-      <input type="text" id="playerName" placeholder="Enter Player Name" />
+      <input type="text" id="nickname" placeholder="Enter Player Name" />
       <input type="text" id="profileImage" placeholder="Enter Profile Image" />
       <button id="joinRoomButton">Join Room</button>
     </div>
@@ -26,13 +26,13 @@
         .getElementById("joinRoomButton")
         .addEventListener("click", () => {
           const roomCode = document.getElementById("roomCode").value;
-          const playerName = document.getElementById("playerName").value;
+          const nickname = document.getElementById("nickname").value;
           const profileImage = document.getElementById("profileImage").value;
 
           console.log(`Room code entered: ${roomCode}`);
-          console.log(`Player name entered: ${playerName}`);
+          console.log(`Player name entered: ${nickname}`);
 
-          joinRoom(roomCode, playerName, profileImage); // 입력받은 roomCode를 전달
+          joinRoom(roomCode, nickname, profileImage); // 입력받은 roomCode를 전달
 
           // 모달과 오버레이를 숨기고 게임 화면 표시
           document.getElementById("modal").style.display = "none";
