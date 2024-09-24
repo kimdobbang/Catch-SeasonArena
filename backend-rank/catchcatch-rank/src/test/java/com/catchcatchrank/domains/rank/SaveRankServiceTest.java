@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
 import com.catchcatchrank.domains.rank.adapter.out.redis.RankRepositoryAdapter;
+import com.catchcatchrank.domains.rank.application.port.out.SaveRankPort;
 import com.catchcatchrank.domains.rank.application.service.SaveRankServiceImpl;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
@@ -23,7 +24,7 @@ public class SaveRankServiceTest {
 	private SaveRankServiceImpl saveRankService;
 
 	@Mock
-	private RankRepositoryAdapter rankRepositoryAdapter;
+	private SaveRankPort saveRankPort;
 
 	private KafkaRankEntity kafkaRankEntity;
 	private Rank rank;
@@ -39,7 +40,7 @@ public class SaveRankServiceTest {
 	@DisplayName("랭크 저장 테스트")
 	public void saveRankTest() {
 		// given when
-		BDDMockito.doNothing().when(rankRepositoryAdapter).saveUserScore(Mockito.any(Rank.class));
+		BDDMockito.doNothing().when(saveRankPort).saveUserScore(Mockito.any(Rank.class));
 
 
 		//then
