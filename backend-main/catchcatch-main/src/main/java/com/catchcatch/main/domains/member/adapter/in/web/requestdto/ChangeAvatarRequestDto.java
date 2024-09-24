@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ChangeAvatarRequestDto(
         @NotBlank String avatar,
-        @NotNull Long memberId;
+        @NotNull Long memberId
 ) {
 }
