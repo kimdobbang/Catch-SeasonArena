@@ -181,8 +181,8 @@ setInterval(() => {
           player.x += player.velocityX;
           player.y += player.velocityY;
         }
-        player.x = Math.max(0, Math.min(MAP_WIDTH, player.x));
-        player.y = Math.max(0, Math.min(MAP_HEIGHT, player.y));
+        player.x = Math.max(80, Math.min(MAP_WIDTH - 80, player.x));
+        player.y = Math.max(80, Math.min(MAP_HEIGHT - 80, player.y));
       });
 
       const players = Object.fromEntries(playersMap);

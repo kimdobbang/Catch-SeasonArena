@@ -28,7 +28,7 @@ const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: false,
+      debug: true,
     },
   },
   scale: {
@@ -244,9 +244,9 @@ function createPlayer(scene, players) {
       .image(player.x, player.y, player.profileImage)
       .setScale(0.3);
     clientPlayers[player.socketId].player.setCollideWorldBounds(true);
-    clientPlayers[player.socketId].player.setCircle(
-      clientPlayers[player.socketId].player.width * 0.3
-    );
+    const radius = 120; // 원의 반지름
+    clientPlayers[player.socketId].player.setCircle(radius);
+    clientPlayers[player.socketId].player.setOffset(radius + 30, radius + 30);
     clientPlayers[player.socketId].player.body.pushable = false;
     playerGroup.add(clientPlayers[player.socketId].player);
 
