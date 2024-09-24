@@ -7,6 +7,7 @@ export { Copyright } from "./copyright";
 // export  { Pagination } from "./Pagination";
 
 // layout
+export { ServiceTitle } from "@ui/layout/service-title";
 export { Header } from "./layout/header";
 export { BottomNavBar } from "./layout/bottom-nav-bar";
 export { NavBarBackground } from "./layout/nav-bar-background";

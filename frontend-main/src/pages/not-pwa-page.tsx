@@ -1,18 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import { Copyright } from "@ui/index";
-import { Sleaves } from "@atoms/index";
+import { Leave } from "@atoms/index";
 import ServiceTitle from "@/assets/symbols/service-title.svg?react";
 
 export const NotPwaPage = () => {
+  const navigate = useNavigate();
+  const goToLogin = () => {
+    navigate("/login");
+  };
+
   const goToGame = () => {
     window.location.href = "/game";
   };
-  const goToLogin = () => {
-    window.location.href = "/login";
-  };
+
   return (
     <div className="flex flex-col items-center justify-around h-screen bg-catch-sub-100">
       <div className="flex flex-col items-center">
-        <Sleaves color="text-catch-sub-400" />
+        <Leave color="text-catch-sub-400" />
         <ServiceTitle />
       </div>
       <div className="text-center font-pretendard text-title">

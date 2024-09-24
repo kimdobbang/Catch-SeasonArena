@@ -1,17 +1,23 @@
 import config from "@/config";
 import React, { useState } from "react";
-import ServiceTitle from "@/assets/symbols/service-title.svg?react";
+import { useNavigate } from "react-router-dom";
+import { ServiceTitle, Copyright } from "@ui/index";
 import {
   InputField,
   IconTextButton,
   DefaultLoginButton,
   KakaoLoginButton,
   GoogleLoginButton,
-  Sleaves,
+  Leave,
 } from "@atoms/index";
-import { Copyright } from "@ui/index";
 
 export const Login: React.FC = () => {
+  const navigate = useNavigate();
+
+  const goSignUp = () => {
+    navigate("/signup");
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -42,18 +48,10 @@ export const Login: React.FC = () => {
     }
   };
 
-  const goSignUp = () => {
-    console.log("회원가입으로 가기");
-    window.location.href = "/signup"; // 회원가입 페이지로 이동
-  };
-
   return (
     <div className="flex flex-col justify-around h-screen bg-catch-sub-100">
       {/* 상단 로고 및 서비스 타이틀 */}
-      <div className="flex flex-col items-center">
-        <Sleaves color="text-catch-sub-400" />
-        <ServiceTitle />
-      </div>
+      <ServiceTitle />
 
       {/* 이메일 및 비밀번호 입력 필드 */}
       <div className="flex flex-col w-full max-w-xs mx-auto space-y-4">
@@ -74,7 +72,7 @@ export const Login: React.FC = () => {
         <div className="flex justify-end w-full">
           <IconTextButton
             label="회원가입"
-            Icon={<Sleaves width="1rem" />}
+            Icon={<Leave width="1rem" />}
             onClick={goSignUp}
           />
         </div>

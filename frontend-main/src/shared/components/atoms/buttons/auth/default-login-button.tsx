@@ -1,4 +1,4 @@
-import { Sleaves } from "@atoms/index";
+import { Leave } from "@atoms/index";
 import { LoginButton } from "./logo-button";
 
 export const DefaultLoginButton: React.FC<{ onClick?: () => void }> = ({
@@ -7,7 +7,7 @@ export const DefaultLoginButton: React.FC<{ onClick?: () => void }> = ({
   return (
     <LoginButton
       onClick={onClick}
-      logo={<Sleaves color="text-catch-sub-200" />} // Tailwind CSS 색상 클래스 적용
+      logo={<Leave color="text-catch-sub-200" />}
       bgColor="bg-catch-sub-400"
       text="로그인"
       textColor="text-white"

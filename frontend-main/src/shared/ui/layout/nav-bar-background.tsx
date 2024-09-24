@@ -1,4 +1,4 @@
-import Leave from "@/assets/icons/sleave-icon.svg?react";
+import { Leave } from "@atoms/index";
 
 type NavBarBackgroundProps = { className: string };
 
