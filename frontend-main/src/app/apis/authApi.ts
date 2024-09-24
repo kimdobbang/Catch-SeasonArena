@@ -1,2 +1,2 @@
 // src/app/api/authApi.ts
-import config from "@/config";
+// import config from "@/config";
