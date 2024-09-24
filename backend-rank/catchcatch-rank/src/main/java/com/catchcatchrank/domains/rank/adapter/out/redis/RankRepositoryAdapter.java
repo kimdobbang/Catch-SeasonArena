@@ -1,5 +1,7 @@
 package com.catchcatchrank.domains.rank.adapter.out.redis;
 
+import java.util.Set;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,25 +16,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RankRepositoryAdapter implements SaveRankPort {
 
-	private final RedisTemplate<String, Object> redisTemplateBronze;
-	private final RedisTemplate<String, Object> redisTemplateSilver;
-	private final RedisTemplate<String, Object> redisTemplateGold;
+	private final RedisTemplate<String, Object> redisTemplate;
 
-	private RedisTemplate<String, Object> getShard(double score) {
+	private String getShard(double score) {
 		if (score <= 100) {
-			return redisTemplateBronze;
+			return "ranking_bronze";
 		}
 		if (score <= 200) {
-			return redisTemplateSilver;
+			return "ranking_sliver";
 		}
 
-		return redisTemplateGold;
+		return "ranking_gold";
 	}
 
 	@Override
 	public void saveUserScore(Rank rank) {
 		RedisRankEntity rankEntity = Rank.rankToRedisRankEntity(rank);
-		RedisTemplate<String, Object> shard = getShard(rankEntity.getRank());
-		shard.opsForZSet().add("ranking", rankEntity.getNickName(), rankEntity.getRank());
+		String shard = getShard(rankEntity.getRank());
+		redisTemplate.opsForZSet().add(shard, rankEntity.getNickName(), rankEntity.getRank());
+	}
+
+	public Set<Object> getTop10FromShard(Integer rank) {
+		String shard = getShard(rank);
+		return redisTemplate.opsForZSet().reverseRange(shard, 0, 9);
 	}
 }
