@@ -2,9 +2,12 @@ package com.catchcatchrank.domains.rank.adapter.out.kafka;
 
 import com.catchcatchrank.domains.rank.domain.Rank;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class KafkaRankEntity {
 
 	private String nickName;
