@@ -18,22 +18,27 @@ public class Member {
     private Boolean isDeleted;
 
     @Builder
-    private Member(String email, String password, Role role, String nickname) {
+    private Member(Long memberId, String email, String password, Role role, String nickname, Integer rating, String avatar, Boolean isDeleted) {
+        this.memberId = memberId;
         this.email = email;
         this.password = password;
         this.role = role;
         this.nickname = nickname;
-        this.rating = 0;
-        this.avatar = "기본 아바타";
-        this.isDeleted = false;
+        this.rating = rating;
+        this.avatar = avatar;
+        this.isDeleted = isDeleted;
     }
 
     public static Member createMemberToEntity(MemberEntity memberEntity) {
         return Member.builder()
+                .memberId(memberEntity.getMemberId())
                 .email(memberEntity.getEmail())
                 .password(memberEntity.getPassword())
                 .role(memberEntity.getRole())
                 .nickname(memberEntity.getNickname())
+                .rating(memberEntity.getRating())
+                .avatar(memberEntity.getAvatar())
+                .isDeleted(memberEntity.getIsDeleted())
                 .build();
     }
 
@@ -43,6 +48,10 @@ public class Member {
                 .password(signUpRequestDto.password())
                 .role(Role.ROLE_USER)
                 .nickname(signUpRequestDto.email().split("@")[0])
+                .rating(0)
+                //TODO: 아바타 이름이 지어지면 수정
+                .avatar("기본 아바타")
+                .isDeleted(false)
                 .build();
     }
 

@@ -1,7 +1,5 @@
 package com.catchcatch.auth.global.security.jwt;
 
-import com.catchcatch.auth.global.exception.CustomException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +20,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = getAccessToken(request);
-        if(accessToken != null && jwtTokenProvider.validateToken(accessToken)){
+        if(accessToken != null && jwtTokenProvider.doValidateToken(accessToken)){
             Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

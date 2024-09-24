@@ -67,6 +67,18 @@ public class JwtTokenProvider {
         }
     }
 
+    public boolean doValidateToken(String token) {
+        try{
+            Jwts.parser()
+                    .verifyWith(config.getSecretKey())
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     public String getEmail(String token) {
         return Jwts.parser()
                 .verifyWith(config.getSecretKey())
@@ -80,6 +92,6 @@ public class JwtTokenProvider {
         String memberEmail = getEmail(token);
         PrincipalDetails principalDetails = (PrincipalDetails) principalDetailsService.loadUserByUsername(memberEmail);
 
-        return new UsernamePasswordAuthenticationToken(memberEmail, null, principalDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
     }
 }
