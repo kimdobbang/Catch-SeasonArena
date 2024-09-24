@@ -10,8 +10,8 @@ function startGame() {
 }
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
-// const socket = io("http://192.168.31.171:3000");
+// const socket = io("https://j11b106.p.ssafy.io");
+const socket = io("http://192.168.31.171:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -60,6 +60,7 @@ let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, 
 let MAGNETIC = {};
 let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
+let MAGNETIC_COUNT = 0;
 
 function preload() {
   this.load.image("player1", "./assets/player1.png");
@@ -203,6 +204,7 @@ function create() {
 
   // <<100fps로 상태 업데이트 받기>>
   socket.on("stateUpdate", ({ players, radius }) => {
+    MAGNETIC_COUNT++;
     Object.keys(players).forEach((key) => {
       if (clientPlayers[key]) {
         // 플레이어 위치 업데이트
@@ -238,9 +240,11 @@ function create() {
     });
 
     // 자기장 업데이트
-    MAGNETIC_FIELD.clear(); // 이전 그래픽 지우기
-    MAGNETIC_FIELD.fillStyle(0xf5deb3);
-    MAGNETIC_FIELD.fillCircle(MAGNETIC.x, MAGNETIC.y, radius);
+    if (MAGNETIC_COUNT % 3 === 0) {
+      MAGNETIC_FIELD.clear(); // 이전 그래픽 지우기
+      MAGNETIC_FIELD.fillStyle(0xf5deb3);
+      MAGNETIC_FIELD.fillCircle(MAGNETIC.x, MAGNETIC.y, radius);
+    }
   });
 }
 
@@ -353,7 +357,7 @@ function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
   const endAngle = initialAngle + Math.PI; // 공격 끝 각도
 
   let currentAngle = startAngle;
-  const angleStep = (endAngle - startAngle) / (duration / 10); // 10ms마다 각도 변경
+  const angleStep = (endAngle - startAngle) / (duration / 16); // 16ms마다 각도 변경
 
   function animate() {
     // 무기와 플레이어의 회전과 위치 업데이트
@@ -362,7 +366,7 @@ function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
     // 계속해서 애니메이션 실행
     if (currentAngle < endAngle) {
       currentAngle += angleStep; // 각도를 점진적으로 증가
-      setTimeout(animate, 10); // 10ms 후에 다시 실행
+      setTimeout(animate, 16); // 16ms 후에 다시 실행
     } else {
       // 애니메이션이 끝나면 무기를 원래 상태로 초기화
       updateWeapon(weapon, player, initialAngle, true);

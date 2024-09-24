@@ -190,6 +190,11 @@ setInterval(() => {
         }
         player.x = Math.max(80, Math.min(MAP_LENGTH - 80, player.x));
         player.y = Math.max(80, Math.min(MAP_LENGTH - 80, player.y));
+
+        if (player.hp <= 0) {
+          getAllPlayers(roomCode).delete(player.socketId);
+          io.in(roomCode).emit("playerDeath", player.socketId);
+        }
       });
 
       const players = Object.fromEntries(playersMap);
@@ -198,7 +203,31 @@ setInterval(() => {
       io.in(roomCode).emit("stateUpdate", { players: players, radius: radius });
     }
   });
-}, 10);
+}, 16);
+
+setInterval(() => {
+  rooms.forEach((room, roomCode) => {
+    if (room.isStarted) {
+      const playersMap = room.players;
+
+      playersMap.forEach((player, socketId) => {
+        // 플레이어 이동 반영
+        if (isPlayerInMagnetic(room, player)) {
+          const gameTime = Date.now() - room.startTime;
+          let damage = 0;
+          if (gameTime < 60000) {
+            damage = 2;
+          } else if (gameTime < 120000) {
+            damage = 5;
+          } else {
+            damage = 10;
+          }
+          player.hp -= damage;
+        }
+      });
+    }
+  });
+}, 1000);
 
 server.listen(3000, () => {
   console.log("Server running on http://localhost:3000/game");
@@ -276,11 +305,6 @@ function applyKnockback(attacker, target, dx, dy) {
 function applyDamage(attacker, target, roomCode) {
   const damage = 20 * attacker.attackPower;
   target.hp -= damage;
-
-  if (target.hp <= 0) {
-    getAllPlayers(roomCode).delete(target.socketId);
-    io.in(roomCode).emit("playerDeath", target.socketId);
-  }
 }
 
 // 자기장 중앙좌표 반환
@@ -299,7 +323,7 @@ function getMagneticRadius(room) {
 
   const magneticLength = getMagneticLength(room);
 
-  return (1 - diff / (gameTime * 1000)) * magneticLength;
+  return Math.max(0, (1 - diff / (gameTime * 1000)) * magneticLength);
 }
 
 function getMagneticLength(room) {
@@ -310,4 +334,14 @@ function getMagneticLength(room) {
     ) +
     MAP_LENGTH / Math.sqrt(2)
   );
+}
+
+function isPlayerInMagnetic(room, player) {
+  const dist = Math.sqrt(
+    (room.magnetic.x - player.x) * (room.magnetic.x - player.x) +
+      (room.magnetic.y - player.y) * (room.magnetic.y - player.y)
+  );
+  const magneticRadius = getMagneticRadius(room);
+
+  return dist > magneticRadius;
 }
