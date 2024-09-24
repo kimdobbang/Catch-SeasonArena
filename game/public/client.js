@@ -14,8 +14,9 @@ const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://192.168.31.171:3000");
 
 // 게임 시작
-socket.on("gameStart", () => {
+socket.on("gameStart", (magnetic) => {
   console.log("게임시작");
+  MAGNETIC = magnetic;
   startGame();
 });
 
@@ -28,7 +29,7 @@ const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: false,
+      debug: true,
     },
   },
   scale: {
@@ -56,6 +57,10 @@ let ROOMCODE;
 let gameStarted = false;
 let playerGroup;
 let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking}
+let MAGNETIC = {};
+let MAGNETIC_FIELD;
+let MAP_LENGTH = 5000;
+let MAGNETIC_COUNT = 0;
 
 function preload() {
   this.load.image("player1", "./assets/player1.png");
@@ -71,11 +76,23 @@ function create() {
 
   socket.emit("getPlayersInfo", ROOMCODE);
 
-  const MAP_WIDTH = 1000;
-  const MAP_HEIGHT = 1000;
+  // 배경 설정
+  this.add.rectangle(
+    MAP_LENGTH / 2,
+    MAP_LENGTH / 2,
+    MAP_LENGTH,
+    MAP_LENGTH,
+    0xff0000
+  );
 
-  scene.physics.world.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT); // 월드 경계 설정
-  scene.cameras.main.setBounds(0, 0, MAP_WIDTH, MAP_HEIGHT); // 카메라 경계 설정
+  // 자기장 객체 생성
+  MAGNETIC_FIELD = this.add.graphics();
+
+  // 그리드 그리기
+  createGrid(this, 50, MAP_LENGTH);
+
+  scene.physics.world.setBounds(0, 0, MAP_LENGTH, MAP_LENGTH); // 월드 경계 설정
+  scene.cameras.main.setBounds(0, 0, MAP_LENGTH, MAP_LENGTH); // 카메라 경계 설정
 
   // 플레이어끼리 충돌 설정
   this.physics.add.collider(playerGroup, playerGroup, (player1, player2) => {
@@ -186,7 +203,8 @@ function create() {
   });
 
   // <<100fps로 상태 업데이트 받기>>
-  socket.on("stateUpdate", (players) => {
+  socket.on("stateUpdate", ({ players, radius }) => {
+    MAGNETIC_COUNT++;
     Object.keys(players).forEach((key) => {
       if (clientPlayers[key]) {
         // 플레이어 위치 업데이트
@@ -220,12 +238,39 @@ function create() {
         );
       }
     });
+
+    // 자기장 업데이트
+    if (MAGNETIC_COUNT % 3 === 0) {
+      MAGNETIC_FIELD.clear(); // 이전 그래픽 지우기
+      MAGNETIC_FIELD.fillStyle(0xf5deb3);
+      MAGNETIC_FIELD.fillCircle(MAGNETIC.x, MAGNETIC.y, radius);
+    }
   });
 }
 
 function update() {}
 
 // ============================================================================ //
+
+// <<맵 그리드 그리기>>
+function createGrid(scene, cellSize, MAP_LENGTH) {
+  const graphics = scene.add.graphics();
+  graphics.lineStyle(1, 0xaaaaaa, 0.5); // 그리드 선의 스타일 설정 (회색, 투명도 0.5)
+
+  // 수평선 그리기
+  for (let y = 0; y <= MAP_LENGTH; y += cellSize) {
+    graphics.moveTo(0, y);
+    graphics.lineTo(MAP_LENGTH, y);
+  }
+
+  // 수직선 그리기
+  for (let x = 0; x <= MAP_LENGTH; x += cellSize) {
+    graphics.moveTo(x, 0);
+    graphics.lineTo(x, MAP_LENGTH);
+  }
+
+  graphics.strokePath(); // 그리드 라인을 실제로 그리기
+}
 
 // <<플레이어 생성 및 설정>>
 function createPlayer(scene, players) {
@@ -244,9 +289,9 @@ function createPlayer(scene, players) {
       .image(player.x, player.y, player.profileImage)
       .setScale(0.3);
     clientPlayers[player.socketId].player.setCollideWorldBounds(true);
-    clientPlayers[player.socketId].player.setCircle(
-      clientPlayers[player.socketId].player.width * 0.3
-    );
+    const radius = 120; // 원의 반지름
+    clientPlayers[player.socketId].player.setCircle(radius);
+    clientPlayers[player.socketId].player.setOffset(radius + 30, radius + 30);
     clientPlayers[player.socketId].player.body.pushable = false;
     playerGroup.add(clientPlayers[player.socketId].player);
 
@@ -312,7 +357,7 @@ function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
   const endAngle = initialAngle + Math.PI; // 공격 끝 각도
 
   let currentAngle = startAngle;
-  const angleStep = (endAngle - startAngle) / (duration / 10); // 10ms마다 각도 변경
+  const angleStep = (endAngle - startAngle) / (duration / 16); // 16ms마다 각도 변경
 
   function animate() {
     // 무기와 플레이어의 회전과 위치 업데이트
@@ -321,7 +366,7 @@ function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
     // 계속해서 애니메이션 실행
     if (currentAngle < endAngle) {
       currentAngle += angleStep; // 각도를 점진적으로 증가
-      setTimeout(animate, 10); // 10ms 후에 다시 실행
+      setTimeout(animate, 16); // 16ms 후에 다시 실행
     } else {
       // 애니메이션이 끝나면 무기를 원래 상태로 초기화
       updateWeapon(weapon, player, initialAngle, true);
@@ -332,3 +377,6 @@ function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
   // 애니메이션 시작
   animate();
 }
+
+// 자기장 업데이트
+function drawMagnetic(MAGNETIC, radius) {}

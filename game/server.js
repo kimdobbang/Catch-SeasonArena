@@ -29,12 +29,15 @@ const redisClient = createClient({
 redisClient.connect().catch(console.error);
 
 // 방을 관리할 자료구조 (Map)
-const rooms = new Map(); // rooms = <roomCode, room = {players: Map<socketId, player>, isStarted : false}>
+const rooms = new Map();
+/* rooms = <roomCode, room = {players: Map<socketId, player>,
+                              isStarted : false,
+                              magnetic : {x : ??, y : ??}, 
+                              startTime : 15723987892ms}> */
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
-const MAP_WIDTH = 1000;
-const MAP_HEIGHT = 1000;
+const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
 const KNOCKBACK_FORCE = 100;
 const KNOCKBACK_DURATION = 100; // 100ms
@@ -66,7 +69,9 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
       if (!rooms.get(roomCode).isStarted) {
-        io.in(roomCode).emit("gameStart");
+        rooms.get(roomCode).startTime = Date.now();
+        rooms.get(roomCode).magnetic = getMagneticPoint();
+        io.in(roomCode).emit("gameStart", rooms.get(roomCode).magnetic);
         console.log(`( 게임 시작 ) ${roomCode}번 방 게임 시작`);
         rooms.get(roomCode).isStarted = true;
       }
@@ -83,7 +88,9 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
     if (room.players.size == 2 && !room.isStarted) {
-      io.in(roomCode).emit("gameStart");
+      rooms.get(roomCode).startTime = Date.now();
+      rooms.get(roomCode).magnetic = getMagneticPoint();
+      io.in(roomCode).emit("gameStart", room.magnetic);
       room.isStarted = true;
     }
     console.log(
@@ -181,16 +188,46 @@ setInterval(() => {
           player.x += player.velocityX;
           player.y += player.velocityY;
         }
-        player.x = Math.max(0, Math.min(MAP_WIDTH, player.x));
-        player.y = Math.max(0, Math.min(MAP_HEIGHT, player.y));
+        player.x = Math.max(80, Math.min(MAP_LENGTH - 80, player.x));
+        player.y = Math.max(80, Math.min(MAP_LENGTH - 80, player.y));
+
+        if (player.hp <= 0) {
+          getAllPlayers(roomCode).delete(player.socketId);
+          io.in(roomCode).emit("playerDeath", player.socketId);
+        }
       });
 
       const players = Object.fromEntries(playersMap);
+      const radius = getMagneticRadius(room);
 
-      io.in(roomCode).emit("stateUpdate", players);
+      io.in(roomCode).emit("stateUpdate", { players: players, radius: radius });
     }
   });
-}, 10);
+}, 16);
+
+setInterval(() => {
+  rooms.forEach((room, roomCode) => {
+    if (room.isStarted) {
+      const playersMap = room.players;
+
+      playersMap.forEach((player, socketId) => {
+        // 플레이어 이동 반영
+        if (isPlayerInMagnetic(room, player)) {
+          const gameTime = Date.now() - room.startTime;
+          let damage = 0;
+          if (gameTime < 60000) {
+            damage = 2;
+          } else if (gameTime < 120000) {
+            damage = 5;
+          } else {
+            damage = 10;
+          }
+          player.hp -= damage;
+        }
+      });
+    }
+  });
+}, 1000);
 
 server.listen(3000, () => {
   console.log("Server running on http://localhost:3000/game");
@@ -268,9 +305,43 @@ function applyKnockback(attacker, target, dx, dy) {
 function applyDamage(attacker, target, roomCode) {
   const damage = 20 * attacker.attackPower;
   target.hp -= damage;
+}
 
-  if (target.hp <= 0) {
-    getAllPlayers(roomCode).delete(target.socketId);
-    io.in(roomCode).emit("playerDeath", target.socketId);
-  }
+// 자기장 중앙좌표 반환
+function getMagneticPoint() {
+  const OFFSET = 500;
+  return {
+    x: Math.floor(Math.random() * (MAP_LENGTH - 2 * OFFSET)) + OFFSET,
+    y: Math.floor(Math.random() * (MAP_LENGTH - 2 * OFFSET)) + OFFSET,
+  };
+}
+
+function getMagneticRadius(room) {
+  const now = Date.now();
+  const diff = now - room.startTime;
+  const gameTime = 180;
+
+  const magneticLength = getMagneticLength(room);
+
+  return Math.max(0, (1 - diff / (gameTime * 1000)) * magneticLength);
+}
+
+function getMagneticLength(room) {
+  return (
+    Math.sqrt(
+      (room.magnetic.x - MAP_LENGTH / 2) * (room.magnetic.x - MAP_LENGTH / 2) +
+        (room.magnetic.y - MAP_LENGTH / 2) * (room.magnetic.y - MAP_LENGTH / 2)
+    ) +
+    MAP_LENGTH / Math.sqrt(2)
+  );
+}
+
+function isPlayerInMagnetic(room, player) {
+  const dist = Math.sqrt(
+    (room.magnetic.x - player.x) * (room.magnetic.x - player.x) +
+      (room.magnetic.y - player.y) * (room.magnetic.y - player.y)
+  );
+  const magneticRadius = getMagneticRadius(room);
+
+  return dist > magneticRadius;
 }
