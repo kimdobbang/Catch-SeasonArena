@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 public class HttpResponseUtil {
 
-    public ResponseEntity<Map<String,Object>> createResponse(Object msg, Object code, Object status){
+    public ResponseEntity<Map<String,Object>> createSuccessResponse(Object msg, Object code, Object status){
         Map<String, Object> data = new HashMap<>();
         data.put("msg", msg);
         data.put("code", code);
@@ -20,6 +20,12 @@ public class HttpResponseUtil {
         response.put("data", data);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity<Map<String,Object>> createResponse(Object o){
+        Map<String, Object> data = new HashMap<>();
+        data.put("data", o);
+        return ResponseEntity.ok().body(data);
     }
 
     public ResponseEntity<Map<String, Object>> errorResponse(HttpStatus status, Object o){
