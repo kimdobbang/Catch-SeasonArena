@@ -24,7 +24,7 @@ export { NewItemTag } from "./symbols/tag/new-item-tag";
 export { CircleTag } from "./symbols/tag/circle-tag";
 
 // text
-export { ResultText } from "@atoms/texts/result-text";
+export { TitleText } from "@atoms/texts/title-text";
 export { Body1Text } from "@atoms/texts/body1-text";
 export { Body2Text } from "@atoms/texts/body2-text";
 export { Caption1Text } from "@atoms/texts/caption1-text";
