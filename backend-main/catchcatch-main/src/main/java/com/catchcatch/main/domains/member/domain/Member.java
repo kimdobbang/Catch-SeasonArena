@@ -44,4 +44,8 @@ public class Member {
     public void changeNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void changeAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 }
