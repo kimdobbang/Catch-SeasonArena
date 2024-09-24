@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import ServiceTitle from "@/assets/symbols/service-title.svg?react";
-import {
-  InputField,
-  SignupButton,
-  IconTextButton,
-  Sleaves,
-} from "@atoms/index";
-import { Copyright } from "@ui/index";
+import { InputField, SignupButton, IconTextButton, Leave } from "@atoms/index";
+import { ServiceTitle, Copyright } from "@ui/index";
 
 export const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -14,7 +8,7 @@ export const Signup: React.FC = () => {
   const [checkPassword, setCheckPassword] = useState<string>("");
 
   const checkEmail = () => {
-    console.log("이메일 중복확인");
+    console.log("이메일 중복확인 post요청으로 변경 예정");
   };
 
   const handleSignup = async () => {
@@ -28,11 +22,7 @@ export const Signup: React.FC = () => {
   return (
     <div className="flex flex-col justify-around h-screen bg-catch-sub-100">
       {/* 상단 로고 및 서비스 타이틀 */}
-      <div className="flex flex-col items-center">
-        <Sleaves color="text-catch-sub-400" />
-        <ServiceTitle />
-      </div>
-
+      <ServiceTitle />
       {/* 가입정보 입력 필드 */}
       <div className="flex flex-col w-full max-w-xs mx-auto space-y-6">
         <div className="flex items-center space-x-2">
@@ -65,7 +55,7 @@ export const Signup: React.FC = () => {
       <div className="flex justify-center mb-4">
         <SignupButton
           onClick={handleSignup}
-          logo={<Sleaves color="text-catch-sub-200" />}
+          logo={<Leave color="text-catch-sub-200" />}
           bgColor="bg-catch-sub-400"
           text="회원가입"
           textColor="text-white"

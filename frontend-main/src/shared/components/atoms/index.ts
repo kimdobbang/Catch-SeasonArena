@@ -16,7 +16,7 @@ export { BottomNavButton } from "@atoms/buttons/bottom-nav-button";
 export { InputField } from "./input/input-field";
 
 // UI 꾸미기 요소들
-export { Sleaves } from "./symbols/sleaves"; // 작은 나뭇잎
+export { Leave } from "./symbols/leave"; // 작은 나뭇잎
 
 // tag
 export { ItemTypeTag } from "./symbols/tag/item-type-tag";
