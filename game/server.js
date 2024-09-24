@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createClient } from "redis";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +21,13 @@ const io = new Server(server, {
 app.use(cors());
 app.use("/game", express.static(path.join(__dirname, "public")));
 
+// redis 설정
+const redisClient = createClient({
+  url: "redis://localhost:6379",
+});
+
+redisClient.connect().catch(console.error);
+
 // 방을 관리할 자료구조 (Map)
 const rooms = new Map(); // rooms = <roomCode, room = {players: Map<socketId, player>, isStarted : false}>
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
@@ -33,11 +41,11 @@ const KNOCKBACK_DURATION = 100; // 100ms
 
 // <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
-function joinPlayer(roomCode, socket, playerName, profileImage) {
+async function joinPlayer(roomCode, socket, nickname, profileImage) {
   // 플레이어 객체 생성
   const player = {
     socketId: socket.id,
-    nickname: playerName,
+    nickname: nickname,
     profileImage: profileImage,
     weaponImage: "weapon", // 나중에 바꿔야 됨
     x: 100,
@@ -52,6 +60,8 @@ function joinPlayer(roomCode, socket, playerName, profileImage) {
     reach: 1,
     canMove: true,
   };
+
+  // const playerData = await redisClient.get(nickname + " " + roomCode);
 
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
@@ -87,9 +97,9 @@ io.on("connection", (socket) => {
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
   // 게임방 참여
-  socket.on("joinRoom", ({ roomCode, playerName, profileImage }) => {
+  socket.on("joinRoom", ({ roomCode, nickname, profileImage }) => {
     socket.join(roomCode);
-    joinPlayer(roomCode, socket, playerName, profileImage);
+    joinPlayer(roomCode, socket, nickname, profileImage);
 
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
   });

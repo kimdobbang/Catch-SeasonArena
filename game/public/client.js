@@ -1,7 +1,7 @@
 // <<HTTP API 통신>>
-function joinRoom(roomCode, playerName, profileImage) {
+function joinRoom(roomCode, nickname, profileImage) {
   ROOMCODE = roomCode;
-  socket.emit("joinRoom", { roomCode, playerName, profileImage });
+  socket.emit("joinRoom", { roomCode, nickname, profileImage });
 }
 
 function startGame() {
