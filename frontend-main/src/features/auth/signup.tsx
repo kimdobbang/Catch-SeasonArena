@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+// import { UseDispatch, useSelector } from "react-redux";
 import { InputField, SignupButton, IconTextButton, Leave } from "@atoms/index";
 import { ServiceTitle, Copyright } from "@ui/index";
 
 export const Signup: React.FC = () => {
+  // const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [checkPassword, setCheckPassword] = useState<string>("");

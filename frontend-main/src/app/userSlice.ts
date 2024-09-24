@@ -3,8 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   nickName: "",
-  email: "",
-  userId: "",
+  userEmail: "",
   accessToken: "",
 };
 
@@ -15,17 +14,13 @@ export const userSlice = createSlice({
     // 모든 사용자 정보 저장
     setUser(state, action) {
       state.nickName = action.payload.name;
-      state.email = action.payload.email;
-      state.userId = action.payload.userId;
+      state.userEmail = action.payload.email;
     },
     setNickName(state, action) {
       state.nickName = action.payload;
     },
-    setEmail(state, action) {
-      state.email = action.payload;
-    },
-    setUserId(state, action) {
-      state.userId = action.payload;
+    setUserEmail(state, action) {
+      state.userEmail = action.payload;
     },
     setAccessToken(state, action) {
       state.accessToken = action.payload;
@@ -33,6 +28,10 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, setNickName, setEmail, setUserId, setAccessToken } =
+// acction
+//dispatch로 액션을 전달해 상태를 어떻게 변화시킬지를 결정함
+export const { setUser, setNickName, setUserEmail, setAccessToken } =
   userSlice.actions;
-export default userSlice;
+
+//reducer
+export default userSlice.reducer;
