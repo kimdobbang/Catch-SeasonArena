@@ -3,12 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // UserState 타입 export
 export interface UserState {
-  token: string | null;
+  accessToken: string | null;
   isAuthenticated: boolean;
 }
 
 const initialState: UserState = {
-  token: null,
+  accessToken: null,
   isAuthenticated: false,
 };
 
@@ -16,12 +16,12 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ token: string }>) => {
-      state.token = action.payload.token;
+    setUser: (state, action: PayloadAction<{ accessToken: string }>) => {
+      state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
     },
     logout: (state) => {
-      state.token = null;
+      state.accessToken = null;
       state.isAuthenticated = false;
     },
   },
