@@ -10,6 +10,10 @@ import { Collect } from "@/features/collect/collect";
 import { Inventory } from "@/features/inventory/inventory";
 import { RootPage } from "@/pages/root-page";
 
+// 로그인 사용자만
+
+// 비로그인 사용자
+
 export const AppRouter = () => {
   return createBrowserRouter([
     {

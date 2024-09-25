@@ -1,12 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { Copyright } from "@ui/index";
-import { Leave } from "@atoms/index";
-import ServiceTitle from "@/assets/symbols/service-title.svg?react";
-
+import { ServiceTitle } from "@ui/index";
 export const NotPwaPage = () => {
   const navigate = useNavigate();
   const goToLogin = () => {
     navigate("/login");
+  };
+
+  const goToRanking = () => {
+    navigate("/ranking");
+  };
+  const goToInventory = () => {
+    navigate("/inventory");
+  };
+  const goToAvartar = () => {
+    navigate("/avartar");
   };
 
   const goToGame = () => {
@@ -16,7 +24,6 @@ export const NotPwaPage = () => {
   return (
     <div className="flex flex-col items-center justify-around h-screen bg-catch-sub-100">
       <div className="flex flex-col items-center">
-        <Leave color="text-catch-sub-400" />
         <ServiceTitle />
       </div>
       <div className="text-center font-pretendard text-title">
@@ -26,13 +33,28 @@ export const NotPwaPage = () => {
         웹, 모바일 웹으로 접속하면 실행이 안대 설치하도록 알려주어야하는 페이지
       </div>
       <div>
-        <button onClick={goToGame} className="bg-catch-main-400">
-          버튼 클릭시 GAME으로 이동합니다
+        <button onClick={goToGame} className="bg-catch-tier-bronze">
+          GAME으로
         </button>
       </div>
       <div>
-        <button onClick={goToLogin} className="bg-catch-tier-dia">
-          버튼 클릭시 로그인으로 이동합니다
+        <button onClick={goToLogin} className="bg-catch-tier-silver">
+          로그인으로
+        </button>
+      </div>
+      <div>
+        <button onClick={goToInventory} className="bg-catch-tier-ruby">
+          인벤토리
+        </button>
+      </div>
+      <div>
+        <button onClick={goToRanking} className="bg-catch-tier-dia">
+          랭킹
+        </button>
+      </div>
+      <div>
+        <button onClick={goToAvartar} className="bg-catch-tier-bronze">
+          아바타
         </button>
       </div>
       {/* <PrimaryButton color="main" size="small">

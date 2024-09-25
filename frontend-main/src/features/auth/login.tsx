@@ -12,6 +12,7 @@ import {
 } from "@atoms/index";
 
 export const Login: React.FC = () => {
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const goSignUp = () => {
@@ -79,7 +80,7 @@ export const Login: React.FC = () => {
       </div>
       {/* 로그인 버튼들 */}
       <div className="flex flex-col items-center w-full max-w-xs mx-auto space-y-4">
-        <DefaultLoginButton onClick={handleLogin} />
+        <DefaultLoginButton onClick={() => handleLogin} />
         <KakaoLoginButton onClick={() => handleOAuthLogin("kakao")} />
         <GoogleLoginButton onClick={() => handleOAuthLogin("google")} />
       </div>
