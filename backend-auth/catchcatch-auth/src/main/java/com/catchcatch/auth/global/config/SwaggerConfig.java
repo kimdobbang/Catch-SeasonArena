@@ -25,6 +25,6 @@ public class SwaggerConfig {
                 .info(new Info().title("캐치캐치 : 시즌 아레나 API")
                         .description("캐치캐치 : 시즌 아레나 API 문서")
                         .version("1.0"))
-                .servers(Arrays.asList(new Server().url("https://j11b106.p.ssafy.io/"), new Server().url("http://localhost:8080/")));  // 서버 URL을 HTTPS로 설정 및 기본 경로 추가
+                .servers(Arrays.asList(new Server().url("https://j11b106.p.ssafy.io/api/auth"), new Server().url("http://localhost:8080/")));  // 서버 URL을 HTTPS로 설정 및 기본 경로 추가
     }
 }
