@@ -17,15 +17,16 @@ export const RootPage = () => {
           method: "GET",
           credentials: "include", // 쿠키를 포함한 요청
         });
+        console.log("response : " + response);
 
         const accessToken = response.headers.get("Authorization");
+        console.log("accessToken : " + accessToken);
         if (accessToken) {
           // 로그인 성공시
-          const token = accessToken;
-          localStorage.setItem("authToken", token);
-          console.log("OAuth 로그인 성공, 엑세스 토큰:", token);
+          localStorage.setItem("authToken", accessToken);
+          console.log("OAuth 로그인 성공, 엑세스 토큰:", accessToken);
           // 사용자 정보를 Redux에 저장
-          dispatch(setUser({ token }));
+          dispatch(setUser({ accessToken }));
           navigate("/main");
         } else {
           throw new Error("Authorization 헤더에 토큰이 없습니다.");
