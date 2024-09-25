@@ -28,7 +28,7 @@ export const RootPage = () => {
         navigate("/pwa");
       } else {
         // PWA로 접속 시 /login 으로 이동
-        navigate("/login");
+        navigate("/pwa");
       }
     }, 3000); // 3초 지연
 
