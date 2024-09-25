@@ -21,7 +21,7 @@ export const RootPage = () => {
         const accessToken = response.headers.get("Authorization");
         if (accessToken) {
           // 로그인 성공시
-          const token = accessToken.replace("Bearer ", "");
+          const token = accessToken;
           localStorage.setItem("authToken", token);
           console.log("OAuth 로그인 성공, 엑세스 토큰:", token);
           // 사용자 정보를 Redux에 저장
@@ -62,10 +62,10 @@ export const RootPage = () => {
         if (!isMobile) console.log("모바일이 아닙니다");
 
         // 데스크탑 접속 시 또는 PWA 아닐시, /pwa 로 이동
-        navigate("/pwa");
+        navigate("/login");
       } else {
         // PWA로 접속 시 /login 으로 이동
-        navigate("/pwa");
+        navigate("/login");
       }
     }, 1500); // 1.5초 지연
 
