@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Copyright } from "@ui/index";
-import { Leave } from "@atoms/index";
-import ServiceTitle from "@/assets/symbols/service-title.svg?react";
-
+import { ServiceTitle } from "@ui/index";
 export const NotPwaPage = () => {
   const navigate = useNavigate();
   const goToLogin = () => {
@@ -26,7 +24,6 @@ export const NotPwaPage = () => {
   return (
     <div className="flex flex-col items-center justify-around h-screen bg-catch-sub-100">
       <div className="flex flex-col items-center">
-        <Leave color="text-catch-sub-400" />
         <ServiceTitle />
       </div>
       <div className="text-center font-pretendard text-title">
