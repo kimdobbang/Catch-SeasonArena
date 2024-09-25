@@ -1,8 +1,8 @@
 /* 아이템 타입 표시하는 태그 (무기, 액티브, 패시브) */
-import { ItemTypes } from "@/app/types/common";
+import { ItemType } from "@/app/types/common";
 
 interface ItemTypeTagProps {
-  type?: ItemTypes; // 아이템타입
+  type?: ItemType; // 아이템타입
   className?: string;
   color?: "orange" | "gray"; // 색깔
 }
