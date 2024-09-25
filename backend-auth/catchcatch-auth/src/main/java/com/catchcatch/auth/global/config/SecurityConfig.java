@@ -7,8 +7,7 @@ import com.catchcatch.auth.global.security.jwt.JwtAuthorizationFilter;
 import com.catchcatch.auth.global.security.jwt.JwtTokenProvider;
 import com.catchcatch.auth.global.security.oauth.OAuth2Service;
 import com.catchcatch.auth.global.security.oauth.OAuth2SuccessHandler;
-import com.catchcatch.auth.global.security.oauth.OAuthFailHandler;
-import com.catchcatch.auth.global.util.HttpResponseUtil;
+import com.catchcatch.auth.global.security.oauth.OAuth2FailHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +32,7 @@ public class SecurityConfig {
     private final RefreshTokenRepository refreshTokenRepository;
     private final OAuth2Service oAuth2Service;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-    private final OAuthFailHandler oAuthFailHandler;
+    private final OAuth2FailHandler oAuthFailHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -61,7 +60,7 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
 
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**","/api/auth/**").permitAll()
                 .anyRequest().authenticated());
 
         http.oauth2Login((oauth) ->

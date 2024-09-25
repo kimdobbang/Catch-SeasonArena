@@ -4,6 +4,7 @@ import com.catchcatch.auth.domains.member.adapter.in.web.message.SuccessSignUpMe
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpRequestDto;
 import com.catchcatch.auth.domains.member.application.port.in.SignUpUseCase;
 import com.catchcatch.auth.global.util.HttpResponseUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class SignUpController {
     private final SignUpUseCase signUpUseCase;
     private final HttpResponseUtil responseUtil;
 
+    @Operation(summary = "회원가입", description = "이메일, 비밀번호로 회원가입")
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto requestDto){
         signUpUseCase.singUp(requestDto);
