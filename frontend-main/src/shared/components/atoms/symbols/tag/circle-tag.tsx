@@ -2,6 +2,7 @@
 import { ItemGrade } from "@/app/types/common";
 import Check from "@/assets/icons/check.svg?react";
 import Person from "@/assets/icons/person.svg?react";
+// 왜이럼
 
 interface CircleTagProps {
   icon?: string;
