@@ -4,6 +4,7 @@ import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpReques
 import com.catchcatch.auth.domains.member.application.port.out.ExistsMemberPort;
 import com.catchcatch.auth.domains.member.application.port.out.SaveMemberPort;
 import com.catchcatch.auth.domains.member.application.service.SignUpServiceImpl;
+import com.catchcatch.auth.domains.rank.application.port.out.SendRankKafkaPort;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
 import org.assertj.core.api.Assertions;
@@ -31,6 +32,9 @@ public class SignUpServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private SendRankKafkaPort sendRankKafkaPort;
 
     private SignUpRequestDto requestDto;
 
