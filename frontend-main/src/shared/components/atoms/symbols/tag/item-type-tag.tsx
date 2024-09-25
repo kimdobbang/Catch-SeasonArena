@@ -1,8 +1,8 @@
 /* 아이템 타입 표시하는 태그 (무기, 액티브, 패시브) */
-import { itemType } from "@/app/Types/common";
+import { ItemType } from "@/app/types/common";
 
 interface ItemTypeTagProps {
-  type?: itemType; // 아이템타입
+  type?: ItemType; // 아이템타입
   className?: string;
   color?: "orange" | "gray"; // 색깔
 }
@@ -39,7 +39,7 @@ export const ItemTypeTag: React.FC<ItemTypeTagProps> = ({
     <div
       className={`w-[60px] h-[24px] bg-catch-sub-400 shrink-0 text-center rounded-full ${className} ${getColor()}`}
     >
-      <p className="text-body2 text-white">{getType()}</p>
+      <p className="text-white text-body2">{getType()}</p>
     </div>
   );
 };
