@@ -40,4 +40,8 @@ public class Member {
                 .isDeleted(memberEntity.getIsDeleted())
                 .build();
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

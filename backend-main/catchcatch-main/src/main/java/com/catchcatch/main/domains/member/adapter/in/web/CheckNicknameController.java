@@ -24,7 +24,7 @@ public class CheckNicknameController {
     public ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname) {
         checkNicknameUseCase.checkNickname(nickname);
 
-        ResponseEntity<?> response = responseUtil.createResponse(
+        ResponseEntity<?> response = responseUtil.createSuccessResponse(
                 SuccessCheckNicknameMessage.SUCCESS_CHECK_NICKNAME.getMessage(),
                 SuccessCheckNicknameMessage.SUCCESS_CHECK_NICKNAME,
                 200
