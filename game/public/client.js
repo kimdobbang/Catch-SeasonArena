@@ -10,8 +10,8 @@ function startGame() {
 }
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
-// const socket = io("http://192.168.31.171:3000");
+// const socket = io("https://j11b106.p.ssafy.io");
+const socket = io("http://192.168.31.171:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -22,8 +22,8 @@ socket.on("gameStart", (magnetic) => {
 
 const config = {
   type: Phaser.AUTO,
-  width: 400,
-  height: 800,
+  width: 800,
+  height: 400,
   backgroundColor: "#2d2d2d",
   physics: {
     default: "arcade",
@@ -56,7 +56,7 @@ const config = {
 let ROOMCODE;
 let gameStarted = false;
 let playerGroup;
-let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking}
+let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체}
 let MAGNETIC = {};
 let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
@@ -103,7 +103,7 @@ function create() {
   // <<조이스틱>>
   let joystick = this.plugins.get("rexVirtualJoystick").add(this, {
     x: 100,
-    y: 700,
+    y: 300,
     radius: 50,
     base: this.add.circle(0, 0, 50, 0x888888).setOrigin(0.5).setScrollFactor(0),
     thumb: this.add
@@ -142,7 +142,7 @@ function create() {
 
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(300, 700, 50, 0xff0000)
+    .circle(700, 300, 50, 0xf29627)
     .setInteractive()
     .setScrollFactor(0);
 
@@ -158,6 +158,26 @@ function create() {
       socket.emit("playerAttack", ROOMCODE);
     }
   });
+
+  // <<미니맵 구현>>
+  const miniMapWidth = 100;
+  const miniMapHeight = 100;
+  const miniMap = this.add.graphics();
+  miniMap.lineStyle(1, 0x000000);
+  miniMap.fillStyle(0xf5deb3);
+  miniMap.fillRect(
+    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
+    25,
+    miniMapWidth,
+    miniMapHeight
+  );
+  miniMap.strokeRect(
+    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
+    25,
+    miniMapWidth,
+    miniMapHeight
+  );
+  miniMap.setScrollFactor(0);
 
   // <<플레이어 정보 로드>>
   socket.on("createPlayers", (players) => {
@@ -184,6 +204,7 @@ function create() {
       deadPlayer.weapon.destroy();
       deadPlayer.nickname.destroy();
       deadPlayer.hpBar.destroy();
+      deadPlayer.point.destroy();
 
       delete clientPlayers[socketId];
     }
@@ -236,6 +257,25 @@ function create() {
           50 * (players[key].hp / 100),
           5
         );
+
+        // 미니맵 업데이트
+        clientPlayers[key].point.clear();
+        const tempDist = calcDist(
+          players[socket.id].x,
+          players[socket.id].y,
+          players[key].x,
+          players[key].y
+        );
+        if (tempDist < 700) {
+          const pointX = players[key].x / 50 + 675;
+          const pointY = players[key].y / 50 + 25;
+          if (tempDist === 0) {
+            clientPlayers[key].point.fillStyle(0x00ff00, 1);
+          } else {
+            clientPlayers[key].point.fillStyle(0xff0000, 1);
+          }
+          clientPlayers[key].point.fillCircle(pointX, pointY, 2);
+        }
       }
     });
 
@@ -318,6 +358,15 @@ function createPlayer(scene, players) {
       .setOrigin(0.5);
     clientPlayers[player.socketId].nickname = nickname;
 
+    // 미니맵 포인트들 생성
+    const point = scene.add.graphics();
+    const pointX = player.x / 50 + 675;
+    const pointY = player.y / 50 + 25;
+    point.fillStyle(0x00ff00, 1);
+    point.fillCircle(pointX, pointY, 2);
+    point.setScrollFactor(0);
+    clientPlayers[player.socketId].point = point;
+
     // 공격중인지 여부 (초기세팅 false)
     clientPlayers[player.socketId].isAttacking = false;
 
@@ -378,5 +427,8 @@ function animateWeaponAttack(weapon, player, initialAngle, clientPlayer) {
   animate();
 }
 
-// 자기장 업데이트
-function drawMagnetic(MAGNETIC, radius) {}
+function calcDist(myX, myY, playerX, playerY) {
+  return Math.sqrt(
+    (myX - playerX) * (myX - playerX) + (myY - playerY) * (myY - playerY)
+  );
+}
