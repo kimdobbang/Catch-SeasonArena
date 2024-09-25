@@ -42,7 +42,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         log.info("access token : {}", accessToken);
 
         String redirectUrl = UriComponentsBuilder.
-                fromUriString("https://j11b106.p.ssafy.io/main")
+                fromUriString("https://j11b106.p.ssafy.io")
                 .build()
                 .toString();
 
