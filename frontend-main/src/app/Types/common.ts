@@ -1,6 +1,6 @@
 // src/app/types/common.ts
 
-// 타입 정의
+// 타입 정의(대문자로 수정)
 export type ItemGrade = "normal" | "rare" | "legend";
 export type Season = "spring" | "summer" | "autumn" | "winter";
 export type ItemType = "weapon" | "active" | "passive";
