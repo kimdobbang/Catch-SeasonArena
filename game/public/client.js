@@ -10,8 +10,8 @@ function startGame() {
 }
 
 // <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
-const socket = io("http://192.168.31.171:3000");
+const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("http://192.168.31.171:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -22,8 +22,8 @@ socket.on("gameStart", (magnetic) => {
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 400,
+  width: 400,
+  height: 800,
   backgroundColor: "#2d2d2d",
   physics: {
     default: "arcade",
@@ -102,8 +102,8 @@ function create() {
 
   // <<조이스틱>>
   let joystick = this.plugins.get("rexVirtualJoystick").add(this, {
-    x: 100,
-    y: 300,
+    x: 80,
+    y: 700,
     radius: 50,
     base: this.add.circle(0, 0, 50, 0x888888).setOrigin(0.5).setScrollFactor(0),
     thumb: this.add
@@ -142,7 +142,7 @@ function create() {
 
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(700, 300, 50, 0xf29627)
+    .circle(320, 700, 50, 0xf29627)
     .setInteractive()
     .setScrollFactor(0);
 
@@ -160,20 +160,20 @@ function create() {
   });
 
   // <<미니맵 구현>>
-  const miniMapWidth = 100;
-  const miniMapHeight = 100;
+  const miniMapWidth = 80;
+  const miniMapHeight = 80;
   const miniMap = this.add.graphics();
   miniMap.lineStyle(1, 0x000000);
   miniMap.fillStyle(0xf5deb3);
   miniMap.fillRect(
-    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
-    25,
+    this.cameras.main.width - miniMapWidth / 2 - 20 - miniMapWidth / 2,
+    20,
     miniMapWidth,
     miniMapHeight
   );
   miniMap.strokeRect(
-    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
-    25,
+    this.cameras.main.width - miniMapWidth / 2 - 20 - miniMapWidth / 2,
+    20,
     miniMapWidth,
     miniMapHeight
   );
@@ -267,8 +267,8 @@ function create() {
           players[key].y
         );
         if (tempDist < 700) {
-          const pointX = players[key].x / 50 + 675;
-          const pointY = players[key].y / 50 + 25;
+          const pointX = players[key].x / (5000 / 80) + 300;
+          const pointY = players[key].y / (5000 / 80) + 20;
           if (tempDist === 0) {
             clientPlayers[key].point.fillStyle(0x00ff00, 1);
           } else {
@@ -358,10 +358,30 @@ function createPlayer(scene, players) {
       .setOrigin(0.5);
     clientPlayers[player.socketId].nickname = nickname;
 
+    // 자기장 중심점 생성
+    const magneticCenterX = MAGNETIC.x / (5000 / 80) + 300;
+    const magneticCenterY = MAGNETIC.y / (5000 / 80) + 20;
+
+    const magneticCenter = scene.add.graphics();
+    magneticCenter.fillStyle(0x0000ff, 1);
+    const size = 5;
+    const diamondShape = new Phaser.Geom.Polygon([
+      magneticCenterX,
+      magneticCenterY - size,
+      magneticCenterX + size,
+      magneticCenterY,
+      magneticCenterX,
+      magneticCenterY + size,
+      magneticCenterX - size,
+      magneticCenterY,
+    ]);
+    magneticCenter.fillPoints(diamondShape.points, true);
+    magneticCenter.setScrollFactor(0);
+
     // 미니맵 포인트들 생성
     const point = scene.add.graphics();
-    const pointX = player.x / 50 + 675;
-    const pointY = player.y / 50 + 25;
+    const pointX = player.x / (5000 / 80) + 300;
+    const pointY = player.y / (5000 / 80) + 20;
     point.fillStyle(0x00ff00, 1);
     point.fillCircle(pointX, pointY, 2);
     point.setScrollFactor(0);
