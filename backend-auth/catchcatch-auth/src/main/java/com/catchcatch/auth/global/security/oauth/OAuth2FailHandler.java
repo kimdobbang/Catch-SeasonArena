@@ -24,7 +24,7 @@ public class OAuth2FailHandler implements AuthenticationFailureHandler {
 		log.error("BACK-AUTH:OAUTH-ERROR : {}", exception);
 
 		String redirectUrl = UriComponentsBuilder.
-				fromUriString("https://j11b106.p.ssafy.io/")
+				fromUriString("https://j11b106.p.ssafy.io/login")
 				.build()
 				.toString();
 
