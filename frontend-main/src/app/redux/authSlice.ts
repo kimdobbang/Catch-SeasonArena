@@ -1,22 +1,22 @@
-// userSlice.ts
+// authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// UserState 타입 export
-export interface UserState {
+// AuthState 타입 export
+export interface AuthState {
   accessToken: string | null;
   isAuthenticated: boolean;
 }
 
-const initialState: UserState = {
+const initialState: AuthState = {
   accessToken: null,
   isAuthenticated: false,
 };
 
-export const userSlice = createSlice({
-  name: "user",
+export const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ accessToken: string }>) => {
+    setAuth: (state, action: PayloadAction<{ accessToken: string }>) => {
       state.accessToken = action.payload.accessToken;
       state.isAuthenticated = true;
     },
@@ -27,5 +27,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = userSlice.actions;
-export default userSlice.reducer;
+export const { setAuth, logout } = authSlice.actions;
+export default authSlice.reducer;

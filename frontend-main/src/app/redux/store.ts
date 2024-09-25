@@ -1,15 +1,15 @@
 //store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer, { UserState } from "./userSlice";
+import authReducer, { AuthState } from "./authSlice";
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
+    auth: authReducer,
   },
 });
 
 export type RootState = {
-  user: UserState; // 명시적으로 UserState 타입 사용
+  auth: AuthState;
 };
 
 export type AppDispatch = typeof store.dispatch;
