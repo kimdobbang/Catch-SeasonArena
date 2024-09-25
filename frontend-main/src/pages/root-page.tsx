@@ -1,8 +1,8 @@
-import config from "@/config";
+// import config from "@/config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setAuth } from "@/app/redux/authSlice";
+import { setAuth } from "@/app/redux/slice/authSlice";
 import { SplashPage } from "./splash-page";
 
 export const RootPage = () => {
@@ -12,8 +12,8 @@ export const RootPage = () => {
   console.log("0. 로그인 후 리디렉션 성공");
   const fetchTokenFromHeader = async () => {
     try {
-      const response = await fetch(`${config.API_BASE_URL}/api/auth/reissue`, {
-        method: "GET",
+      const response = await fetch(window.location.href, {
+        method: "POST",
         credentials: "include", //쿠키포함
       });
 

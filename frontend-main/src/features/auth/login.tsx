@@ -1,3 +1,4 @@
+// login.tsx
 import config from "@/config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,7 @@ export const Login: React.FC = () => {
 
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/login`, {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -80,7 +81,7 @@ export const Login: React.FC = () => {
       </div>
       {/* 로그인 버튼들 */}
       <div className="flex flex-col items-center w-full max-w-xs mx-auto space-y-4">
-        <DefaultLoginButton onClick={() => handleLogin} />
+        <DefaultLoginButton onClick={handleLogin} />
         <KakaoLoginButton onClick={() => handleOAuthLogin("kakao")} />
         <GoogleLoginButton onClick={() => handleOAuthLogin("google")} />
       </div>
