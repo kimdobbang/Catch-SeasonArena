@@ -12,7 +12,6 @@ import {
 } from "@atoms/index";
 
 export const Login: React.FC = () => {
-  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const goSignUp = () => {
@@ -23,6 +22,7 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState("");
 
   const handleOAuthLogin = (provider: "kakao" | "google") => {
+    window.localStorage.setItem("provider", provider);
     window.location.href = `${config.API_BASE_URL}/api/auth/oauth2/authorization/${provider}`;
   };
 
