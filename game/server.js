@@ -62,6 +62,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
     knockBack: 1,
     reach: 1,
     canMove: true,
+    kill: 0,
   };
 
   // const playerData = await redisClient.get(nickname + " " + roomCode);
@@ -305,6 +306,11 @@ function applyKnockback(attacker, target, dx, dy) {
 function applyDamage(attacker, target, roomCode) {
   const damage = 20 * attacker.attackPower;
   target.hp -= damage;
+  if (target.hp <= 0) {
+    console.log(attacker.nickname + "킬 전" + attacker.kill);
+    attacker.kill++;
+    console.log(attacker.nickname + "킬 후" + attacker.kill);
+  }
 }
 
 // 자기장 중앙좌표 반환
