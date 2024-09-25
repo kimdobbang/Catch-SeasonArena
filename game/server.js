@@ -191,10 +191,16 @@ io.on("connection", (socket) => {
 
 setInterval(() => {
   rooms.forEach((room, roomCode) => {
+    if (room.players.size === 0) {
+      rooms.delete(roomCode);
+    }
     if (room.isStarted) {
       const playersMap = room.players;
 
       playersMap.forEach((player, socketId) => {
+        if (playersMap.size === 1) {
+          player.hp = 0;
+        }
         // 플레이어 이동 반영
         if (player.canMove) {
           player.x += player.velocityX;
