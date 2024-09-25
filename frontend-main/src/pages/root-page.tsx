@@ -25,8 +25,7 @@ export const RootPage = () => {
           localStorage.setItem("authToken", token);
           console.log("OAuth 로그인 성공, 엑세스 토큰:", token);
           // 사용자 정보를 Redux에 저장
-          const email = "user@example.com"; // 실제로 서버에서 이메일 정보를 받아와 사용(토큰 디코딩하면 이메일됨)
-          dispatch(setUser({ token, email }));
+          dispatch(setUser({ token }));
           navigate("/main");
         } else {
           throw new Error("Authorization 헤더에 토큰이 없습니다.");
