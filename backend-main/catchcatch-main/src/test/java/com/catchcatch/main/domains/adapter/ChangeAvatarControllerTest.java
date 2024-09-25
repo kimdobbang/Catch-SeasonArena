@@ -1,9 +1,9 @@
 package com.catchcatch.main.domains.adapter;
 
-import com.catchcatch.main.domains.member.adapter.in.web.ChangeNicknameController;
-import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeNicknameRequestDto;
-import com.catchcatch.main.domains.member.adapter.in.web.responsedto.ChangeNicknameResponseDto;
-import com.catchcatch.main.domains.member.application.port.in.ChangeNicknameUseCase;
+import com.catchcatch.main.domains.member.adapter.in.web.ChangeAvatarController;
+import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeAvatarRequestDto;
+import com.catchcatch.main.domains.member.adapter.in.web.responsedto.ChangeAvatarResponseDto;
+import com.catchcatch.main.domains.member.application.port.in.ChangeAvatarUseCase;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +20,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(
-        controllers = ChangeNicknameController.class
+        controllers = ChangeAvatarController.class
 )
 @MockBean(JpaMetamodelMappingContext.class)
-public class ChangeNicknameControllerTest {
+public class ChangeAvatarControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,34 +32,28 @@ public class ChangeNicknameControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ChangeNicknameUseCase changeNicknameUseCase;
+    private ChangeAvatarUseCase changeAvatarUseCase;
 
     @MockBean
     private HttpResponseUtil responseUtil;
 
-    private ChangeNicknameRequestDto requestDto;
-    private ChangeNicknameResponseDto responseDto;
+    private ChangeAvatarRequestDto requestDto;
+    private ChangeAvatarResponseDto responseDto;
 
     @BeforeEach
-    void setUp() throws Exception {
-        requestDto = new ChangeNicknameRequestDto(
-                "변경후닉네임",
-                1L
-        );
-        responseDto = new ChangeNicknameResponseDto(
-                requestDto.nickname()
-        );
+    public void setUp() throws Exception {
+        requestDto = new ChangeAvatarRequestDto("avatar", 1L);
+        responseDto = new ChangeAvatarResponseDto(requestDto.avatar());
     }
 
     @Test
-    @DisplayName("닉네임 변경 성공 테스트")
-    public void 닉네임_변경_성공_테스트() throws Exception {
+    @DisplayName("아바타 변경 성공 테스트")
+    public void 아바타_변경_성공_테스트() throws Exception {
         String requestBody = objectMapper.writeValueAsString(requestDto);
 
-        BDDMockito.given(changeNicknameUseCase.changeNickname(requestDto))
-                .willReturn(responseDto);
+        BDDMockito.given(changeAvatarUseCase.changeAvatar(requestDto)).willReturn(responseDto);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/main/members/nickname")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/main/members/avatar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
