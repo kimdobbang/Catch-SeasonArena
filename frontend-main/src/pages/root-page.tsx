@@ -43,7 +43,7 @@ export const RootPage = () => {
         }
       } catch (error) {
         console.error("OAuth 로그인 실패:", error);
-        navigate("/login");
+        // navigate("/login");
       }
     };
 
