@@ -5,7 +5,7 @@ export const NotPwaPage = () => {
   const navigate = useNavigate();
 
   const goToMain = () => {
-    window.location.href = "/main";
+    navigate("/main");
   };
   const goToLogin = () => {
     navigate("/login");
