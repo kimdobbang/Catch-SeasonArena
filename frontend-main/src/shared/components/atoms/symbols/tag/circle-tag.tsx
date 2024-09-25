@@ -1,12 +1,12 @@
 /*사람, 체크 모양 아이콘이나 등급표시(R,L,N)가 들어갑니다 */
-import { ItemGrade } from "@/app/types/common";
+import { ItemGrades } from "@/app/types/common";
 import Check from "@/assets/icons/check.svg?react";
 import Person from "@/assets/icons/person.svg?react";
 // 왜이럼
 
 interface CircleTagProps {
   icon?: string;
-  grade?: ItemGrade;
+  grade?: ItemGrades;
   className?: string;
 }
 

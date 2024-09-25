@@ -1,8 +1,8 @@
-import { ItemType } from "@/app/types/common";
-import { ItemGrade } from "@/app/types/common";
+import { ItemTypes } from "@/app/types/common";
+import { ItemGrades } from "@/app/types/common";
 interface DescBoxProps {
-  type: ItemType;
-  grade: ItemGrade;
+  type: ItemTypes;
+  grade: ItemGrades;
   skill: string;
 }
 
