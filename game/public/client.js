@@ -10,8 +10,8 @@ function startGame() {
 }
 
 // <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
-const socket = io("http://192.168.31.171:3000");
+const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("http://192.168.31.171:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -29,7 +29,7 @@ const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: true,
+      debug: false,
     },
   },
   scale: {
@@ -210,16 +210,7 @@ function create() {
     }
 
     if (socketId === socket.id) {
-      const gameOverText = scene.add.text(
-        scene.cameras.main.width / 2,
-        scene.cameras.main.height / 2,
-        "Game Over",
-        {
-          fontSize: "64px",
-          fill: "#ffffff",
-        }
-      );
-      gameOverText.setOrigin(0.5, 0.5); // 중앙 정렬
+      socket.disconnect();
     }
   });
 
@@ -357,6 +348,26 @@ function createPlayer(scene, players) {
       })
       .setOrigin(0.5);
     clientPlayers[player.socketId].nickname = nickname;
+
+    // 자기장 중심점 생성
+    const magneticCenterX = MAGNETIC.x / 50 + 675;
+    const magneticCenterY = MAGNETIC.y / 50 + 25;
+
+    const magneticCenter = scene.add.graphics();
+    magneticCenter.fillStyle(0x0000ff, 1);
+    const size = 5;
+    const diamondShape = new Phaser.Geom.Polygon([
+      magneticCenterX,
+      magneticCenterY - size,
+      magneticCenterX + size,
+      magneticCenterY,
+      magneticCenterX,
+      magneticCenterY + size,
+      magneticCenterX - size,
+      magneticCenterY,
+    ]);
+    magneticCenter.fillPoints(diamondShape.points, true);
+    magneticCenter.setScrollFactor(0);
 
     // 미니맵 포인트들 생성
     const point = scene.add.graphics();
