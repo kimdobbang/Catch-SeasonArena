@@ -69,9 +69,9 @@ export const RootPage = () => {
         if (!isPWA) console.log("PWA가 아닙니다");
         if (!isMobile) console.log("모바일이 아닙니다");
 
-        // navigate("/login");
+        navigate("/login");
       } else {
-        // navigate("/login");
+        navigate("/login");
       }
     }, 1500);
 
