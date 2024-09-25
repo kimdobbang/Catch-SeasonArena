@@ -33,16 +33,13 @@ export const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch(
-        `${config.API_BASE_URL}/api/auth/members/login`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
+      const response = await fetch(`${config.API_BASE_URL}/api/login`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
       console.log("로그인 성공:", data);
