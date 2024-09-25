@@ -12,7 +12,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("*")
                 .exposedHeaders("Authorization")
-                .allowedOrigins("https://j11b106.p.ssafy.io/")
+                .allowedOrigins("https://j11b106.p.ssafy.io")
                 .allowCredentials(true);
     }
 }
