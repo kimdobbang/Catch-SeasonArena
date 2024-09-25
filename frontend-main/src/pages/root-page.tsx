@@ -17,6 +17,7 @@ export const RootPage = () => {
         const response = await fetch(window.location.href, {
           method: "GET",
           credentials: "include", // 쿠키 포함 요청
+          redirect: "manual", // 리다이렉션을 따르지 않음
         });
 
         console.log("1. response: ", response);
@@ -43,7 +44,7 @@ export const RootPage = () => {
         }
       } catch (error) {
         console.error("OAuth 로그인 실패:", error);
-        // navigate("/login");
+        navigate("/login");
       }
     };
 
