@@ -30,7 +30,7 @@ export const RootPage = () => {
         // PWA로 접속 시 /login 으로 이동
         navigate("/login");
       }
-    }, 2000); // 2초 지연
+    }, 3000); // 3초 지연
 
     // 컴포넌트가 언마운트될 때 타이머를 정리하여 메모리 누수 방지
     return () => clearTimeout(timer);
