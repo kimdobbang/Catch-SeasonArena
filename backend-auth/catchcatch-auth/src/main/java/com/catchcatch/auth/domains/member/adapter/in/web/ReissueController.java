@@ -3,6 +3,7 @@ package com.catchcatch.auth.domains.member.adapter.in.web;
 import com.catchcatch.auth.domains.member.adapter.in.web.message.SuccessReissueMessage;
 import com.catchcatch.auth.domains.member.application.port.in.ReissueUseCase;
 import com.catchcatch.auth.global.util.HttpResponseUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ReissueController {
     private final ReissueUseCase reissueUseCase;
     private final HttpResponseUtil responseUtil;
 
+    @Operation(summary = "Access 토큰 재발급", description = "Access 토큰 만료 시 재발급")
     @GetMapping("/reissue")
     public ResponseEntity<?> reissue(
             @CookieValue(value = "refreshToken", required = false) Cookie coookie,

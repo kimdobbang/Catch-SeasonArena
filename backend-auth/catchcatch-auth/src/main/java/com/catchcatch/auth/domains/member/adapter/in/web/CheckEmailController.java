@@ -3,6 +3,11 @@ package com.catchcatch.auth.domains.member.adapter.in.web;
 import com.catchcatch.auth.domains.member.adapter.in.web.message.SuccessCheckEmailMessage;
 import com.catchcatch.auth.domains.member.application.port.in.CheckEmailUseCase;
 import com.catchcatch.auth.global.util.HttpResponseUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,7 @@ public class CheckEmailController {
     private final CheckEmailUseCase checkEmailUseCase;
     private final HttpResponseUtil responseUtil;
 
+    @Operation(summary = "이메일 중복 조회", description = "회원가입 시 이메일 중복 조회")
     @GetMapping("/{email}")
     public ResponseEntity<?> checkEmail(@PathVariable String email) {
         checkEmailUseCase.checkEmail(email);
