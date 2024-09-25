@@ -3,6 +3,10 @@ import { Copyright } from "@ui/index";
 import { ServiceTitle } from "@ui/index";
 export const NotPwaPage = () => {
   const navigate = useNavigate();
+
+  const goToMain = () => {
+    window.location.href = "/main";
+  };
   const goToLogin = () => {
     navigate("/login");
   };
@@ -31,6 +35,11 @@ export const NotPwaPage = () => {
       </div>
       <div>
         웹, 모바일 웹으로 접속하면 실행이 안대 설치하도록 알려주어야하는 페이지
+      </div>
+      <div>
+        <button onClick={goToMain} className="bg-catch-main-400">
+          Main으로
+        </button>
       </div>
       <div>
         <button onClick={goToGame} className="bg-catch-tier-bronze">

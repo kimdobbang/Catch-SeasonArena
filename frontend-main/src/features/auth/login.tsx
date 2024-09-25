@@ -34,7 +34,7 @@ export const Login: React.FC = () => {
 
     try {
       const response = await fetch(`${config.API_BASE_URL}/api/login`, {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
