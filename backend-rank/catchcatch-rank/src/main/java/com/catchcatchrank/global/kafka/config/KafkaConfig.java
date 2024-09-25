@@ -60,8 +60,10 @@ public class KafkaConfig {
 		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
+		JsonDeserializer<KafkaRankEntity> deserializer = new JsonDeserializer<>(KafkaRankEntity.class, false);
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
 
-		return new DefaultKafkaConsumerFactory<>(config);
+		return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), deserializer);
 	}
 
 	@Bean
