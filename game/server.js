@@ -5,6 +5,16 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import { createClient } from "redis";
+import { Kafka } from "kafkajs";
+
+// Kafka 클라이언트 생성
+const kafka = new Kafka({
+  clientId: "game-producer", // 클라이언트 식별자
+  brokers: ["3.36.122.163:9092"], // 브로커 주소
+});
+
+// Kafka 프로듀서 생성
+const producer = kafka.producer();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,6 +73,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
     reach: 1,
     canMove: true,
     kill: 0,
+    rating: 500,
   };
 
   // const playerData = await redisClient.get(nickname + " " + roomCode);
@@ -88,7 +99,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
-    if (room.players.size == 2 && !room.isStarted) {
+    if (room.players.size == 5 && !room.isStarted) {
       rooms.get(roomCode).startTime = Date.now();
       rooms.get(roomCode).magnetic = getMagneticPoint();
       io.in(roomCode).emit("gameStart", room.magnetic);
@@ -199,6 +210,23 @@ setInterval(() => {
         player.y = Math.max(80, Math.min(MAP_LENGTH - 80, player.y));
 
         if (player.hp <= 0) {
+          const nickname = player.nickname;
+          const kill = player.kill;
+          const time = Math.round((Date.now() - room.startTime) / 1000);
+          const rank = room.players.size;
+          const rating = player.rating;
+
+          // 데이터셋을 객체로 만들기
+          const result = {
+            nickname: nickname,
+            kill: kill,
+            time: time,
+            rank: rank,
+            rating: rating,
+          };
+
+          sendMessage(result);
+
           getAllPlayers(roomCode).delete(player.socketId);
           io.in(roomCode).emit("playerDeath", player.socketId);
         }
@@ -356,4 +384,30 @@ function isPlayerInMagnetic(room, player) {
   const magneticRadius = getMagneticRadius(room);
 
   return dist > magneticRadius;
+}
+
+// 메시지 전송 함수
+async function sendMessage(result) {
+  try {
+    // 프로듀서 연결
+    await producer.connect();
+
+    // 메시지 전송
+    await producer.send({
+      topic: "game_result",
+      messages: [
+        {
+          key: "game_result",
+          value: JSON.stringify(result), // JSON 형식 확인
+        },
+      ],
+    });
+
+    console.log("메시지가 성공적으로 전송되었습니다.");
+  } catch (err) {
+    console.error("메시지 전송 중 오류 발생:", err);
+  } finally {
+    // 프로듀서 연결 종료
+    await producer.disconnect();
+  }
 }

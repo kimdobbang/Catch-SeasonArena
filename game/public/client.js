@@ -29,7 +29,7 @@ const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: true,
+      debug: false,
     },
   },
   scale: {
@@ -210,16 +210,7 @@ function create() {
     }
 
     if (socketId === socket.id) {
-      const gameOverText = scene.add.text(
-        scene.cameras.main.width / 2,
-        scene.cameras.main.height / 2,
-        "Game Over",
-        {
-          fontSize: "64px",
-          fill: "#ffffff",
-        }
-      );
-      gameOverText.setOrigin(0.5, 0.5); // 중앙 정렬
+      socket.disconnect();
     }
   });
 
