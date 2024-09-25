@@ -1,59 +1,67 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/app/redux/userSlice";
-
+import { setAuth } from "@/app/redux/authSlice";
 import { SplashPage } from "./splash-page";
 
 export const RootPage = () => {
-  // OAuthCallback
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   useEffect(() => {
-    // 리디렉션된 후 엑세스 토큰을 헤더에서 가져오기
+    console.log("0. 로그인 후 리디렉션 성공");
+
+    // 리디렉션 후 헤더에서 토큰 가져오는 함수
     const fetchTokenFromHeader = async () => {
       try {
         const response = await fetch(window.location.href, {
           method: "GET",
-          credentials: "include", // 쿠키를 포함한 요청
+          credentials: "include", // 쿠키 포함 요청
         });
-        console.log("response : " + response);
 
-        const accessToken = response.headers.get("Authorization");
-        console.log("accessToken : " + accessToken);
-        if (accessToken) {
-          // 로그인 성공시
-          localStorage.setItem("authToken", accessToken);
-          console.log("OAuth 로그인 성공, 엑세스 토큰:", accessToken);
-          // 사용자 정보를 Redux에 저장
-          dispatch(setUser({ accessToken }));
+        console.log("1. response: ", response);
+
+        // Authorization 헤더에서 토큰 추출 (Bearer <token> 형식)
+        const authorizationHeader = response.headers.get("Authorization");
+        console.log("2. authorizationHeader: ", authorizationHeader);
+
+        if (authorizationHeader && authorizationHeader.startsWith("Bearer ")) {
+          // "Bearer " 접두사를 제거하고 순수한 토큰 추출
+          const accessToken = authorizationHeader.replace("Bearer ", "");
+
+          // 토큰을 로컬 스토리지에 저장
+          localStorage.setItem("token", accessToken);
+          console.log("3. OAuth 로그인 성공, 엑세스 토큰:", accessToken);
+
+          // Redux에 토큰 저장
+          dispatch(setAuth({ accessToken }));
+
+          // 메인 페이지로 이동
           navigate("/main");
         } else {
-          throw new Error("Authorization 헤더에 토큰이 없습니다.");
+          throw new Error("Authorization 헤더에 유효한 토큰이 없습니다.");
         }
       } catch (error) {
         console.error("OAuth 로그인 실패:", error);
         navigate("/login");
       }
     };
-    // 로그인 시도 후 OAuthCallback URL로 root에 redirect된 경우 fetchTokenFromHeader 호출
+
+    // 리디렉션 후 토큰을 가져오기 위해 함수 호출
     fetchTokenFromHeader();
   }, [dispatch, navigate]);
 
-  // SplashPage
+  // SplashPage 처리
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    // 2초 동안 스플래시 페이지를 보여줌
     const timer = setTimeout(() => {
       setShowSplash(false);
 
-      // PWA 접속 여부 체크
       const isPWA =
         window.matchMedia("(display-mode: standalone)").matches ||
         window.navigator.standalone === true;
 
-      // 모바일 여부 확인
       const userAgent = window.navigator.userAgent.toLowerCase();
       const isMobile = /mobile|android|iphone|ipad/.test(userAgent);
 
@@ -61,15 +69,12 @@ export const RootPage = () => {
         if (!isPWA) console.log("PWA가 아닙니다");
         if (!isMobile) console.log("모바일이 아닙니다");
 
-        // 데스크탑 접속 시 또는 PWA 아닐시, /pwa 로 이동
         navigate("/login");
       } else {
-        // PWA로 접속 시 /login 으로 이동
         navigate("/login");
       }
-    }, 1500); // 1.5초 지연
+    }, 1500);
 
-    // 컴포넌트가 언마운트될 때 타이머를 정리하여 메모리 누수 방지
     return () => clearTimeout(timer);
   }, [navigate]);
 
