@@ -6,3 +6,4 @@ export { UserNameContainer } from "./user/user-name-container";
 export { ItemCell } from "@/shared/components/atoms/item-cell";
 export { ItemLibrary } from "./inventory/items-library";
 export { InventoryUserInfo } from "./inventory/inventory-userinfo";
+export { InGameStats } from "./inventory/ingame-stats";
