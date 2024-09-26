@@ -10,8 +10,8 @@ export interface Collection {
   grade: ItemGrade;
   season: Season;
   type: ItemType;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface Item {
