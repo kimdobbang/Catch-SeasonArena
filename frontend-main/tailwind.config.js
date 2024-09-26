@@ -3,16 +3,19 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        "custom-inset": "inset 0 -7px 7px rgba(0, 0, 0, 0.05)", // Custom shadow
+      },
       width: {
         22: "5.5rem", // 5.5rem 너비 추가
       },
       colors: {
-        "catch-tier-bronze": "#9d4900",
-        "catch-tier-silver": "#c0c0c0",
-        "catch-tier-gold": "#ffb028",
-        "catch-tier-platinum": "#27e2a4",
-        "catch-tier-dia": "#41caff",
-        "catch-tier-ruby": "#f5005a",
+        "catch-tier-Bronze": "#9d4900",
+        "catch-tier-Silver": "#c0c0c0",
+        "catch-tier-Gold": "#ffb028",
+        "catch-tier-Platinum": "#27e2a4",
+        "catch-tier-Diamond": "#41caff",
+        "catch-tier-Ruby": "#f5005a",
         "catch-sub-100": "#fef8ec",
         "catch-sub-200": "#fce9c9",
         "catch-sub-300": "#f8d18f",
