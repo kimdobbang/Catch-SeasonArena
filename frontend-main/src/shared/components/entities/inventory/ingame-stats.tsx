@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 
@@ -17,36 +16,36 @@ export const InGameStats = () => {
 
   return (
     <div className="flex-col space-y-2">
-      {/* 체력 Progress Bar */}
+      {/* 체력 */}
       <div className="flex items-center">
         <div className="w-20 text-sm text-gray-600">체력</div>
         <div className="w-full bg-gray-200 rounded-full h-2.5 mx-2">
           <div
-            className="bg-red-500 h-2.5 rounded-full"
+            className="bg-catch-main-400 h-2.5 rounded-full"
             style={{ width: `${(currentStats.hp / 200) * 100}%` }}
           />
         </div>
         <p className="w-8 text-right">{currentStats.hp}</p>
       </div>
 
-      {/* 공격력 Progress Bar */}
+      {/* 공격력 */}
       <div className="flex items-center">
         <div className="w-20 text-sm text-gray-600">공격력</div>
         <div className="w-full bg-gray-200 rounded-full h-2.5 mx-2">
           <div
-            className="bg-blue-500 h-2.5 rounded-full"
+            className="bg-catch-main-400 h-2.5 rounded-full"
             style={{ width: `${(currentStats.attackPower / 20) * 100}%` }}
           />
         </div>
         <p className="w-8 text-right">{currentStats.attackPower}</p>
       </div>
 
-      {/* 속도 Progress Bar */}
+      {/* 속도 */}
       <div className="flex items-center">
         <div className="w-20 text-sm text-gray-600">속도</div>
         <div className="w-full bg-gray-200 rounded-full h-2.5 mx-2">
           <div
-            className="bg-green-500 h-2.5 rounded-full"
+            className="bg-catch-main-400 h-2.5 rounded-full"
             style={{ width: `${(currentStats.speed / 20) * 100}%` }}
           />
         </div>

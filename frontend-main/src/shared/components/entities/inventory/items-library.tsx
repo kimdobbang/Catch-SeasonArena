@@ -103,28 +103,14 @@ export const ItemLibrary = () => {
       </div>
 
       {/* 페이지네이션 버튼 */}
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 ${
-            currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-          }`}
-        >
+      <div className="flex justify-center mt-4">
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>
           이전
         </button>
-        <span>
+        <div className="justify-center mx-3 felx">
           {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 ${
-            currentPage === totalPages
-              ? "bg-gray-300"
-              : "bg-blue-500 text-white"
-          }`}
-        >
+        </div>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           다음
         </button>
       </div>
