@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-export const Collect = () => {
-  const navigate = useNavigate();
+
+export const CollectTest = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
@@ -123,12 +122,7 @@ export const Collect = () => {
 
   return (
     <div className="relative w-full h-full">
-      <video
-        className="w-full h-full object-cover"
-        ref={videoRef}
-        autoPlay
-        playsInline
-      />
+      <video className="w-full h-full" ref={videoRef} autoPlay playsInline />
 
       {/* 오버레이: 캡처할 영역을 시각적으로 표시 */}
       <div
@@ -149,7 +143,6 @@ export const Collect = () => {
         자동 캡처 시작
       </button>
 
-      <button onClick={() => navigate("processing")}>게임으로 이동</button>
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
         <h3 className="text-lg font-bold">Captured Images:</h3>
         <div className="flex flex-wrap gap-2">
