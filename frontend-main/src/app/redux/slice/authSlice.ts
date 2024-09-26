@@ -1,4 +1,5 @@
 // src/app/redux/slice/authSlice.ts
+// 인증 관련 상태: 로그인, 로그아웃, 인증 토큰 및 인증상태
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserInfo } from "@/app/types/userType";
 
@@ -19,16 +20,26 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<{ accessToken: string }>) => {
-      state.accessToken = action.payload.accessToken;
+    setToken: (state, action: PayloadAction<string>) => {
+      state.accessToken = action.payload;
       state.isAuthenticated = true;
+    },
+    setUser: (state, action: PayloadAction<UserInfo>) => {
+      state.userInfo = action.payload;
+    },
+    deleteToken: (state) => {
+      state.accessToken = "";
+    },
+    deleteUser: (state) => {
+      state.userInfo = null;
     },
     logout: (state) => {
       state.accessToken = null;
+      state.userInfo = null;
       state.isAuthenticated = false;
     },
   },
 });
 
-export const { setAuth, logout } = authSlice.actions;
+export const { setToken, setUser, deleteToken, logout } = authSlice.actions;
 export default authSlice.reducer;

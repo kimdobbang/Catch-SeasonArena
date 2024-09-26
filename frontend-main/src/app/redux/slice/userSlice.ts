@@ -1,4 +1,5 @@
 // src/app/redux/slice/userSlice.ts
+// 유저 관리 상태: 도감, 장비, 아바타, 티어
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ItemType, Collection } from "@/app/types/common";
 import { UserStat, UserEquipment, UserInfo } from "@/app/types/userType";
@@ -32,6 +33,7 @@ export interface UserState extends UserInfo {
 //     passive: null,
 //   },
 // };
+
 // 초기 상태 설정 - mock 데이터로 설정
 const initialState: UserState = {
   email: "mockuser@example.com",
@@ -49,7 +51,6 @@ const initialState: UserState = {
       season: "autumn",
       type: "weapon",
       createdAt: "2022-01-01T00:00:00.000Z", // ISO 문자열로 변경
-      updatedAt: "2022-01-31T00:00:00.000Z", // ISO 문자열로 변경
     },
     {
       id: 2,
@@ -61,7 +62,6 @@ const initialState: UserState = {
       season: "autumn",
       type: "active",
       createdAt: "2022-01-01T00:00:00.000Z", // ISO 문자열로 변경
-      updatedAt: "2022-01-31T00:00:00.000Z", // ISO 문자열로 변경
     },
     {
       id: 3,
@@ -73,7 +73,6 @@ const initialState: UserState = {
       season: "autumn",
       type: "passive",
       createdAt: "2022-01-01T00:00:00.000Z", // ISO 문자열로 변경
-      updatedAt: "2022-01-31T00:00:00.000Z", // ISO 문자열로 변경
     },
   ],
   selectedAvatar: 2,
@@ -135,8 +134,6 @@ const userSlice = createSlice({
         collection.quantity = action.payload.quantity;
       }
     },
-
-    // ...다른 리듀서들
   },
 });
 

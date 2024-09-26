@@ -11,7 +11,6 @@ export interface Collection {
   season: Season;
   type: ItemType;
   createdAt: string | Date;
-  updatedAt: string | Date;
 }
 
 export interface Item {

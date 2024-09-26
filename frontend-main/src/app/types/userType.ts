@@ -1,5 +1,4 @@
 // src/ap/types/userType.ts
-import { Collection } from "@/app/types/common";
 
 // 사용자 관련 타입 정의
 export interface UserInfo {
@@ -7,6 +6,7 @@ export interface UserInfo {
   nickName: string;
 }
 
+// 유저의 게임 스탯
 export interface UserStat {
   hp: number;
   attackPower: number;
@@ -17,12 +17,4 @@ export interface UserEquipment<T, U> {
   weapon: T | U | null;
   active: T | U | null;
   passive: T | U | null;
-}
-
-export interface UserState extends UserInfo {
-  rating: number;
-  collections: Collection[];
-  selectedAvatar: number;
-  stats: UserStat;
-  equipment: UserEquipment<string, string | null>;
 }

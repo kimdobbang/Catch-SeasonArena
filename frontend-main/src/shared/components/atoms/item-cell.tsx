@@ -14,7 +14,7 @@ export const ItemCell: React.FC<ItemCellProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-center justify-center p-2 cursor-pointer ${itemType === "equipment" ? "border-catch-gray-300" : "border-catch-gray-200"} ${onClick ? "hover:bg-catch-gray-200 hover:text-white" : ""}`}
+      className={`flex items-center bg-catch-gray-000 justify-center p-2 cursor-pointer ${itemType === "equipment" ? "border-catch-gray-300" : "border-catch-gray-200"} ${onClick ? "hover:bg-catch-gray-200 hover:text-white" : ""}`}
       onClick={onClick}
     >
       <div className="flex items-center justify-center w-8 h-8">{symbol}</div>

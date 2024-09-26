@@ -9,7 +9,7 @@ import userReducer from "./slice/userSlice";
 const persistConfig = {
   key: "root", // persist key 설정
   storage: sessionStorage, // sessionStorage 사용
-  whitelist: ["auth", "user"], // 저장할 slice 이름 지정 (선택적 설정)
+  whitelist: ["auth", "user"], // 저장할 slice 이름 지정
 };
 
 const rootReducer = combineReducers({
