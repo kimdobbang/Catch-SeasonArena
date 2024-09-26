@@ -6,11 +6,11 @@ import lombok.Getter;
 public class RedisRankEntity {
 
 	private String nickName;
-	private Integer rank;
+	private Integer rate;
 
-	public RedisRankEntity(String nickName, Integer rank) {
+	public RedisRankEntity(String nickName, Integer rate) {
 		this.nickName = nickName;
-		this.rank = rank;
+		this.rate = rate;
 	}
 }
 
