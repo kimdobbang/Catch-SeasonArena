@@ -56,7 +56,7 @@ const KNOCKBACK_DURATION = 100; // 100ms
 
 // <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
-async function joinPlayer(roomCode, socket, nickname, profileImage) {
+async function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
   // 플레이어 객체 생성
   const player = {
     socketId: socket.id,
@@ -76,6 +76,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
     canMove: true,
     kill: 0,
     rating: 500,
+    skill: skill,
   };
 
   // const playerData = await redisClient.get(nickname + " " + roomCode);
@@ -118,9 +119,9 @@ io.on("connection", (socket) => {
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
   // 게임방 참여
-  socket.on("joinRoom", ({ roomCode, nickname, profileImage }) => {
+  socket.on("joinRoom", ({ roomCode, nickname, profileImage, skill }) => {
     socket.join(roomCode);
-    joinPlayer(roomCode, socket, nickname, profileImage);
+    joinPlayer(roomCode, socket, nickname, profileImage, skill);
 
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
   });
@@ -166,7 +167,7 @@ socket.on("getPlayersInfo", (roomCode) => {
   // <<플레이어 움직임 & 정지 구현>>
   socket.on("playerMovement", (angle) => {
     const player = getPlayer(socket.id);
-
+    if(!player) return;
     if (player && player.canMove) {
       angle = angle * (Math.PI / 180);
       player.velocityX = Math.cos(angle) * player.speed * 5.5;
@@ -177,7 +178,7 @@ socket.on("getPlayersInfo", (roomCode) => {
 
   socket.on("stopMovement", () => {
     const player = getPlayer(socket.id);
-
+    if(!player)return;
     if (player) {
       player.velocityX = 0;
       player.velocityY = 0;
@@ -187,6 +188,7 @@ socket.on("getPlayersInfo", (roomCode) => {
   // <<플레이어 공격 기능>>
   socket.on("playerAttack", (roomCode) => {
     const players = getAllPlayers(roomCode);
+    if(!players)return;
     const attacker = getPlayer(socket.id);
     if (attacker) {
       // 공격 범위 내 플레이어 감지
@@ -196,6 +198,24 @@ socket.on("getPlayersInfo", (roomCode) => {
       io.in(roomCode).emit("playerAttacked", {
         attackerId: attacker.socketId,
         angle: attacker.direction,
+      });
+    }
+  });
+
+  // <<플레이어 스킬 기능>>
+  socket.on("playerSkill", (roomCode) => {
+    const room = rooms.get(roomCode);
+    if(!room)return;
+    const attacker = getPlayer(socket.id);
+    const skill = attacker.skill;
+    if (attacker) {
+      // 공격 범위 내 플레이어 감지
+      useSkill(room, attacker, skill, roomCode);
+
+      // 모든 클라이언트에게 공격 이벤트 전송
+      io.in(roomCode).emit("playerSkilled", {
+        attackerId: attacker.socketId,
+        skill: attacker.skill,
       });
     }
   });
@@ -287,11 +307,22 @@ server.listen(3000, () => {
 // <<socket.id로 플레이어를 불러오는 함수>>
 function getPlayer(socketId) {
   let roomCode = userRoom.get(socketId);
+
+  // 방이 존재하지 않으면 null 반환
+  if (!roomCode || !rooms.has(roomCode)) {
+    console.log(`( 경고 ) 방을 찾을 수 없습니다. socketId: ${socketId}`);
+    return null;
+  }
   return rooms.get(roomCode).players.get(socketId);
 }
 
 // <<roomCode로 플레이어들을 불러오는 함수>>
 function getAllPlayers(roomCode) {
+  if (!rooms.has(roomCode)) {
+    console.log(`( 경고 ) 방을 찾을 수 없습니다. roomCode: ${roomCode}`);
+    return null;
+  }
+
   return rooms.get(roomCode).players;
 }
 
@@ -423,5 +454,41 @@ async function sendMessage(result) {
   } finally {
     // 프로듀서 연결 종료
     await producer.disconnect();
+  }
+}
+//스킬 사용
+function useSkill(room, attacker, skill, roomCode) {
+  const magneticRadius = getMagneticRadius(room); // 자기장 반지름 가져오기
+
+  if (skill === "dragonfly") {
+    // 드래곤플라이 스킬 사용 시 반지름이 300 미만이면 사용 불가
+    if (magneticRadius < 300) {
+      console.log(`( 드래곤플라이 스킬 실패 ) 자기장 반지름이 너무 작아 스킬을 사용할 수 없습니다.`);
+      return;
+    }
+
+    // 자기장 중심과 반지름 가져오기
+    const { x: magneticX, y: magneticY } = room.magnetic;
+
+    // 플레이어를 이동시킬 거리 (자기장 반지름의 80% 정도를 사용하여 여유를 둠)
+    const moveRadius = magneticRadius * 0.8;
+
+    // 무작위 각도 선택
+    const randomAngle = Math.random() * 2 * Math.PI;
+
+    // 각도를 기반으로 새로운 좌표 계산
+    const newPosX = magneticX + moveRadius * Math.cos(randomAngle);
+    const newPosY = magneticY + moveRadius * Math.sin(randomAngle);
+    attacker.canMove = false;
+    // 새로운 위치로 플레이어 이동
+    setTimeout(() => {
+      attacker.x = newPosX;
+      attacker.y = newPosY;
+      attacker.canMove = true;
+      console.log(`( 드래곤플라이 스킬 ) ${attacker.nickname}가 1초 후에 자기장 내의 랜덤 위치로 이동했습니다: (${newPosX}, ${newPosY})`);
+    }, 1000);
+  } else {
+    // 다른 스킬에 대한 로직을 여기에 추가
+    console.log(`( 스킬 사용 ) ${attacker.nickname}가 ${skill} 스킬을 사용했습니다.`);
   }
 }

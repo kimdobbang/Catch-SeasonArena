@@ -17,6 +17,7 @@
       <input type="text" id="roomCode" placeholder="Enter Room Code" />
       <input type="text" id="nickname" placeholder="Enter Player Name" />
       <input type="text" id="profileImage" placeholder="Enter Profile Image" />
+      <input type="text" id="skill" placeholder="Enter Skill" />
       <button id="joinRoomButton">Join Room</button>
     </div>
 
@@ -28,11 +29,11 @@
           const roomCode = document.getElementById("roomCode").value;
           const nickname = document.getElementById("nickname").value;
           const profileImage = document.getElementById("profileImage").value;
-
+          const skill = document.getElementById("skill").value;
           console.log(`Room code entered: ${roomCode}`);
           console.log(`Player name entered: ${nickname}`);
 
-          joinRoom(roomCode, nickname, profileImage); // 입력받은 roomCode를 전달
+          joinRoom(roomCode, nickname, profileImage, skill); // 입력받은 roomCode를 전달
 
           // 모달과 오버레이를 숨기고 게임 화면 표시
           document.getElementById("modal").style.display = "none";

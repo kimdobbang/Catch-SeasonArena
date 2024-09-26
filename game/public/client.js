@@ -1,7 +1,7 @@
 // <<HTTP API 통신>>
-function joinRoom(roomCode, nickname, profileImage) {
+function joinRoom(roomCode, nickname, profileImage, skill) {
   ROOMCODE = roomCode;
-  socket.emit("joinRoom", { roomCode, nickname, profileImage });
+  socket.emit("joinRoom", { roomCode, nickname, profileImage, skill });
 }
 
 function startGame() {
@@ -10,8 +10,9 @@ function startGame() {
 }
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://192.168.31.171:3000");
+const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -61,6 +62,9 @@ let MAGNETIC = {};
 let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
 let MAGNETIC_COUNT = 0;
+let lastSkillUsedTime = 0; 
+const skillCooldown = 5000; 
+let cooldownText; 
 
 function preload() {
   this.load.image("player1", "./assets/player1.png");
@@ -158,7 +162,47 @@ function create() {
       socket.emit("playerAttack", ROOMCODE);
     }
   });
-
+   // <<스킬 버튼>>
+   const skillButton = this.add.circle(320, 600, 25, 0x4caf50).setInteractive().setScrollFactor(0); // 공격 버튼 위에 위치하도록 설정
+   cooldownText = this.add.text(320, 600, '', { fontSize: '16px', fill: '#ffffff' }).setOrigin(0.5).setScrollFactor(0);
+   cooldownText.setVisible(false); 
+   skillButton.on("pointerdown", () => {
+    const currentTime = Date.now();
+  
+    // 스킬 쿨타임 확인
+    if (currentTime - lastSkillUsedTime >= skillCooldown) {
+      // 쿨타임이 지난 경우 스킬 사용 가능
+      console.log("Skill activated!");
+  
+      // 스킬 사용 이벤트 서버로 전송
+      socket.emit("playerSkill", ROOMCODE);
+  
+      // 마지막 사용 시간을 현재 시간으로 업데이트
+      lastSkillUsedTime = currentTime;
+  
+      // 스킬 사용 후 버튼을 잠시 비활성화하고 투명도 적용
+      skillButton.setAlpha(0.5); // 버튼 반투명 처리
+      cooldownText.setText(skillCooldown/1000);
+      cooldownText.setVisible(true); // 텍스트 보이기
+      
+      // 남은 쿨다운 시간을 갱신하는 함수
+      const updateCooldown = setInterval(() => {
+        const elapsedTime = Date.now() - lastSkillUsedTime;
+        const remainingCooldown = Math.ceil((skillCooldown - elapsedTime) / 1000);
+  
+        if (remainingCooldown <= 0) {
+          cooldownText.setVisible(false); // 쿨타임이 끝나면 텍스트 숨기기
+          skillButton.setAlpha(1); // 버튼 다시 활성화
+          clearInterval(updateCooldown); // 업데이트 중지
+        } else {
+          cooldownText.setText(remainingCooldown); // 남은 쿨타임 텍스트 갱신
+        }
+      }, 1000); // 1초마다 업데이트
+  
+    } else {
+      // 스킬 쿨타임 중일 때 아무 동작도 하지 않음
+    }
+  });
   // <<미니맵 구현>>
   const miniMapWidth = 80;
   const miniMapHeight = 80;
@@ -194,6 +238,39 @@ function create() {
       clientPlayers[attackerId]
     );
   });
+
+  // <<플레이어들의 스킬 이벤트 받기>>
+socket.on("playerSkilled", ({ attackerId, skill }) => {
+  const player = clientPlayers[attackerId];
+
+  if (player && skill === "dragonfly") {
+    
+    console.log(`${player.nickname} 사용한 스킬: ${skill}`);
+    const portal = scene.add.circle(player.player.x, player.player.y, 60, 0x0000ff).setAlpha(0.7);
+   
+     portal.setScrollFactor(player.player.scrollFactorX, player.player.scrollFactorY);
+
+   
+    scene.tweens.add({
+      targets: portal,
+      scale: 1.2,  
+      duration: 800,
+      onComplete: () => {
+        portal.destroy(); 
+      },
+    });
+
+    scene.tweens.add({
+      targets: player.player,
+      alpha: 0.5, 
+      duration: 1000,
+      onComplete: () => {
+        player.player.alpha = 1; 
+      },
+    });
+  }
+});
+
 
   // <<플레이어 죽음 구현>>
   socket.on("playerDeath", (socketId) => {
