@@ -1,22 +1,5 @@
 // src/app/types/common.ts
-// 전역적으로 사용되는 공통 타입
-
-export interface UserInfo {
-  email: string;
-  nickName: string;
-}
-
-export interface UserStat {
-  attackPower: number;
-  defensePower: number;
-  speed: number;
-}
-
-export interface UserEquipment<T, U> {
-  weapon: T | U;
-  active: T | U;
-  passive: T | U;
-}
+// 여러 도메인이나 모듈에서 전역으로 사용되는 타입을 정의
 
 export interface Collection {
   id: number;
