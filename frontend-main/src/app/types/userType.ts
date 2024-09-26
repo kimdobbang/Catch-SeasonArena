@@ -1,3 +1,4 @@
+// src/ap/types/userType.ts
 // 사용자 관련 타입 정의
 export interface UserInfo {
   email: string;
@@ -11,7 +12,7 @@ export interface UserStat {
 }
 
 export interface UserEquipment<T, U> {
-  weapon: T | U;
-  active: T | U;
-  passive: T | U;
+  weapon: T | U | null;
+  active: T | U | null;
+  passive: T | U | null;
 }
