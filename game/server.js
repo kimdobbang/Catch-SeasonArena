@@ -224,9 +224,17 @@ socket.on("getPlayersInfo", (roomCode) => {
 setInterval(() => {
   rooms.forEach((room, roomCode) => {
     if (room.isEnd) {
-      rooms.delete(roomCode);
+      // 10초 뒤에 방 삭제
+      setTimeout(() => {
+        if (rooms.has(roomCode)) {
+          rooms.delete(roomCode);
+          console.log(`( 방 삭제 ) ${roomCode} 방이 10초 후에 삭제되었습니다.`);
+        }
+      }, 10000); // 10초 (10000ms)
+      
       return;
     }
+    
     if (room.isStarted) {
       const playersMap = room.players;
 
