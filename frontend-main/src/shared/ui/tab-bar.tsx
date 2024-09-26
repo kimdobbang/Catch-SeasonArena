@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-// 한글 이름 매핑을 포함하여 데이터를 가져옵니다
-import { seasonNames, itemTypeNames } from "@/app/types/common"; // 경로는 프로젝트 구조에 맞게 조정하세요
+import { seasonNames, itemTypeNames } from "@/app/types/common";
 
 type CategoryType = "Season" | "ItemType";
 
 interface TabBarProps {
-  categoryType: CategoryType; // 'Season' 또는 'ItemType' 선택
+  categoryType: CategoryType;
+  onCategoryChange?: (category: string) => void;
 }
 
-export const TabBar: React.FC<TabBarProps> = ({ categoryType }) => {
-  // 카테고리를 season 또는 itemType으로 설정
+export const TabBar: React.FC<TabBarProps> = ({
+  categoryType,
+  onCategoryChange,
+}) => {
   const categories = categoryType === "Season" ? seasonNames : itemTypeNames;
 
   const [activeTab, setActiveTab] = useState<string>(
@@ -17,7 +19,11 @@ export const TabBar: React.FC<TabBarProps> = ({ categoryType }) => {
   );
 
   const handleTabClick = (tab: string) => {
+    console.log("Tab clicked:", tab);
     setActiveTab(tab);
+    if (onCategoryChange) {
+      onCategoryChange(tab);
+    }
   };
 
   return (
@@ -27,15 +33,11 @@ export const TabBar: React.FC<TabBarProps> = ({ categoryType }) => {
           <li key={category} className="flex-grow">
             <button
               onClick={() => handleTabClick(category)}
-              className={`w-full p-4 border-b-2 rounded-t-lg transition-all duration-500 ease-in-out ${
+              className={`w-full pt-4 pb-2 border-b-2 rounded-t-lg transition-all duration-500 ease-in-out ${
                 activeTab === category
                   ? "text-catch-main-400 border-catch-main-400"
                   : "text-gray-500 border-transparent"
               }`}
-              style={{
-                transition:
-                  "border-color 0.5s ease-in-out, color 0.5s ease-in-out",
-              }}
             >
               {categories[category as keyof typeof categories]}
             </button>

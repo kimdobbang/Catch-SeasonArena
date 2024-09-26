@@ -2,7 +2,7 @@ interface ItemCellProps {
   onClick?: () => void;
   item: string;
   symbol?: JSX.Element;
-  season: string;
+  season?: string;
   itemType: string;
 }
 
@@ -10,7 +10,6 @@ export const ItemCell: React.FC<ItemCellProps> = ({
   onClick,
   item,
   symbol,
-  season,
   itemType,
 }) => {
   return (
@@ -19,8 +18,10 @@ export const ItemCell: React.FC<ItemCellProps> = ({
       onClick={onClick}
     >
       <div className="flex items-center justify-center w-8 h-8">{symbol}</div>
-      <div>{season}</div>
-      <p className="ml-2 text-catch-gray-600">{item}</p>
+      <div>
+        <div>{itemType}</div>
+        <p className="ml-2 text-catch-gray-600">{item}</p>
+      </div>
     </div>
   );
 };
