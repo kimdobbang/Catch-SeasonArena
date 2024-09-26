@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ItemCell } from "@entities/index";
 import { TabBar } from "@/shared/ui";
 
