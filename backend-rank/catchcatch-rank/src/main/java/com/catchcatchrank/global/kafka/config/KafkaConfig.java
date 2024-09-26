@@ -19,6 +19,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
+import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
+
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
@@ -37,7 +39,7 @@ public class KafkaConfig {
 	private String consumerGroupId;
 
 	@Bean
-	public ProducerFactory<String, KafkaRankEntity> producerFactory() {
+	public ProducerFactory<String, KafkaUpdateRankEntity> producerFactory() {
 		Map<String, Object> config = new HashMap<>();
 		config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -47,7 +49,7 @@ public class KafkaConfig {
 	}
 
 	@Bean
-	public KafkaTemplate<String, KafkaRankEntity> kafkaTemplate() {
+	public KafkaTemplate<String, KafkaUpdateRankEntity> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 
@@ -70,6 +72,30 @@ public class KafkaConfig {
 	public ConcurrentKafkaListenerContainerFactory<String, KafkaRankEntity> kafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, KafkaRankEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
+
+		return factory;
+	}
+
+
+	@Bean
+	public ConsumerFactory<String, KafkaUpdateRankEntity> consumerUpdateRankFactory() {
+		Map<String, Object> config = new HashMap<>();
+		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
+		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+		config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+
+		JsonDeserializer<KafkaUpdateRankEntity> deserializer = new JsonDeserializer<>(KafkaUpdateRankEntity.class, false);
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+
+		return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), deserializer);
+	}
+
+	@Bean
+	public ConcurrentKafkaListenerContainerFactory<String, KafkaUpdateRankEntity> kafkaUpdateRankListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, KafkaUpdateRankEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(consumerUpdateRankFactory());
 
 		return factory;
 	}
