@@ -13,11 +13,11 @@ export default defineConfig({
     svgr(),
     wasm(),
     VitePWA({
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg}"], // 캐싱할 파일 패턴 설정
-        globIgnores: ["**/*.html"], // .html 파일을 캐싱에서 제외
-      },
       registerType: "autoUpdate",
+      // 사용자 정의 Service Worker 파일을 지정합니다.
+      srcDir: "src", // Service Worker 파일을 위치시킬 폴더
+      filename: "custom-sw.ts", // 생성할 Service Worker 파일 이름
+      strategies: "injectManifest", // injectManifest를 사용하여 직접 만든 Service Worker에 설정을 주입
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
         name: "Vite PWA Project",
