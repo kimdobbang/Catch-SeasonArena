@@ -26,8 +26,11 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // 직렬화 불가능한 데이터를 처리할 때 문제를 피하기 위한 설정
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        ignoredPaths: [
+          "user.collections.createdAt",
+          "user.collections.updatedAt",
+        ], // 직렬화 검사에서 제외
       },
     }),
 });
