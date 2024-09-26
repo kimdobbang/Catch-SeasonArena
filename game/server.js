@@ -43,7 +43,9 @@ const rooms = new Map();
 /* rooms = <roomCode, room = {players: Map<socketId, player>,
                               isStarted : false,
                               magnetic : {x : ??, y : ??}, 
-                              startTime : 15723987892ms}> */
+                              startTime : 15723987892ms, 
+                              isEnd : false,
+                              */
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
@@ -88,7 +90,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage) {
         rooms.get(roomCode).isStarted = true;
       }
     }, 10000);
-    const tempRoom = { players: new Map(), isStarted: false };
+    const tempRoom = { players: new Map(), isStarted: false, isEnd: false };
     tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
@@ -146,10 +148,11 @@ io.on("connection", (socket) => {
   // <<플레이어 정보요청>>
 <<<<<<< Updated upstream
   socket.on("getPlayersInfo", (roomCode) => {
-    const playersMap = getAllPlayers(roomCode);
-    const players = Object.fromEntries(playersMap);
-
-    io.in(socket.id).emit("createPlayers", players);
+    if(!rooms.get(roomCode).isEnd){
+      const playersMap = getAllPlayers(roomCode);
+      const players = Object.fromEntries(playersMap);
+      io.in(socket.id).emit("createPlayers", players);
+    }
   });
 =======
 socket.on("getPlayersInfo", (roomCode) => {
@@ -209,7 +212,7 @@ socket.on("getPlayersInfo", (roomCode) => {
 
 setInterval(() => {
   rooms.forEach((room, roomCode) => {
-    if (room.players.size === 0) {
+    if (room.isEnd) {
       rooms.delete(roomCode);
       return;
     }
@@ -218,6 +221,7 @@ setInterval(() => {
 
       playersMap.forEach((player, socketId) => {
         if (playersMap.size === 1) {
+          room.isEnd = true;
           player.hp = 0;
         }
         // 플레이어 이동 반영
