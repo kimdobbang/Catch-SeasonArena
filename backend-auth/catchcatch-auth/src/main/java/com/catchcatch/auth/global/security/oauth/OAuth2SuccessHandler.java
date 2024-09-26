@@ -46,7 +46,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .build()
                 .toString();
 
-        response.addHeader("Authorization", "Bearer " + accessToken);
+//        response.addHeader("Authorization", "Bearer " + accessToken);
+        response.addCookie(createCookie("Authorization", accessToken));
         response.addCookie(createCookie("refreshToken", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
         response.sendRedirect(redirectUrl);
@@ -55,6 +56,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private Cookie createCookie(String key, String value){
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24*60*60);
+        cookie.setSecure(true);
         cookie.setHttpOnly(true);
         return cookie;
     }
