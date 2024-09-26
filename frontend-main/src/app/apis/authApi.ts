@@ -2,11 +2,13 @@
 // Redux와 책임 분리: API 요청 및 응답 처리. 토큰을 저장하거나, 서버와 통신하여 데이터를 받아오는 로직 처리.
 import config from "@/config";
 import { UserInfo } from "@/app/types/userType";
+// import { AppDispatch } from "@/app/redux/store";
+// import { setAuth } from "@/app/redux/slice/authSlice";
+// import { setUser } from "@/app/redux/slice/userSlice";
 
-export interface JoinUserData {
+export interface SignUpUserData {
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export interface LoginUserData {
@@ -15,23 +17,44 @@ export interface LoginUserData {
 }
 
 // 토큰 저장 함수
-export const setToken = (token: string | null) => {
-  if (token) {
-    localStorage.setItem("token", token); // 토큰을 로컬 스토리지에 저장
+export const setAccessToken = (accessToken: string | null) => {
+  if (accessToken) {
+    localStorage.setItem("accessToken", accessToken);
   } else {
-    localStorage.removeItem("token"); // 토큰을 제거
+    localStorage.removeItem("accessToken");
   }
 };
 
 // 토큰 가져오기 함수
-export const getToken = (): string | null => {
-  return localStorage.getItem("token");
+export const getAccessToken = (): string | null => {
+  return localStorage.getItem("accessToken");
+};
+
+// 이메일 중복 확인 API (쿼리 스트링 방식)
+export const checkEmailExists = async (email: string): Promise<boolean> => {
+  const response = await fetch(
+    `${config.API_BASE_URL}/api/auth/members/${encodeURIComponent(email)}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  console.log("Checking email");
+
+  console.log(response.ok);
+  if (response.ok) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 // 유저 가입 함수
-export const joinUser = async (
-  userData: UserInfo,
-): Promise<{ data: UserInfo; token: string | null }> => {
+export const signUpUser = async (
+  userData: SignUpUserData,
+): Promise<{ data: UserInfo; accessToken: string | null }> => {
   const response = await fetch(
     `${config.API_BASE_URL}/api/auth/members/signup`,
     {
@@ -39,7 +62,7 @@ export const joinUser = async (
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
       },
-      body: JSON.stringify(userData), // 이메일, 비밀번호, 비밀번호 확인 정보 전달
+      body: JSON.stringify(userData),
     },
   );
 
@@ -49,16 +72,17 @@ export const joinUser = async (
   }
 
   const data = await response.json();
-  const token = response.headers.get("Authorization")?.split(" ")[1] || null;
-  setToken(token);
-  return { data, token };
+  const accessToken =
+    response.headers.get("Authorization")?.split(" ")[1] || null;
+  setAccessToken(accessToken);
+  return { data, accessToken };
 };
 
 // 유저 로그인 함수
 export const loginUser = async (
   email: string,
   password: string,
-): Promise<{ data: UserInfo; token: string | null }> => {
+): Promise<{ data: UserInfo; accessToken: string | null }> => {
   const response = await fetch(
     `${config.API_BASE_URL}/api/auth/members/login`,
     {
@@ -76,22 +100,23 @@ export const loginUser = async (
   }
 
   const data = await response.json();
-  const token = response.headers.get("Authorization")?.split(" ")[1] || null;
-  setToken(token); // 로그인 성공 시 토큰 저장
-  return { data, token };
+  const accessToken =
+    response.headers.get("Authorization")?.split(" ")[1] || null;
+  setAccessToken(accessToken); // 로그인 성공 시 토큰 저장
+  return { data, accessToken };
 };
 
 // 사용자 정보 가져오기 함수
 export const fetchUserInfo = async (): Promise<UserInfo> => {
-  const token = getToken(); // local storage에서 gettoken
-  if (!token) {
+  const accessToken = getAccessToken(); // local storage에서 getAccessTokentoken
+  if (!accessToken) {
     throw new Error("토큰이 없습니다. or 로그인이 필요합니다.");
   }
   // 유저정보 main서버에 요청 api(명세에 없음)
   const response = await fetch(`${config.API_BASE_URL}/api/main/undefined`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json;charset=UTF-8",
     },
   });

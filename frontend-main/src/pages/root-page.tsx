@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setAuth } from "@/app/redux/slice/authSlice";
 import { SplashPage } from "./splash-page";
 
 export const RootPage = () => {
@@ -29,7 +28,6 @@ export const RootPage = () => {
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("token", accessToken);
         console.log("3. OAuth 로그인 성공, 토큰 저장 완:", accessToken);
-        dispatch(setAuth({ accessToken }));
         navigate("/main");
       } else {
         throw new Error("Authorization 헤더에 유효한 토큰이 없습니다.");
