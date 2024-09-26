@@ -81,11 +81,11 @@ export const ItemLibrary = () => {
   // TabBar에서 선택된 카테고리 변경 핸들러
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    setCurrentPage(1); // 카테고리가 바뀔 때 페이지를 첫 페이지로 리셋
+    setCurrentPage(1);
   };
 
   return (
-    <div className="h-[40%]">
+    <div>
       {/* TabBar에서 선택된 카테고리를 부모로 전달 */}
       <TabBar categoryType="ItemType" onCategoryChange={handleCategoryChange} />
       <div>
