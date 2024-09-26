@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
   collections: Collection[];
-  selectedAvatar: number | null; // 기본 아바타 설정 필요
+  selectedAvatar: number; // 기본 아바타 설정 필요
   rating: number | null; // 시작 레이팅 설정 필요
   equipment: UserEquipment<ItemType, string>;
 }
@@ -13,7 +13,7 @@ export interface UserState {
 // 초기 상태 설정
 const initialState: UserState = {
   collections: [],
-  selectedAvatar: 0, // 기본 아바타 ID 설정
+  selectedAvatar: 1, // 기본 아바타 ID 설정
   rating: 500, // 시작 레이팅 설정
   equipment: {
     weapon: "",
