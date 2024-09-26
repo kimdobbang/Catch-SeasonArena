@@ -8,8 +8,8 @@ export interface UserInfo {
 }
 
 export interface UserStat {
+  hp: number;
   attackPower: number;
-  defensePower: number;
   speed: number;
 }
 
