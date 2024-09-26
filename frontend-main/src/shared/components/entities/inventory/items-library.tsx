@@ -81,11 +81,11 @@ export const ItemLibrary = () => {
   // TabBar에서 선택된 카테고리 변경 핸들러
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    setCurrentPage(1); // 카테고리가 바뀔 때 페이지를 첫 페이지로 리셋
+    setCurrentPage(1);
   };
 
   return (
-    <div className="h-[40%]">
+    <div>
       {/* TabBar에서 선택된 카테고리를 부모로 전달 */}
       <TabBar categoryType="ItemType" onCategoryChange={handleCategoryChange} />
       <div>
@@ -103,28 +103,14 @@ export const ItemLibrary = () => {
       </div>
 
       {/* 페이지네이션 버튼 */}
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 ${
-            currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-          }`}
-        >
+      <div className="flex justify-center mt-4">
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>
           이전
         </button>
-        <span>
+        <div className="justify-center mx-3 felx">
           {currentPage} / {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 ${
-            currentPage === totalPages
-              ? "bg-gray-300"
-              : "bg-blue-500 text-white"
-          }`}
-        >
+        </div>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           다음
         </button>
       </div>

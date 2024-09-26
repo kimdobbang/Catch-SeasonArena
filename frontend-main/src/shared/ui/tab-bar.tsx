@@ -19,7 +19,6 @@ export const TabBar: React.FC<TabBarProps> = ({
   );
 
   const handleTabClick = (tab: string) => {
-    console.log("Tab clicked:", tab);
     setActiveTab(tab);
     if (onCategoryChange) {
       onCategoryChange(tab);
@@ -28,7 +27,7 @@ export const TabBar: React.FC<TabBarProps> = ({
 
   return (
     <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-      <ul className="flex justify-between w-full -mb-px">
+      <ul className="flex justify-between w-full -mb-px shadow-custom-inset">
         {Object.keys(categories).map((category) => (
           <li key={category} className="flex-grow">
             <button
