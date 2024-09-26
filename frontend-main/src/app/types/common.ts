@@ -1,4 +1,47 @@
 // src/app/types/common.ts
+// 전역적으로 사용되는 공통 타입
+
+export interface UserInfo {
+  email: string;
+  nickName: string;
+}
+
+export interface UserStat {
+  attackPower: number;
+  defensePower: number;
+  speed: number;
+}
+
+export interface UserEquipment<T, U> {
+  weapon: T | U;
+  active: T | U;
+  passive: T | U;
+}
+
+export interface Collection {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  quantity: number;
+  grade: ItemGrade;
+  season: Season;
+  type: ItemType;
+}
+
+export interface Item {
+  id: number;
+  name: string;
+  type: ItemType;
+  grade: ItemGrade;
+  skill: string;
+  season: Season;
+  description: string;
+  image: string;
+  createdAt: Date;
+  updatedAt: Date;
+  durability: number;
+}
 
 // 타입 정의(대문자로 수정)
 export type ItemGrade = "normal" | "rare" | "legend";
