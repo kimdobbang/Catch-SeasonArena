@@ -144,12 +144,30 @@ io.on("connection", (socket) => {
   });
 
   // <<플레이어 정보요청>>
+<<<<<<< Updated upstream
   socket.on("getPlayersInfo", (roomCode) => {
     const playersMap = getAllPlayers(roomCode);
     const players = Object.fromEntries(playersMap);
 
     io.in(socket.id).emit("createPlayers", players);
   });
+=======
+socket.on("getPlayersInfo", (roomCode) => {
+  const room = rooms.get(roomCode); 
+  if (!room) {
+    console.log(`방을 찾을 수 없습니다: ${roomCode}`);
+    return;  
+  }
+
+  // 방이 존재하고 게임이 끝나지 않은 경우에만 처리
+  if (!room.isEnd) {
+    const playersMap = getAllPlayers(roomCode);
+    const players = Object.fromEntries(playersMap);
+    io.in(socket.id).emit("createPlayers", players);
+  }
+});
+
+>>>>>>> Stashed changes
 
   // <<플레이어 움직임 & 정지 구현>>
   socket.on("playerMovement", (angle) => {
@@ -193,6 +211,7 @@ setInterval(() => {
   rooms.forEach((room, roomCode) => {
     if (room.players.size === 0) {
       rooms.delete(roomCode);
+      return;
     }
     if (room.isStarted) {
       const playersMap = room.players;
