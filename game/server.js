@@ -146,15 +146,6 @@ io.on("connection", (socket) => {
   });
 
   // <<플레이어 정보요청>>
-<<<<<<< Updated upstream
-  socket.on("getPlayersInfo", (roomCode) => {
-    if(!rooms.get(roomCode).isEnd){
-      const playersMap = getAllPlayers(roomCode);
-      const players = Object.fromEntries(playersMap);
-      io.in(socket.id).emit("createPlayers", players);
-    }
-  });
-=======
 socket.on("getPlayersInfo", (roomCode) => {
   const room = rooms.get(roomCode); 
   if (!room) {
@@ -170,7 +161,7 @@ socket.on("getPlayersInfo", (roomCode) => {
   }
 });
 
->>>>>>> Stashed changes
+
 
   // <<플레이어 움직임 & 정지 구현>>
   socket.on("playerMovement", (angle) => {
