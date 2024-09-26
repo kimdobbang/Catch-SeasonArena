@@ -10,6 +10,8 @@ export interface Collection {
   grade: ItemGrade;
   season: Season;
   type: ItemType;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Item {
@@ -21,8 +23,6 @@ export interface Item {
   season: Season;
   description: string;
   image: string;
-  createdAt: Date;
-  updatedAt: Date;
   durability: number;
 }
 
