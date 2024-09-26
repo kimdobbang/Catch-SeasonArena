@@ -6,9 +6,11 @@ import { HeaderLayout, Layout, MainLayout } from "@/shared/ui/index";
 import { Main } from "@/features/main/main";
 import { Ranking } from "@/features/main/ranking";
 import { Avartar } from "@/features/main/avartar";
-import { Collect } from "@/features/collect/collect";
 import { Inventory } from "@/features/inventory/inventory";
 import { RootPage } from "@/pages/root-page";
+import { CollectPage } from "@/pages/collect-page";
+import { CollectGamePage } from "@/pages/collect-game-page";
+import { CollectResultPage } from "@/pages/collect-result-page";
 
 // 로그인 사용자만
 
@@ -41,7 +43,20 @@ export const AppRouter = () => {
         },
         {
           path: "/collect",
-          element: <Collect />,
+          children: [
+            {
+              index: true,
+              element: <CollectPage />,
+            },
+            {
+              path: "processing",
+              element: <CollectGamePage />,
+            },
+            {
+              path: "result",
+              element: <CollectResultPage />,
+            },
+          ],
         },
       ],
     },

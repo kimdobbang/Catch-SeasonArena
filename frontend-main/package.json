@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
+    "@types/axios": "^0.14.0",
     "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.7.7",
     "onnxruntime-web": "^1.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
