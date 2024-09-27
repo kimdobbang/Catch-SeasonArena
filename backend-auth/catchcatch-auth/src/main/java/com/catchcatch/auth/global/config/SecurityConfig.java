@@ -70,6 +70,7 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
 
                 configuration.setAllowedOrigins(Collections.singletonList("https://j11b106.p.ssafy.io"));
+                configuration.setAllowedMethods(Collections.singletonList("http://localhost:3000"));
                 configuration.setAllowedMethods(Collections.singletonList("*"));
                 configuration.setAllowCredentials(true);
                 configuration.setAllowedHeaders(Collections.singletonList("*"));
