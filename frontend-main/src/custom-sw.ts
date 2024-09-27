@@ -10,6 +10,8 @@ precacheAndRoute(self.__WB_MANIFEST);
 // 특정 경로를 제외하고 모든 탐색 요청에 대해 index.html을 반환합니다.
 registerRoute(
   new NavigationRoute(createHandlerBoundToURL("/index.html"), {
-    denylist: [/^\/game/], // 제외할 경로 추가
+    denylist: [/^\/game.*/, /^\/api.*/],
+    // denylist: [/^\/game.*/],
+    // 제외할 경로 추가
   }),
 );

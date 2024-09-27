@@ -9,6 +9,7 @@ import { Avartar } from "@/features/main/avartar";
 import { Collect } from "@/features/collect/collect";
 import { Inventory } from "@/features/inventory/inventory";
 import { RootPage } from "@/pages/root-page";
+import { OAuthCallbackPage } from "@/pages/oauth-callback-page";
 
 // 로그인 사용자만
 
@@ -20,6 +21,7 @@ export const AppRouter = () => {
       path: "/",
       element: <RootPage />,
     },
+    { path: "/oauth/token/*", element: <OAuthCallbackPage /> },
     {
       element: <Layout />,
       errorElement: <div>에러발생 1</div>,
