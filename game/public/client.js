@@ -1,7 +1,7 @@
 // <<HTTP API 통신>>
-function joinRoom(roomCode, nickname, profileImage, skill) {
+function joinRoom(roomCode, nickname, profileImage) {
   ROOMCODE = roomCode;
-  socket.emit("joinRoom", { roomCode, nickname, profileImage, skill });
+  socket.emit("joinRoom", { roomCode, nickname, profileImage });
 }
 
 function startGame() {
@@ -9,10 +9,23 @@ function startGame() {
   setTimeout(() => (gameStarted = true), 3000);
 }
 
+// // 클라이언트: 쿼리 스트링에서 roomCode와 nickname 추출
+// const queryParams = new URLSearchParams(window.location.search);
+// const roomCode = queryParams.get('roomCode');
+// const nickname = queryParams.get('nickname');
+
+// // Socket.io 클라이언트 초기화 시 roomCode와 nickname을 서버에 전달
+// const socket = io('https://j11b106.p.ssafy.io', {
+//   query: {
+//     roomCode,
+//     nickname
+//   }
+// });
+
 // <<phaser config>>
 // const socket = io("https://j11b106.p.ssafy.io");
-// const socket = io("http://192.168.31.171:3000");
-const socket = io("http://localhost:3000");
+const socket = io("http://192.168.31.171:3000");
+// const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -23,8 +36,8 @@ socket.on("gameStart", (magnetic) => {
 
 const config = {
   type: Phaser.AUTO,
-  width: 400,
-  height: 800,
+  width: 800,
+  height: 400,
   backgroundColor: "#2d2d2d",
   physics: {
     default: "arcade",
@@ -62,9 +75,9 @@ let MAGNETIC = {};
 let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
 let MAGNETIC_COUNT = 0;
-let lastSkillUsedTime = 0; 
-const skillCooldown = 5000; 
-let cooldownText; 
+let lastSkillUsedTime = 0;
+let skillCooldown = 5000;
+let cooldownText;
 
 function preload() {
   this.load.image("player1", "./assets/player1.png");
@@ -106,8 +119,8 @@ function create() {
 
   // <<조이스틱>>
   let joystick = this.plugins.get("rexVirtualJoystick").add(this, {
-    x: 80,
-    y: 700,
+    x: 100,
+    y: 300,
     radius: 50,
     base: this.add.circle(0, 0, 50, 0x888888).setOrigin(0.5).setScrollFactor(0),
     thumb: this.add
@@ -146,7 +159,7 @@ function create() {
 
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(320, 700, 50, 0xf29627)
+    .circle(700, 300, 50, 0xf29627)
     .setInteractive()
     .setScrollFactor(0);
 
@@ -162,62 +175,63 @@ function create() {
       socket.emit("playerAttack", ROOMCODE);
     }
   });
-   // <<스킬 버튼>>
-   const skillButton = this.add.circle(320, 600, 25, 0x4caf50).setInteractive().setScrollFactor(0); // 공격 버튼 위에 위치하도록 설정
-   cooldownText = this.add.text(320, 600, '', { fontSize: '16px', fill: '#ffffff' }).setOrigin(0.5).setScrollFactor(0);
-   cooldownText.setVisible(false); 
-   skillButton.on("pointerdown", () => {
+
+  // <<스킬 버튼>>
+  const skillButton = this.add
+    .circle(320, 600, 25, 0x4caf50)
+    .setInteractive()
+    .setScrollFactor(0);
+  cooldownText = this.add
+    .text(320, 600, "", { fontSize: "16px", fill: "#ffffff" })
+    .setOrigin(0.5)
+    .setScrollFactor(0);
+  cooldownText.setVisible(false);
+  skillButton.on("pointerdown", () => {
     const currentTime = Date.now();
-  
+
     // 스킬 쿨타임 확인
     if (currentTime - lastSkillUsedTime >= skillCooldown) {
-      // 쿨타임이 지난 경우 스킬 사용 가능
-      console.log("Skill activated!");
-  
-      // 스킬 사용 이벤트 서버로 전송
       socket.emit("playerSkill", ROOMCODE);
-  
-      // 마지막 사용 시간을 현재 시간으로 업데이트
       lastSkillUsedTime = currentTime;
-  
-      // 스킬 사용 후 버튼을 잠시 비활성화하고 투명도 적용
-      skillButton.setAlpha(0.5); // 버튼 반투명 처리
-      cooldownText.setText(skillCooldown/1000);
-      cooldownText.setVisible(true); // 텍스트 보이기
-      
+      skillButton.setAlpha(0.5);
+      cooldownText.setText(skillCooldown / 1000);
+      cooldownText.setVisible(true);
+
       // 남은 쿨다운 시간을 갱신하는 함수
       const updateCooldown = setInterval(() => {
         const elapsedTime = Date.now() - lastSkillUsedTime;
-        const remainingCooldown = Math.ceil((skillCooldown - elapsedTime) / 1000);
-  
+        const remainingCooldown = Math.ceil(
+          (skillCooldown - elapsedTime) / 1000
+        );
+
         if (remainingCooldown <= 0) {
-          cooldownText.setVisible(false); // 쿨타임이 끝나면 텍스트 숨기기
-          skillButton.setAlpha(1); // 버튼 다시 활성화
+          cooldownText.setVisible(false);
+          skillButton.setAlpha(1);
           clearInterval(updateCooldown); // 업데이트 중지
         } else {
-          cooldownText.setText(remainingCooldown); // 남은 쿨타임 텍스트 갱신
+          cooldownText.setText(remainingCooldown);
         }
-      }, 1000); // 1초마다 업데이트
-  
+      }, 1000);
     } else {
       // 스킬 쿨타임 중일 때 아무 동작도 하지 않음
     }
   });
+
   // <<미니맵 구현>>
-  const miniMapWidth = 80;
-  const miniMapHeight = 80;
+  const miniMapWidth = 100;
+  const miniMapHeight = 100;
   const miniMap = this.add.graphics();
   miniMap.lineStyle(1, 0x000000);
   miniMap.fillStyle(0xf5deb3);
   miniMap.fillRect(
-    this.cameras.main.width - miniMapWidth / 2 - 20 - miniMapWidth / 2,
-    20,
+    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
+    25,
     miniMapWidth,
     miniMapHeight
   );
   miniMap.strokeRect(
-    this.cameras.main.width - miniMapWidth / 2 - 20 - miniMapWidth / 2,
-    20,
+    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
+    25,
     miniMapWidth,
     miniMapHeight
   );
@@ -240,37 +254,43 @@ function create() {
   });
 
   // <<플레이어들의 스킬 이벤트 받기>>
-socket.on("playerSkilled", ({ attackerId, skill }) => {
-  const player = clientPlayers[attackerId];
+  socket.on("playerSkilled", ({ attackerId, skill }) => {
+    const player = clientPlayers[attackerId];
 
-  if (player && skill === "dragonfly") {
-    
-    console.log(`${player.nickname} 사용한 스킬: ${skill}`);
-    const portal = scene.add.circle(player.player.x, player.player.y, 60, 0x0000ff).setAlpha(0.7);
-   
-     portal.setScrollFactor(player.player.scrollFactorX, player.player.scrollFactorY);
+    if (player) {
+      useSkill(scene, player, skill);
+    }
 
-   
-    scene.tweens.add({
-      targets: portal,
-      scale: 1.2,  
-      duration: 800,
-      onComplete: () => {
-        portal.destroy(); 
-      },
-    });
+    if (player && skill === "dragonfly") {
+      console.log(`${player.nickname} 사용한 스킬: ${skill}`);
+      const portal = scene.add
+        .circle(player.player.x, player.player.y, 60, 0x0000ff)
+        .setAlpha(0.7);
 
-    scene.tweens.add({
-      targets: player.player,
-      alpha: 0.5, 
-      duration: 1000,
-      onComplete: () => {
-        player.player.alpha = 1; 
-      },
-    });
-  }
-});
+      portal.setScrollFactor(
+        player.player.scrollFactorX,
+        player.player.scrollFactorY
+      );
 
+      scene.tweens.add({
+        targets: portal,
+        scale: 1.2,
+        duration: 800,
+        onComplete: () => {
+          portal.destroy();
+        },
+      });
+
+      scene.tweens.add({
+        targets: player.player,
+        alpha: 0.5,
+        duration: 1000,
+        onComplete: () => {
+          player.player.alpha = 1;
+        },
+      });
+    }
+  });
 
   // <<플레이어 죽음 구현>>
   socket.on("playerDeath", (socketId) => {
@@ -335,8 +355,8 @@ socket.on("playerSkilled", ({ attackerId, skill }) => {
           players[key].y
         );
         if (tempDist < 700) {
-          const pointX = players[key].x / (5000 / 80) + 300;
-          const pointY = players[key].y / (5000 / 80) + 20;
+          const pointX = players[key].x / 50 + 675;
+          const pointY = players[key].y / 50 + 25;
           if (tempDist === 0) {
             clientPlayers[key].point.fillStyle(0x00ff00, 1);
           } else {
@@ -427,8 +447,8 @@ function createPlayer(scene, players) {
     clientPlayers[player.socketId].nickname = nickname;
 
     // 자기장 중심점 생성
-    const magneticCenterX = MAGNETIC.x / (5000 / 80) + 300;
-    const magneticCenterY = MAGNETIC.y / (5000 / 80) + 20;
+    const magneticCenterX = MAGNETIC.x / 50 + 675;
+    const magneticCenterY = MAGNETIC.y / 50 + 25;
 
     const magneticCenter = scene.add.graphics();
     magneticCenter.fillStyle(0x0000ff, 1);
@@ -448,8 +468,8 @@ function createPlayer(scene, players) {
 
     // 미니맵 포인트들 생성
     const point = scene.add.graphics();
-    const pointX = player.x / (5000 / 80) + 300;
-    const pointY = player.y / (5000 / 80) + 20;
+    const pointX = player.x / 50 + 675;
+    const pointY = player.y / 50 + 25;
     point.fillStyle(0x00ff00, 1);
     point.fillCircle(pointX, pointY, 2);
     point.setScrollFactor(0);
@@ -519,4 +539,41 @@ function calcDist(myX, myY, playerX, playerY) {
   return Math.sqrt(
     (myX - playerX) * (myX - playerX) + (myY - playerY) * (myY - playerY)
   );
+}
+
+function useSkill(scene, player, skill) {
+  switch (skill) {
+    case 4:
+      useDragonfly(scene, player);
+      break;
+  }
+}
+
+function useDragonfly(scene, player) {
+  const portal = scene.add
+    .circle(player.player.x, player.player.y, 60, 0x0000ff)
+    .setAlpha(0.7);
+
+  portal.setScrollFactor(
+    player.player.scrollFactorX,
+    player.player.scrollFactorY
+  );
+
+  scene.tweens.add({
+    targets: portal,
+    scale: 1.1,
+    duration: 800,
+    onComplete: () => {
+      portal.destroy();
+    },
+  });
+
+  scene.tweens.add({
+    targets: player.player,
+    alpha: 0.5,
+    duration: 1000,
+    onComplete: () => {
+      player.player.alpha = 1;
+    },
+  });
 }
