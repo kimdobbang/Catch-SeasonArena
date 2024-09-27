@@ -9,7 +9,7 @@ export interface UserInfo {
 // 유저의 게임 스탯
 export interface UserStat {
   hp: number;
-  attackPower: number;
+  coverage: number;
   speed: number;
 }
 

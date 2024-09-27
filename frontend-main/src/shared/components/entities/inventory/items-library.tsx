@@ -40,21 +40,17 @@ export const ItemLibrary = () => {
     { item: "아이템10", season: "autumn", itemType: "active" },
   ];
 
-  // 한 페이지에 보여줄 아이템 수
   const itemsPerPage = 8;
 
-  // 현재 페이지 상태 관리
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 선택된 카테고리 상태 관리
   const [selectedCategory, setSelectedCategory] = useState("weapon");
 
-  // 선택된 카테고리에 맞게 아이템 필터링
   const filteredItems = items.filter(
     (item) => item.itemType === selectedCategory,
   );
 
-  // 총 페이지 수 계산
+  // 필요 페이지 수
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
   // 현재 페이지에 해당하는 아이템 슬라이스

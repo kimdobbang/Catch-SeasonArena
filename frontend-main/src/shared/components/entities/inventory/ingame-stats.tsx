@@ -28,16 +28,16 @@ export const InGameStats = () => {
         <p className="w-8 text-right">{currentStats.hp}</p>
       </div>
 
-      {/* 공격력 */}
+      {/* 사거리 */}
       <div className="flex items-center">
-        <div className="w-20 text-sm text-gray-600">공격력</div>
+        <div className="w-20 text-sm text-gray-600">사거리</div>
         <div className="w-full bg-gray-200 rounded-full h-2.5 mx-2">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            style={{ width: `${(currentStats.attackPower / 20) * 100}%` }}
+            style={{ width: `${(currentStats.coverage / 20) * 100}%` }}
           />
         </div>
-        <p className="w-8 text-right">{currentStats.attackPower}</p>
+        <p className="w-8 text-right">{currentStats.coverage}</p>
       </div>
 
       {/* 속도 */}
