@@ -35,7 +35,6 @@ app.use("/game", express.static(path.join(__dirname, "public")));
 const redisClient = createClient({
   url: "redis://localhost:6379",
 });
-
 redisClient.connect().catch(console.error);
 
 // 방을 관리할 자료구조 (Map)
@@ -43,9 +42,7 @@ const rooms = new Map();
 /* rooms = <roomCode, room = {players: Map<socketId, player>,
                               isStarted : false,
                               magnetic : {x : ??, y : ??}, 
-                              startTime : 15723987892ms, 
-                              isEnd : false,
-                              */
+                              startTime : 15723987892ms}> */
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
@@ -56,7 +53,7 @@ const KNOCKBACK_DURATION = 100; // 100ms
 
 // <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
-async function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
+function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
   // 플레이어 객체 생성
   const player = {
     socketId: socket.id,
@@ -76,10 +73,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
     canMove: true,
     kill: 0,
     rating: 500,
-    skill: skill,
   };
-
-  // const playerData = await redisClient.get(nickname + " " + roomCode);
 
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
@@ -91,7 +85,7 @@ async function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
         rooms.get(roomCode).isStarted = true;
       }
     }, 10000);
-    const tempRoom = { players: new Map(), isStarted: false, isEnd: false };
+    const tempRoom = { players: new Map(), isStarted: false };
     tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
@@ -116,12 +110,19 @@ async function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
 
 // <<게임>>
 io.on("connection", (socket) => {
+  // // 클라이언트에서 보낸 roomCode와 nickname 조회
+  // const { roomCode, nickname } = socket.handshake.query;
+
+  const playerData = getPlayerData(nickname, roomCode);
+  // const profileImage =  영호가 해놓을거임
+  // const skill =  영호가 해놓을거임
+
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
-  // 게임방 참여
+  // 게임방 참여 (나중에 socket.on 지우기, 클라에서도 지우기)
   socket.on("joinRoom", ({ roomCode, nickname, profileImage, skill }) => {
     socket.join(roomCode);
-    joinPlayer(roomCode, socket, nickname, profileImage, skill);
+    joinPlayer(roomCode, socket, nickname, profileImage);
 
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
   });
@@ -147,27 +148,25 @@ io.on("connection", (socket) => {
   });
 
   // <<플레이어 정보요청>>
-socket.on("getPlayersInfo", (roomCode) => {
-  const room = rooms.get(roomCode); 
-  if (!room) {
-    console.log(`방을 찾을 수 없습니다: ${roomCode}`);
-    return;  
-  }
+  socket.on("getPlayersInfo", (roomCode) => {
+    const room = rooms.get(roomCode);
+    if (!room) {
+      console.log(`방을 찾을 수 없습니다: ${roomCode}`);
+      return;
+    }
 
-  // 방이 존재하고 게임이 끝나지 않은 경우에만 처리
-  if (!room.isEnd) {
-    const playersMap = getAllPlayers(roomCode);
-    const players = Object.fromEntries(playersMap);
-    io.in(socket.id).emit("createPlayers", players);
-  }
-});
-
-
+    // 방이 존재하고 게임이 끝나지 않은 경우에만 처리
+    if (!room.isEnd) {
+      const playersMap = getAllPlayers(roomCode);
+      const players = Object.fromEntries(playersMap);
+      io.in(socket.id).emit("createPlayers", players);
+    }
+  });
 
   // <<플레이어 움직임 & 정지 구현>>
   socket.on("playerMovement", (angle) => {
     const player = getPlayer(socket.id);
-    if(!player) return;
+    if (!player) return;
     if (player && player.canMove) {
       angle = angle * (Math.PI / 180);
       player.velocityX = Math.cos(angle) * player.speed * 5.5;
@@ -178,7 +177,7 @@ socket.on("getPlayersInfo", (roomCode) => {
 
   socket.on("stopMovement", () => {
     const player = getPlayer(socket.id);
-    if(!player)return;
+    if (!player) return;
     if (player) {
       player.velocityX = 0;
       player.velocityY = 0;
@@ -188,7 +187,7 @@ socket.on("getPlayersInfo", (roomCode) => {
   // <<플레이어 공격 기능>>
   socket.on("playerAttack", (roomCode) => {
     const players = getAllPlayers(roomCode);
-    if(!players)return;
+    if (!players) return;
     const attacker = getPlayer(socket.id);
     if (attacker) {
       // 공격 범위 내 플레이어 감지
@@ -205,7 +204,7 @@ socket.on("getPlayersInfo", (roomCode) => {
   // <<플레이어 스킬 기능>>
   socket.on("playerSkill", (roomCode) => {
     const room = rooms.get(roomCode);
-    if(!room)return;
+    if (!room) return;
     const attacker = getPlayer(socket.id);
     const skill = attacker.skill;
     if (attacker) {
@@ -231,18 +230,14 @@ setInterval(() => {
           console.log(`( 방 삭제 ) ${roomCode} 방이 10초 후에 삭제되었습니다.`);
         }
       }, 10000); // 10초 (10000ms)
-      
+
       return;
     }
-    
+
     if (room.isStarted) {
       const playersMap = room.players;
 
       playersMap.forEach((player, socketId) => {
-        if (playersMap.size === 1) {
-          room.isEnd = true;
-          player.hp = 0;
-        }
         // 플레이어 이동 반영
         if (player.canMove) {
           player.x += player.velocityX;
@@ -267,7 +262,8 @@ setInterval(() => {
             rating: rating,
           };
 
-          sendMessage(result);
+          sendMessage(result); // 카프카로 전송
+          saveResultToRedis(nickname, result); // 레디스에 저장
 
           getAllPlayers(roomCode).delete(player.socketId);
           io.in(roomCode).emit("playerDeath", player.socketId);
@@ -312,25 +308,47 @@ server.listen(3000, () => {
 
 // ============================================================================ //
 
+// nickname과 roomCode를 키로 데이터 조회
+async function getPlayerData(nickname, roomCode) {
+  try {
+    // 키 생성
+    const key = `${nickname} ${roomCode}`;
+
+    // Redis에서 데이터 조회
+    const playerData = await redisClient.get(key);
+
+    if (playerData) {
+      console.log(`데이터 조회 성공: ${playerData}`);
+      return JSON.parse(playerData); // JSON으로 변환해서 반환
+    } else {
+      console.log(`해당 키로 조회된 데이터가 없습니다: ${key}`);
+      return null;
+    }
+  } catch (err) {
+    console.error(`Redis 조회 중 오류 발생: ${err}`);
+    throw err;
+  }
+}
+
+// result 객체를 Redis에 저장하는 함수
+async function saveResultToRedis(nickname, result) {
+  try {
+    // HSET 명령을 통해 nickname을 키로 나머지 데이터를 저장
+    await redisClient.hSet(nickname, result);
+    console.log(`데이터 저장 성공: ${nickname}`);
+  } catch (err) {
+    console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
+  }
+}
+
 // <<socket.id로 플레이어를 불러오는 함수>>
 function getPlayer(socketId) {
   let roomCode = userRoom.get(socketId);
-
-  // 방이 존재하지 않으면 null 반환
-  if (!roomCode || !rooms.has(roomCode)) {
-    console.log(`( 경고 ) 방을 찾을 수 없습니다. socketId: ${socketId}`);
-    return null;
-  }
   return rooms.get(roomCode).players.get(socketId);
 }
 
 // <<roomCode로 플레이어들을 불러오는 함수>>
 function getAllPlayers(roomCode) {
-  if (!rooms.has(roomCode)) {
-    console.log(`( 경고 ) 방을 찾을 수 없습니다. roomCode: ${roomCode}`);
-    return null;
-  }
-
   return rooms.get(roomCode).players;
 }
 
@@ -471,7 +489,9 @@ function useSkill(room, attacker, skill, roomCode) {
   if (skill === "dragonfly") {
     // 드래곤플라이 스킬 사용 시 반지름이 300 미만이면 사용 불가
     if (magneticRadius < 300) {
-      console.log(`( 드래곤플라이 스킬 실패 ) 자기장 반지름이 너무 작아 스킬을 사용할 수 없습니다.`);
+      console.log(
+        `( 드래곤플라이 스킬 실패 ) 자기장 반지름이 너무 작아 스킬을 사용할 수 없습니다.`
+      );
       return;
     }
 
@@ -493,10 +513,14 @@ function useSkill(room, attacker, skill, roomCode) {
       attacker.x = newPosX;
       attacker.y = newPosY;
       attacker.canMove = true;
-      console.log(`( 드래곤플라이 스킬 ) ${attacker.nickname}가 1초 후에 자기장 내의 랜덤 위치로 이동했습니다: (${newPosX}, ${newPosY})`);
+      console.log(
+        `( 드래곤플라이 스킬 ) ${attacker.nickname}가 1초 후에 자기장 내의 랜덤 위치로 이동했습니다: (${newPosX}, ${newPosY})`
+      );
     }, 1000);
   } else {
     // 다른 스킬에 대한 로직을 여기에 추가
-    console.log(`( 스킬 사용 ) ${attacker.nickname}가 ${skill} 스킬을 사용했습니다.`);
+    console.log(
+      `( 스킬 사용 ) ${attacker.nickname}가 ${skill} 스킬을 사용했습니다.`
+    );
   }
 }
