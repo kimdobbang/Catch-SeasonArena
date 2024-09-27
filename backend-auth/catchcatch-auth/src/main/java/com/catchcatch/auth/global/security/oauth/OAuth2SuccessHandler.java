@@ -42,12 +42,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         log.info("access token : {}", accessToken);
 
         String redirectUrl = UriComponentsBuilder.
-                fromUriString("https://j11b106.p.ssafy.io")
+                fromUriString("https://j11b106.p.ssafy.io/oauth/token/" + accessToken)
                 .build()
                 .toString();
 
 //        response.addHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(createCookie("Authorization", accessToken));
+//        response.addCookie(createCookie("Authorization", accessToken));
         response.addCookie(createCookie("refreshToken", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
         response.sendRedirect(redirectUrl);
