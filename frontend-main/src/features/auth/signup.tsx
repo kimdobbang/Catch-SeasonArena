@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { InputField, SignupButton, IconTextButton, Leave } from "@atoms/index";
 import { ServiceTitle, Copyright } from "@ui/index";
 import { signUpUser, checkEmailExists } from "@/app/apis/authApi";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "@/app/redux/slice/authSlice";
 
 export const Signup: React.FC = () => {
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [checkPassword, setCheckPassword] = useState<string>("");
@@ -51,7 +53,8 @@ export const Signup: React.FC = () => {
       // 토큰이 있다면 로컬 스토리지와 Redux에 저장
       if (accessToken) {
         localStorage.setItem("accessToken", accessToken);
-        // dispatch();
+        dispatch(setToken(accessToken));
+        dispatch(setUser(data)); // 유저 정보 저장
       }
 
       console.log("회원가입 성공:", data);

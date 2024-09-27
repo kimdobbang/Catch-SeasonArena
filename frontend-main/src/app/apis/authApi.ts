@@ -1,10 +1,10 @@
 // src/app/api/authApi.ts
-// Redux와 책임 분리: API 요청 및 응답 처리. 토큰을 저장하거나, 서버와 통신하여 데이터를 받아오는 로직 처리.
+// 책임 분리
+// 각 페이지: 상태관리, 스토리지 관리, API 처리 책임
+// Api: API 호출과 서버 통신 책임
 import config from "@/config";
 import { UserInfo } from "@/app/types/userType";
 // import { AppDispatch } from "@/app/redux/store";
-// import { setAuth } from "@/app/redux/slice/authSlice";
-// import { setUser } from "@/app/redux/slice/userSlice";
 
 export interface SignUpUserData {
   email: string;
@@ -42,12 +42,13 @@ export const checkEmailExists = async (email: string): Promise<boolean> => {
     },
   );
   console.log("Checking email");
-
   console.log(response.ok);
   if (response.ok) {
     return true;
-  } else {
+  } else if (response.status === 400) {
     return false;
+  } else {
+    throw new Error(`서버 오류: ${response.statusText}`);
   }
 };
 
