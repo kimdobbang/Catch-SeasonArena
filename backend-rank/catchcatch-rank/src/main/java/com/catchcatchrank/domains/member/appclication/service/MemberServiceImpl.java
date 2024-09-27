@@ -27,8 +27,7 @@ public class MemberServiceImpl {
 	public void updateRank(Rank rank) {
 
 		MemberEntity memberEntity = getMemberByNickNamePort.getMemberByNickName(rank.getNickName());
-		log.info("BE-RANK :  memberId {}" , memberEntity.getRating());
-		//memberEntity.setRating(rank.getRate());
+		log.info("BE-RANK :  member rate {}" , memberEntity.getRating());
 
 		 Member member = Member.createMemberToEntity(memberEntity);
 		 log.info("BE-RANK : rank {}" , rank.getRate());
