@@ -60,6 +60,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomExceptionHandler customExceptionHandler) throws Exception {
         http.csrf((csrf) -> csrf.disable());
+        http.cors(Customizer.withDefaults());
         http.formLogin((formLogin) -> formLogin.disable());
         http.httpBasic((httpBasic) -> httpBasic.disable());
         http.authorizeHttpRequests((requests) -> requests
