@@ -1,7 +1,10 @@
-// login.tsx
+// /src/feature/auth/ogin.tsx
 import config from "@/config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "@/app/apis/authApi";
+import { setToken, setUser } from "@/app/redux/slice/authSlice";
 import { ServiceTitle, Copyright } from "@ui/index";
 import {
   InputField,
@@ -14,13 +17,15 @@ import {
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const goSignUp = () => {
     navigate("/signup");
   };
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const handleOAuthLogin = (provider: "kakao" | "google") => {
     window.localStorage.setItem("provider", provider);
@@ -34,19 +39,17 @@ export const Login: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${config.API_BASE_URL}/api/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const { data, accessToken } = await loginUser({ email, password });
 
-      const data = await response.json();
-      console.log("로그인 성공:", data);
-      // 로그인 성공 후 페이지 이동 또는 토큰 저장 로직 추가
+      if (accessToken) {
+        localStorage.setItem("access_token", accessToken);
+        dispatch(setToken(accessToken));
+        dispatch(setUser(data));
+        navigate("/main");
+      }
     } catch (error) {
-      console.error("로그인 실패:", error);
+      setErrorMessage("로그인 실패");
+      console.error("로그인 에러:", error);
     }
   };
 
@@ -78,6 +81,7 @@ export const Login: React.FC = () => {
             onClick={goSignUp}
           />
         </div>
+        {errorMessage && <div className="text-red-500">{errorMessage}</div>}
       </div>
       {/* 로그인 버튼들 */}
       <div className="flex flex-col items-center w-full max-w-xs mx-auto space-y-4">
