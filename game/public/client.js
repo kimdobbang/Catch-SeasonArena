@@ -1,7 +1,14 @@
 // <<HTTP API 통신>>
-function joinRoom(roomCode, nickname, profileImage) {
+function joinRoom(roomCode, nickname, profileImage, weapon, passive, skill) {
   ROOMCODE = roomCode;
-  socket.emit("joinRoom", { roomCode, nickname, profileImage });
+  socket.emit("joinRoom", {
+    roomCode,
+    nickname,
+    profileImage,
+    weapon,
+    passive,
+    skill,
+  });
 }
 
 function startGame() {
@@ -186,6 +193,7 @@ function create() {
     .setOrigin(0.5)
     .setScrollFactor(0);
   cooldownText.setVisible(false);
+
   skillButton.on("pointerdown", () => {
     const currentTime = Date.now();
 
@@ -256,39 +264,8 @@ function create() {
   // <<플레이어들의 스킬 이벤트 받기>>
   socket.on("playerSkilled", ({ attackerId, skill }) => {
     const player = clientPlayers[attackerId];
-
     if (player) {
       useSkill(scene, player, skill);
-    }
-
-    if (player && skill === "dragonfly") {
-      console.log(`${player.nickname} 사용한 스킬: ${skill}`);
-      const portal = scene.add
-        .circle(player.player.x, player.player.y, 60, 0x0000ff)
-        .setAlpha(0.7);
-
-      portal.setScrollFactor(
-        player.player.scrollFactorX,
-        player.player.scrollFactorY
-      );
-
-      scene.tweens.add({
-        targets: portal,
-        scale: 1.2,
-        duration: 800,
-        onComplete: () => {
-          portal.destroy();
-        },
-      });
-
-      scene.tweens.add({
-        targets: player.player,
-        alpha: 0.5,
-        duration: 1000,
-        onComplete: () => {
-          player.player.alpha = 1;
-        },
-      });
     }
   });
 
@@ -478,8 +455,9 @@ function createPlayer(scene, players) {
     // 공격중인지 여부 (초기세팅 false)
     clientPlayers[player.socketId].isAttacking = false;
 
-    // 카메라 따라가기 구현
+    // 스킬 설정 & 카메라 따라가기 구현
     if (socket.id === player.socketId) {
+      setSkill(player.skill);
       console.log("camera follow" + player.socketId);
       scene.cameras.main.startFollow(
         clientPlayers[socket.id].player,
@@ -489,6 +467,30 @@ function createPlayer(scene, players) {
       );
     }
   });
+}
+
+// 스킬 초기화
+function setSkill(skill) {
+  switch (skill) {
+    case 3: // 솔 폭탄
+      skillCooldown = 20000;
+      break;
+    case 4: // 드래곤플라이
+      skillCooldown = 30000;
+      break;
+    case 7: // 뚜기 점프
+      skillCooldown = 30000;
+      break;
+    case 8: // 버섯
+      skillCooldown = 20000;
+      break;
+    case 11: // 갤럭시 문
+      skillCooldown = 50000;
+      break;
+    case 12: // 허수아비
+      skillCooldown = 50000;
+      break;
+  }
 }
 
 // <<무기 업데이트>>

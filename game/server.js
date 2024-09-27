@@ -53,7 +53,15 @@ const KNOCKBACK_DURATION = 100; // 100ms
 
 // <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
-function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
+function joinPlayer(
+  roomCode,
+  socket,
+  nickname,
+  profileImage,
+  weapon,
+  passive,
+  skill
+) {
   // 플레이어 객체 생성
   const player = {
     socketId: socket.id,
@@ -73,7 +81,12 @@ function joinPlayer(roomCode, socket, nickname, profileImage, skill) {
     canMove: true,
     kill: 0,
     rating: 500,
+    protect: 1,
+    skill: skill,
   };
+
+  setWeapon(player, weapon);
+  setPassive(player, passive);
 
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
@@ -113,19 +126,34 @@ io.on("connection", (socket) => {
   // // 클라이언트에서 보낸 roomCode와 nickname 조회
   // const { roomCode, nickname } = socket.handshake.query;
 
-  const playerData = getPlayerData(nickname, roomCode);
+  // const playerData = getPlayerData(nickname, roomCode);
   // const profileImage =  영호가 해놓을거임
+  // const weapon = 영호가 해놓을거임
+  // const passive =  영호가 해놓을거임
   // const skill =  영호가 해놓을거임
 
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
   // 게임방 참여 (나중에 socket.on 지우기, 클라에서도 지우기)
-  socket.on("joinRoom", ({ roomCode, nickname, profileImage, skill }) => {
-    socket.join(roomCode);
-    joinPlayer(roomCode, socket, nickname, profileImage);
+  socket.on(
+    "joinRoom",
+    ({ roomCode, nickname, profileImage, weapon, passive, skill }) => {
+      socket.join(roomCode);
+      joinPlayer(
+        roomCode,
+        socket,
+        nickname,
+        profileImage,
+        weapon,
+        passive,
+        skill
+      );
 
-    console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
-  });
+      console.log(
+        `( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`
+      );
+    }
+  );
 
   // 게임 연결 종료
   socket.on("disconnect", () => {
@@ -330,6 +358,12 @@ async function getPlayerData(nickname, roomCode) {
   }
 }
 
+// <<socket.id로 플레이어를 불러오는 함수>>
+function getPlayer(socketId) {
+  let roomCode = userRoom.get(socketId);
+  return rooms.get(roomCode).players.get(socketId);
+}
+
 // result 객체를 Redis에 저장하는 함수
 async function saveResultToRedis(nickname, result) {
   try {
@@ -341,10 +375,33 @@ async function saveResultToRedis(nickname, result) {
   }
 }
 
-// <<socket.id로 플레이어를 불러오는 함수>>
-function getPlayer(socketId) {
-  let roomCode = userRoom.get(socketId);
-  return rooms.get(roomCode).players.get(socketId);
+function setWeapon(player, weapon) {
+  switch (weapon) {
+    case 1: // 메이플 창
+      player.reach = 1.3;
+      break;
+    case 5: // 코스모 완드
+      player.knockBack = 2;
+      break;
+    case 9: // 황금 옥수수
+      player.knockBack = 1.5;
+      break;
+  }
+}
+
+function setPassive(player, passive) {
+  switch (passive) {
+    case 2: // 잭 오 랜턴
+      // player.profileImage = 나중에
+      player.protect = 0.8;
+      break;
+    case 6: // 곰
+      player.hp = 200;
+      break;
+    case 10: // 다라미
+      player.speed = 1.15;
+      break;
+  }
 }
 
 // <<roomCode로 플레이어들을 불러오는 함수>>
@@ -410,7 +467,7 @@ function applyKnockback(attacker, target, dx, dy) {
 // 체력 감소 및 사망 처리 함수
 function applyDamage(attacker, target, roomCode) {
   const damage = 20 * attacker.attackPower;
-  target.hp -= damage;
+  target.hp -= damage * target.protect;
   if (target.hp <= 0) {
     console.log(attacker.nickname + "킬 전" + attacker.kill);
     attacker.kill++;
@@ -482,6 +539,7 @@ async function sendMessage(result) {
     await producer.disconnect();
   }
 }
+
 //스킬 사용
 function useSkill(room, attacker, skill, roomCode) {
   const magneticRadius = getMagneticRadius(room); // 자기장 반지름 가져오기
