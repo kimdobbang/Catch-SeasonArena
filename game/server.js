@@ -42,7 +42,9 @@ const rooms = new Map();
 /* rooms = <roomCode, room = {players: Map<socketId, player>,
                               isStarted : false,
                               magnetic : {x : ??, y : ??}, 
-                              startTime : 15723987892ms}> */
+                              startTime : 15723987892ms}>,
+                              isEnd : false
+                              */
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
@@ -98,7 +100,7 @@ function joinPlayer(
         rooms.get(roomCode).isStarted = true;
       }
     }, 10000);
-    const tempRoom = { players: new Map(), isStarted: false };
+    const tempRoom = { players: new Map(), isStarted: false, isEnd: false };
     tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
@@ -109,7 +111,7 @@ function joinPlayer(
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
-    if (room.players.size == 5 && !room.isStarted) {
+    if (room.players.size == 2 && !room.isStarted) {
       rooms.get(roomCode).startTime = Date.now();
       rooms.get(roomCode).magnetic = getMagneticPoint();
       io.in(roomCode).emit("gameStart", room.magnetic);
@@ -241,8 +243,7 @@ io.on("connection", (socket) => {
 
       // 모든 클라이언트에게 공격 이벤트 전송
       io.in(roomCode).emit("playerSkilled", {
-        attackerId: attacker.socketId,
-        skill: attacker.skill,
+        attacker: attacker,
       });
     }
   });
@@ -266,6 +267,11 @@ setInterval(() => {
       const playersMap = room.players;
 
       playersMap.forEach((player, socketId) => {
+        // 1명만 남으면 방을 끝내고 사망처리
+        if (playersMap.size === 1) {
+          room.isEnd = true;
+          player.hp = 0;
+        }
         // 플레이어 이동 반영
         if (player.canMove) {
           player.x += player.velocityX;
@@ -336,7 +342,26 @@ server.listen(3000, () => {
 
 // ============================================================================ //
 
-// nickname과 roomCode를 키로 데이터 조회
+// <<socket.id로 플레이어를 불러오는 함수>>
+function getPlayer(socketId) {
+  let roomCode = userRoom.get(socketId);
+  if (!roomCode || !rooms.has(roomCode)) {
+    console.log(`( 경고 ) 방을 찾을 수 없습니다. socketId: ${socketId}`);
+    return null;
+  }
+  return rooms.get(roomCode).players.get(socketId);
+}
+
+// <<roomCode로 플레이어들을 불러오는 함수>>
+function getAllPlayers(roomCode) {
+  if (!rooms.has(roomCode)) {
+    console.log(`( 경고 ) 방을 찾을 수 없습니다. roomCode: ${roomCode}`);
+    return null;
+  }
+  return rooms.get(roomCode).players;
+}
+
+// <<nickname과 roomCode를 키로 레디스에서 데이터 조회>>
 async function getPlayerData(nickname, roomCode) {
   try {
     // 키 생성
@@ -358,13 +383,7 @@ async function getPlayerData(nickname, roomCode) {
   }
 }
 
-// <<socket.id로 플레이어를 불러오는 함수>>
-function getPlayer(socketId) {
-  let roomCode = userRoom.get(socketId);
-  return rooms.get(roomCode).players.get(socketId);
-}
-
-// result 객체를 Redis에 저장하는 함수
+// <<result 객체를 Redis에 저장하는 함수>>
 async function saveResultToRedis(nickname, result) {
   try {
     // HSET 명령을 통해 nickname을 키로 나머지 데이터를 저장
@@ -377,13 +396,13 @@ async function saveResultToRedis(nickname, result) {
 
 function setWeapon(player, weapon) {
   switch (weapon) {
-    case 1: // 메이플 창
+    case "1": // 메이플 창
       player.reach = 1.3;
       break;
-    case 5: // 코스모 완드
+    case "5": // 코스모 완드
       player.knockBack = 2;
       break;
-    case 9: // 황금 옥수수
+    case "9": // 황금 옥수수
       player.knockBack = 1.5;
       break;
   }
@@ -391,22 +410,17 @@ function setWeapon(player, weapon) {
 
 function setPassive(player, passive) {
   switch (passive) {
-    case 2: // 잭 오 랜턴
+    case "2": // 잭 오 랜턴
       // player.profileImage = 나중에
       player.protect = 0.8;
       break;
-    case 6: // 곰
+    case "6": // 곰
       player.hp = 200;
       break;
-    case 10: // 다라미
+    case "10": // 다라미
       player.speed = 1.15;
       break;
   }
-}
-
-// <<roomCode로 플레이어들을 불러오는 함수>>
-function getAllPlayers(roomCode) {
-  return rooms.get(roomCode).players;
 }
 
 // <<공격 범위 내의 플레이어들을 감지하는 함수>>
@@ -469,9 +483,16 @@ function applyDamage(attacker, target, roomCode) {
   const damage = 20 * attacker.attackPower;
   target.hp -= damage * target.protect;
   if (target.hp <= 0) {
-    console.log(attacker.nickname + "킬 전" + attacker.kill);
     attacker.kill++;
-    console.log(attacker.nickname + "킬 후" + attacker.kill);
+    console.log(
+      attacker +
+        "kill" +
+        target +
+        "\n" +
+        attacker +
+        "의 킬 수 : " +
+        attacker.kill
+    );
   }
 }
 
@@ -531,7 +552,7 @@ async function sendMessage(result) {
       ],
     });
 
-    console.log("메시지가 성공적으로 전송되었습니다.");
+    console.log("카프카 메시지가 성공적으로 전송되었습니다.");
   } catch (err) {
     console.error("메시지 전송 중 오류 발생:", err);
   } finally {
@@ -542,43 +563,63 @@ async function sendMessage(result) {
 
 //스킬 사용
 function useSkill(room, attacker, skill, roomCode) {
+  switch (skill) {
+    case "3": // 솔 폭탄
+      useBomb(room, attacker);
+      break;
+    case "4": // 드래곤플라이
+      useDragonfly(room, attacker);
+      break;
+  }
+}
+
+function useBomb(room, attacker) {
+  const bombX = attacker.x;
+  const bombY = attacker.y;
+
+  setTimeout(() => {
+    room.players.forEach((target, socketId) => {
+      const dx = target.x - bombX;
+      const dy = target.y - bombY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < 200) {
+        target.hp -= 30 * target.protect;
+      }
+    });
+  }, 3000);
+}
+
+function useDragonfly(room, attacker) {
   const magneticRadius = getMagneticRadius(room); // 자기장 반지름 가져오기
 
-  if (skill === "dragonfly") {
-    // 드래곤플라이 스킬 사용 시 반지름이 300 미만이면 사용 불가
-    if (magneticRadius < 300) {
-      console.log(
-        `( 드래곤플라이 스킬 실패 ) 자기장 반지름이 너무 작아 스킬을 사용할 수 없습니다.`
-      );
-      return;
-    }
-
-    // 자기장 중심과 반지름 가져오기
-    const { x: magneticX, y: magneticY } = room.magnetic;
-
-    // 플레이어를 이동시킬 거리 (자기장 반지름의 80% 정도를 사용하여 여유를 둠)
-    const moveRadius = magneticRadius * 0.8;
-
-    // 무작위 각도 선택
-    const randomAngle = Math.random() * 2 * Math.PI;
-
-    // 각도를 기반으로 새로운 좌표 계산
-    const newPosX = magneticX + moveRadius * Math.cos(randomAngle);
-    const newPosY = magneticY + moveRadius * Math.sin(randomAngle);
-    attacker.canMove = false;
-    // 새로운 위치로 플레이어 이동
-    setTimeout(() => {
-      attacker.x = newPosX;
-      attacker.y = newPosY;
-      attacker.canMove = true;
-      console.log(
-        `( 드래곤플라이 스킬 ) ${attacker.nickname}가 1초 후에 자기장 내의 랜덤 위치로 이동했습니다: (${newPosX}, ${newPosY})`
-      );
-    }, 1000);
-  } else {
-    // 다른 스킬에 대한 로직을 여기에 추가
+  // 드래곤플라이 스킬 사용 시 반지름이 300 미만이면 사용 불가
+  if (magneticRadius < 300) {
     console.log(
-      `( 스킬 사용 ) ${attacker.nickname}가 ${skill} 스킬을 사용했습니다.`
+      `( 드래곤플라이 스킬 실패 ) 자기장 반지름이 너무 작아 스킬을 사용할 수 없습니다.`
     );
+    return;
   }
+
+  // 자기장 중심과 반지름 가져오기
+  const { x: magneticX, y: magneticY } = room.magnetic;
+
+  // 플레이어를 이동시킬 거리 (자기장 반지름의 80% 정도를 사용하여 여유를 둠)
+  const moveRadius = magneticRadius * 0.8;
+
+  // 무작위 각도 선택
+  const randomAngle = Math.random() * 2 * Math.PI;
+
+  // 각도를 기반으로 새로운 좌표 계산
+  const newPosX = magneticX + moveRadius * Math.cos(randomAngle);
+  const newPosY = magneticY + moveRadius * Math.sin(randomAngle);
+  attacker.canMove = false;
+  // 새로운 위치로 플레이어 이동
+  setTimeout(() => {
+    attacker.x = newPosX;
+    attacker.y = newPosY;
+    attacker.canMove = true;
+    console.log(
+      `( 드래곤플라이 스킬 ) ${attacker.nickname}가 1초 후에 자기장 내의 랜덤 위치로 이동했습니다: (${newPosX}, ${newPosY})`
+    );
+  }, 1000);
 }
