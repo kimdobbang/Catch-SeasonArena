@@ -31,7 +31,7 @@ function startGame() {
 
 // <<phaser config>>
 // const socket = io("https://j11b106.p.ssafy.io");
-const socket = io("http://192.168.31.171:3000");
+const socket = io("http://192.168.45.113:3000");
 // const socket = io("http://localhost:3000");
 
 // 게임 시작
@@ -43,14 +43,14 @@ socket.on("gameStart", (magnetic) => {
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 400,
+  width: 400,
+  height: 800,
   backgroundColor: "#2d2d2d",
   physics: {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: false,
+      debug: true,
     },
   },
   scale: {
@@ -83,7 +83,7 @@ let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
 let MAGNETIC_COUNT = 0;
 let lastSkillUsedTime = 0;
-let skillCooldown = 5000;
+let skillCooldown = 10000;
 let cooldownText;
 
 function preload() {
@@ -91,7 +91,66 @@ function preload() {
   this.load.image("player2", "./assets/player2.png");
   this.load.image("player3", "./assets/player3.png");
   this.load.image("player4", "./assets/player4.png");
+
   this.load.image("weapon", "./assets/sword.png");
+
+  this.load.image("bomb", "./assets/bomb.png");
+
+  this.load.spritesheet("effects1", "./assets/effects1.png", {
+    frameWidth: 64,
+    frameHeight: 64,
+  });
+  this.load.spritesheet("effects2", "./assets/effects2.png", {
+    frameWidth: 64,
+    frameHeight: 64,
+  });
+  this.load.spritesheet("effects3", "./assets/effects3.png", {
+    frameWidth: 64,
+    frameHeight: 64,
+  });
+
+  setTimeout(() => {
+    // bomb 애니메이션
+    this.anims.create({
+      key: "3",
+      frames: this.anims.generateFrameNumbers("effects1", {
+        start: 120,
+        end: 124,
+      }),
+      frameRate: 10,
+      repeat: 0,
+    });
+    // dragonfly 애니메이션
+    this.anims.create({
+      key: "4",
+      frames: this.anims.generateFrameNumbers("effects2", {
+        start: 15,
+        end: 19,
+      }),
+      frameRate: 10,
+      repeat: 0,
+    });
+    // jump 애니메이션
+    this.anims.create({
+      key: "7",
+      frames: this.anims.generateFrameNumbers("effects2", {
+        start: 175,
+        end: 179,
+      }),
+      frameRate: 10,
+      repeat: 0,
+    });
+    // mushroom 애니메이션
+    this.anims.create({
+      key: "8",
+      frames: this.anims.generateFrameNumbers("effects2", {
+        start: 130,
+        end: 134,
+      }),
+      frameRate: 10,
+      repeat: 0,
+    });
+  }, 2000);
 }
 
 function create() {
@@ -126,8 +185,8 @@ function create() {
 
   // <<조이스틱>>
   let joystick = this.plugins.get("rexVirtualJoystick").add(this, {
-    x: 100,
-    y: 300,
+    x: 80,
+    y: 700,
     radius: 50,
     base: this.add.circle(0, 0, 50, 0x888888).setOrigin(0.5).setScrollFactor(0),
     thumb: this.add
@@ -166,7 +225,7 @@ function create() {
 
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(700, 300, 50, 0xf29627)
+    .circle(320, 700, 50, 0xf29627)
     .setInteractive()
     .setScrollFactor(0);
 
@@ -226,20 +285,20 @@ function create() {
   });
 
   // <<미니맵 구현>>
-  const miniMapWidth = 100;
-  const miniMapHeight = 100;
+  const miniMapWidth = 80;
+  const miniMapHeight = 80;
   const miniMap = this.add.graphics();
   miniMap.lineStyle(1, 0x000000);
   miniMap.fillStyle(0xf5deb3);
   miniMap.fillRect(
-    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
-    25,
+    this.cameras.main.width - miniMapWidth / 2 - 20 - miniMapWidth / 2,
+    20,
     miniMapWidth,
     miniMapHeight
   );
   miniMap.strokeRect(
-    this.cameras.main.width - miniMapWidth / 2 - 25 - miniMapWidth / 2,
-    25,
+    this.cameras.main.width - miniMapWidth / 2 - 20 - miniMapWidth / 2,
+    20,
     miniMapWidth,
     miniMapHeight
   );
@@ -262,10 +321,10 @@ function create() {
   });
 
   // <<플레이어들의 스킬 이벤트 받기>>
-  socket.on("playerSkilled", ({ attackerId, skill }) => {
-    const player = clientPlayers[attackerId];
+  socket.on("playerSkilled", ({ attacker }) => {
+    const player = clientPlayers[attacker.socketId];
     if (player) {
-      useSkill(scene, player, skill);
+      useSkill(scene, attacker, attacker.skill);
     }
   });
 
@@ -331,9 +390,9 @@ function create() {
           players[key].x,
           players[key].y
         );
-        if (tempDist < 700) {
-          const pointX = players[key].x / 50 + 675;
-          const pointY = players[key].y / 50 + 25;
+        if (tempDist < 850) {
+          const pointX = players[key].x / (5000 / 80) + 300;
+          const pointY = players[key].y / (5000 / 80) + 20;
           if (tempDist === 0) {
             clientPlayers[key].point.fillStyle(0x00ff00, 1);
           } else {
@@ -424,8 +483,8 @@ function createPlayer(scene, players) {
     clientPlayers[player.socketId].nickname = nickname;
 
     // 자기장 중심점 생성
-    const magneticCenterX = MAGNETIC.x / 50 + 675;
-    const magneticCenterY = MAGNETIC.y / 50 + 25;
+    const magneticCenterX = MAGNETIC.x / (5000 / 80) + 300;
+    const magneticCenterY = MAGNETIC.y / (5000 / 80) + 20;
 
     const magneticCenter = scene.add.graphics();
     magneticCenter.fillStyle(0x0000ff, 1);
@@ -445,8 +504,8 @@ function createPlayer(scene, players) {
 
     // 미니맵 포인트들 생성
     const point = scene.add.graphics();
-    const pointX = player.x / 50 + 675;
-    const pointY = player.y / 50 + 25;
+    const pointX = player.x / (5000 / 80) + 300;
+    const pointY = player.y / (5000 / 80) + 20;
     point.fillStyle(0x00ff00, 1);
     point.fillCircle(pointX, pointY, 2);
     point.setScrollFactor(0);
@@ -472,22 +531,22 @@ function createPlayer(scene, players) {
 // 스킬 초기화
 function setSkill(skill) {
   switch (skill) {
-    case 3: // 솔 폭탄
+    case "3": // 솔 폭탄
       skillCooldown = 20000;
       break;
-    case 4: // 드래곤플라이
+    case "4": // 드래곤플라이
       skillCooldown = 30000;
       break;
-    case 7: // 뚜기 점프
+    case "7": // 뚜기 점프
       skillCooldown = 30000;
       break;
-    case 8: // 버섯
+    case "8": // 버섯
       skillCooldown = 20000;
       break;
-    case 11: // 갤럭시 문
+    case "11": // 갤럭시 문
       skillCooldown = 50000;
       break;
-    case 12: // 허수아비
+    case "12": // 허수아비
       skillCooldown = 50000;
       break;
   }
@@ -545,10 +604,24 @@ function calcDist(myX, myY, playerX, playerY) {
 
 function useSkill(scene, player, skill) {
   switch (skill) {
-    case 4:
+    case "3":
+      useBomb(scene, player);
+      break;
+    case "4":
       useDragonfly(scene, player);
       break;
   }
+}
+
+function useBomb(scene, player) {
+  const bombX = player.x;
+  const bombY = player.y;
+  const bomb = scene.add.image(bombX, bombY, "bomb").setScale(0.1);
+  setTimeout(() => {
+    bomb.destroy();
+    const explosion = scene.add.sprite(bombX, bombY, "effects1").setScale(7);
+    explosion.play("3");
+  }, 3000);
 }
 
 function useDragonfly(scene, player) {
