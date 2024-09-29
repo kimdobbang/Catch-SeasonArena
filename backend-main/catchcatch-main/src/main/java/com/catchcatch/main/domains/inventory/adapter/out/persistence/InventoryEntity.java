@@ -41,7 +41,7 @@ public class InventoryEntity {
 	private Boolean isEquipped;
 
 	@Builder
-	private InventoryEntity(Long id, MemberEntity member, ItemEntity item, Integer durability, Boolean isEquipped) {
+	public InventoryEntity(Long id, MemberEntity member, ItemEntity item, Integer durability, Boolean isEquipped) {
 		this.id = id;
 		this.member = member;
 		this.item = item;

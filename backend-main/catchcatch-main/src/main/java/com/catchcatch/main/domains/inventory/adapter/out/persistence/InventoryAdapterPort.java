@@ -3,7 +3,7 @@ package com.catchcatch.main.domains.inventory.adapter.out.persistence;
 import org.springframework.stereotype.Component;
 
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
-import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmail;
+import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmail {
+public class InventoryAdapterPort implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort {
 
 	private final InventoryRepository inventoryRepository;
 
