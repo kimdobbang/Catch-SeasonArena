@@ -10,14 +10,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "inventory")
 @Getter
-public class Inventory {
+public class InventoryEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +39,13 @@ public class Inventory {
 
 	@Column(nullable = false)
 	private Boolean isEquipped;
+
+	@Builder
+	private InventoryEntity(Long id, MemberEntity member, ItemEntity item, Integer durability, Boolean isEquipped) {
+		this.id = id;
+		this.member = member;
+		this.item = item;
+		this.durability = durability;
+		this.isEquipped = isEquipped;
+	}
 }
