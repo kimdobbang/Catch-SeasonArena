@@ -17,6 +17,8 @@ import com.catchcatch.main.domains.inventory.application.service.DeleteInventory
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
 import com.catchcatch.main.domains.member.domain.Role;
+import com.catchcatch.main.global.exception.CustomException;
+import com.catchcatch.main.global.exception.ExceptionResponse;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteInventoryServiceTest {
@@ -46,5 +48,18 @@ public class DeleteInventoryServiceTest {
 		//when then
 		Assertions.assertThatNoException().isThrownBy(() -> deleteInventoryService.deleteInventory(1L, "test"));
 
+	}
+
+	@Test
+	@DisplayName("인벤토리 삭제 실패 테슽트")
+	public void 인벤토리_삭제_실패() {
+
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willThrow(new ExceptionResponse(CustomException.NOT_EXISTS_INVENTORY_EXCEPTION));
+
+
+		//when then
+		Assertions.assertThatThrownBy(() -> deleteInventoryService.deleteInventory(1L, "test"))
+			.isInstanceOf(Exception.class)
+			.hasFieldOrPropertyWithValue("customException", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
 	}
 }
