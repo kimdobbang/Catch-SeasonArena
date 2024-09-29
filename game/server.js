@@ -125,37 +125,82 @@ function joinPlayer(
 
 // <<게임>>
 io.on("connection", (socket) => {
-  // // 클라이언트에서 보낸 roomCode와 nickname 조회
-  // const { roomCode, nickname } = socket.handshake.query;
-
-  // const playerData = getPlayerData(nickname, roomCode);
-  // const profileImage =  영호가 해놓을거임
-  // const weapon = 영호가 해놓을거임
-  // const passive =  영호가 해놓을거임
-  // const skill =  영호가 해놓을거임
-
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
   // 게임방 참여 (나중에 socket.on 지우기, 클라에서도 지우기)
-  socket.on(
-    "joinRoom",
-    ({ roomCode, nickname, profileImage, weapon, passive, skill }) => {
-      socket.join(roomCode);
-      joinPlayer(
-        roomCode,
-        socket,
-        nickname,
-        profileImage,
-        weapon,
-        passive,
-        skill
-      );
+  socket.on("joinRoom", ({ roomCode, nickname, playerData }) => {
+    // // 클라이언트에서 보낸 roomCode와 nickname 조회
+    // const { roomCode, nickname } = socket.handshake.query;
 
-      console.log(
-        `( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`
-      );
+    // const playerData = getPlayerData(nickname, roomCode);
+    if (!playerData) {
+      return;
     }
-  );
+
+    playerData = Number(playerData);
+
+    console.log("playerData는 " + playerData);
+    let profileImage;
+    let weapon;
+    let passive;
+    let skill;
+
+    if ((playerData & (1 << 1)) !== 0) {
+      weapon = "1";
+    } else if ((playerData & (1 << 5)) !== 0) {
+      weapon = "5";
+    } else if ((playerData & (1 << 9)) !== 0) {
+      weapon = "9";
+    }
+
+    if ((playerData & (1 << 2)) !== 0) {
+      passive = "2";
+    } else if ((playerData & (1 << 6)) !== 0) {
+      passive = "6";
+    } else if ((playerData & (1 << 10)) !== 0) {
+      passive = "10";
+    }
+
+    if ((playerData & (1 << 3)) !== 0) {
+      skill = "3";
+    } else if ((playerData & (1 << 4)) !== 0) {
+      skill = "4";
+    } else if ((playerData & (1 << 7)) !== 0) {
+      skill = "7";
+    } else if ((playerData & (1 << 8)) !== 0) {
+      skill = "8";
+    } else if ((playerData & (1 << 11)) !== 0) {
+      skill = "11";
+    } else if ((playerData & (1 << 12)) !== 0) {
+      skill = "12";
+    }
+
+    if ((playerData & (1 << 13)) !== 0) {
+      profileImage = "player1";
+    } else if ((playerData & (1 << 14)) !== 0) {
+      profileImage = "player2";
+    } else if ((playerData & (1 << 15)) !== 0) {
+      profileImage = "player3";
+    } else if ((playerData & (1 << 16)) !== 0) {
+      profileImage = "player4";
+    }
+
+    console.log(profileImage + weapon + passive + skill);
+
+    socket.join(roomCode);
+
+    joinPlayer(
+      roomCode,
+      socket,
+      nickname,
+      profileImage,
+      weapon,
+      passive,
+      skill
+    );
+
+    console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
+  });
 
   // 게임 연결 종료
   socket.on("disconnect", () => {
@@ -364,15 +409,18 @@ function getAllPlayers(roomCode) {
 // <<nickname과 roomCode를 키로 레디스에서 데이터 조회>>
 async function getPlayerData(nickname, roomCode) {
   try {
-    // 키 생성
-    const key = `${nickname} ${roomCode}`;
+    const key = nickname + " " + roomCode;
 
-    // Redis에서 데이터 조회
+    // redis에서 데이터 조회
     const playerData = await redisClient.get(key);
 
     if (playerData) {
-      console.log(`데이터 조회 성공: ${playerData}`);
-      return JSON.parse(playerData); // JSON으로 변환해서 반환
+      // 문자열을 Buffer로 변환
+      const buffer = Buffer.from(redisData, "binary");
+
+      // Big Endian 방식으로 변환 (큰 숫자를 다룰 수 있음)
+      const number = buffer.readUIntBE(0, buffer.length);
+      return number;
     } else {
       console.log(`해당 키로 조회된 데이터가 없습니다: ${key}`);
       return null;
@@ -387,7 +435,7 @@ async function getPlayerData(nickname, roomCode) {
 async function saveResultToRedis(nickname, result) {
   try {
     // HSET 명령을 통해 nickname을 키로 나머지 데이터를 저장
-    await redisClient.hSet(nickname, result);
+    await redisClient.set(nickname, JSON.stringify(result));
     console.log(`데이터 저장 성공: ${nickname}`);
   } catch (err) {
     console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
