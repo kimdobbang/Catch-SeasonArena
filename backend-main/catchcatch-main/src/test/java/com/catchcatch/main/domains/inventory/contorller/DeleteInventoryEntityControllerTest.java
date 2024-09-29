@@ -22,7 +22,7 @@ import com.catchcatch.main.global.util.HttpResponseUtil;
 	controllers = DeleteInventoryController.class
 )
 @MockBean(JpaMetamodelMappingContext.class)
-public class DeleteInventoryControllerTest {
+public class DeleteInventoryEntityControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
