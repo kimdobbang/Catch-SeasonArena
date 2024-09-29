@@ -15,18 +15,6 @@ export interface LoginUserData {
   password: string;
 }
 
-export const setLocalAccessToken = (accessToken: string | null) => {
-  if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
-  } else {
-    localStorage.removeItem("accessToken");
-  }
-};
-
-export const getLocalAccessToken = (): string | null => {
-  return localStorage.getItem("accessToken");
-};
-
 export const checkEmailExists = async (email: string): Promise<boolean> => {
   const response = await fetch(
     `${config.API_BASE_URL}/api/auth/members/${encodeURIComponent(email)}`,
@@ -70,7 +58,6 @@ export const signUpUser = async (
   const data = await response.json();
   const accessToken =
     response.headers.get("Authorization")?.split(" ")[1] || null;
-  setLocalAccessToken(accessToken);
   return { data, accessToken };
 };
 
@@ -88,7 +75,6 @@ export const loginUser = async (
       body: JSON.stringify(userData),
     },
   );
-  console.log("요청 잘 받음");
 
   if (!response.ok) {
     console.log(response.status);
@@ -99,31 +85,5 @@ export const loginUser = async (
   const accessToken =
     response.headers.get("Authorization")?.split(" ")[1] || null;
 
-  setLocalAccessToken(accessToken);
   return { data, accessToken };
-};
-
-export const fetchUserInfo = async (): Promise<UserInfo> => {
-  const accessToken = getLocalAccessToken();
-  if (!accessToken) {
-    throw new Error("토큰이 없습니다. or 로그인이 필요합니다.");
-  }
-  // 유저정보 main서버에 요청 api(명세에 없음)
-  const response = await fetch(`${config.API_BASE_URL}/api/main/undefined`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json;charset=UTF-8",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("사용자 정보를 가져오는 데 실패했습니다");
-  }
-
-  const result = await response.json();
-  if (!result || !result.data) {
-    throw new Error("잘못된 사용자 정보 응답");
-  }
-  return result.data;
 };
