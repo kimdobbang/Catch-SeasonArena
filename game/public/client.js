@@ -1,13 +1,10 @@
 // <<HTTP API 통신>>
-function joinRoom(roomCode, nickname, profileImage, weapon, passive, skill) {
+function joinRoom(roomCode, nickname, playerData) {
   ROOMCODE = roomCode;
   socket.emit("joinRoom", {
     roomCode,
     nickname,
-    profileImage,
-    weapon,
-    passive,
-    skill,
+    playerData,
   });
 }
 
@@ -30,8 +27,8 @@ function startGame() {
 // });
 
 // <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
-const socket = io("http://192.168.45.113:3000");
+const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("http://192.168.31.171:3000");
 // const socket = io("http://localhost:3000");
 
 // 게임 시작

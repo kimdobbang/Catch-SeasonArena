@@ -16,10 +16,43 @@
       <h2>Enter Room Code and Player Name</h2>
       <input type="text" id="roomCode" placeholder="Enter Room Code" />
       <input type="text" id="nickname" placeholder="Enter Player Name" />
-      <input type="text" id="profileImage" placeholder="Enter Profile Image" />
-      <input type="text" id="weapon" placeholder="Enter weapon" />
-      <input type="text" id="passive" placeholder="Enter passive" />
-      <input type="text" id="skill" placeholder="Enter Skill" />
+
+      <!-- Profile Image Select Box -->
+      <label for="profileImage">Select Profile Image:</label>
+      <select id="profileImage">
+        <option value="13">Player 1</option>
+        <option value="14">Player 2</option>
+        <option value="15">Player 3</option>
+        <option value="16">Player 4</option>
+      </select>
+
+      <!-- Weapon Select Box -->
+      <label for="weapon">Select Weapon:</label>
+      <select id="weapon">
+        <option value="1">메이플 창</option>
+        <option value="5">코스모 완드</option>
+        <option value="9">황금 옥수수</option>
+      </select>
+
+      <!-- Passive Select Box -->
+      <label for="passive">Select Passive:</label>
+      <select id="passive">
+        <option value="2">잭 오 랜턴</option>
+        <option value="6">곰</option>
+        <option value="10">다라미</option>
+      </select>
+
+      <!-- Skill Select Box -->
+      <label for="skill">Select Skill:</label>
+      <select id="skill">
+        <option value="3">솔 폭탄</option>
+        <option value="4">드래곤플라이</option>
+        <option value="7">뚜기 점프</option>
+        <option value="8">버섯</option>
+        <option value="11">갤럭시 문</option>
+        <option value="12">허수아비</option>
+      </select>
+
       <button id="joinRoomButton">Join Room</button>
     </div>
 
@@ -34,10 +67,17 @@
           const weapon = document.getElementById("weapon").value;
           const passive = document.getElementById("passive").value;
           const skill = document.getElementById("skill").value;
+
+          let playerData = 0;
+          playerData += 1 << Number(profileImage);
+          playerData += 1 << Number(weapon);
+          playerData += 1 << Number(passive);
+          playerData += 1 << Number(skill);
+
           console.log(`Room code entered: ${roomCode}`);
           console.log(`Player name entered: ${nickname}`);
 
-          joinRoom(roomCode, nickname, profileImage, weapon, passive, skill); // 입력받은 roomCode를 전달
+          joinRoom(roomCode, nickname, playerData); // 입력받은 값을 전달
 
           // 모달과 오버레이를 숨기고 게임 화면 표시
           document.getElementById("modal").style.display = "none";
