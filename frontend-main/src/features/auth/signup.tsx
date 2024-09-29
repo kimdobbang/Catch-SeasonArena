@@ -14,8 +14,10 @@ export const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [checkPassword, setCheckPassword] = useState<string>("");
-  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const [emailAvailable, setEmailAvailable] = useState<boolean>(false);
+  const [emailerrorMessage, setEmailErrorMessage] = useState<string>("");
+  const [signupErrorMessage, setSignupErrorMessage] = useState<string>("");
 
   // 이메일 중복 확인 (API 호출)
   const checkEmail = async () => {
@@ -23,14 +25,14 @@ export const Signup: React.FC = () => {
       const exists = await checkEmailExists(email);
       if (exists) {
         setEmailAvailable(true);
-        setErrorMessage("사용 가능한 이메일입니다.");
+        setEmailErrorMessage("반갑습니다");
       } else {
         setEmailAvailable(false);
-        setErrorMessage("이미 사용 중인 이메일입니다.");
+        setEmailErrorMessage("이미 사용 중인 이메일입니다.");
       }
     } catch (error) {
       setEmailAvailable(false);
-      setErrorMessage("이메일 중복 확인 실패");
+      setEmailErrorMessage("이메일 중복 확인 실패");
       console.error("중복 확인 에러:", error);
     }
   };
@@ -38,12 +40,16 @@ export const Signup: React.FC = () => {
   // 회원가입 처리
   const handleSignup = async () => {
     if (!email || !password || !checkPassword) {
-      setErrorMessage("이메일과 비밀번호를 모두 입력하세요.");
+      setSignupErrorMessage("가입정보를 입력해주세요.");
+      return;
+    }
+    if (!emailAvailable) {
+      setSignupErrorMessage("이메일 중복 확인을 해주세요.");
       return;
     }
 
     if (password !== checkPassword) {
-      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      setSignupErrorMessage("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -60,7 +66,7 @@ export const Signup: React.FC = () => {
       console.log("회원가입 성공:", data);
       navigate("/main");
     } catch (error) {
-      setErrorMessage("회원가입에 실패했습니다.");
+      setSignupErrorMessage("회원가입에 실패했습니다.");
       console.error("회원가입 에러:", error);
     }
   };
@@ -80,11 +86,8 @@ export const Signup: React.FC = () => {
           />
           <IconTextButton label="중복 확인" onClick={checkEmail} />
         </div>
-        {emailAvailable === true && (
-          <div className="text-green-500">사용 가능한 이메일입니다.</div>
-        )}
-        {emailAvailable === false && (
-          <div className="text-red-500">이미 사용 중인 이메일입니다.</div>
+        {emailerrorMessage && (
+          <div className="mt-0 text-catch-main-400">{emailerrorMessage}</div>
         )}
         <InputField
           label="Password"
@@ -100,8 +103,10 @@ export const Signup: React.FC = () => {
           value={checkPassword}
           onChange={setCheckPassword}
         />
-        {errorMessage && (
-          <div className="mt-2 text-center text-red-500">{errorMessage}</div>
+        {signupErrorMessage && (
+          <div className="mt-2 text-center text-catch-main-700">
+            {signupErrorMessage}
+          </div>
         )}
       </div>
 

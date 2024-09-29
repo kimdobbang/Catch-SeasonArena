@@ -4,6 +4,7 @@ interface LoginButtonProps {
   bgColor: string;
   text: string;
   textColor: string;
+  disabled?: boolean;
 }
 
 export const SignupButton: React.FC<LoginButtonProps> = ({
