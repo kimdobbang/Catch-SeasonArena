@@ -31,5 +31,7 @@ export { Caption1Text } from "@atoms/texts/caption1-text";
 export { Caption2Text } from "@atoms/texts/caption2-text";
 export { Sub2Text } from "@atoms/texts/sub2-text";
 
-
 export { ItemCell } from "@atoms/item-cell";
+
+export { AvatarFace } from "@atoms/symbols/avatars/avatar-face";
+export { AvatarBody } from "@atoms/symbols/avatars/avatar";
