@@ -1,4 +1,4 @@
-package com.catchcatch.main.domains.service;
+package com.catchcatch.main.domains.member.service;
 
 import com.catchcatch.main.domains.member.application.port.out.ExistsMemberPort;
 import com.catchcatch.main.domains.member.application.service.CheckNicknameServiceImpl;

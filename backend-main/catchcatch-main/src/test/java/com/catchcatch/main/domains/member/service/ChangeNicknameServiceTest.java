@@ -1,4 +1,4 @@
-package com.catchcatch.main.domains.service;
+package com.catchcatch.main.domains.member.service;
 
 import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeNicknameRequestDto;
 import com.catchcatch.main.domains.member.application.port.out.ExistsMemberPort;

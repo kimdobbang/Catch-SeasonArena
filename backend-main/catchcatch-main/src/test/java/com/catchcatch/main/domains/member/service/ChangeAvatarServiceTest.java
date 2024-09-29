@@ -1,4 +1,4 @@
-package com.catchcatch.main.domains.service;
+package com.catchcatch.main.domains.member.service;
 
 import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeAvatarRequestDto;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.ChangeAvatarResponseDto;
