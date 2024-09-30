@@ -8,12 +8,14 @@ interface CircleTagProps {
   icon?: string;
   grade?: ItemGrade;
   className?: string;
+  onClick?: () => void;
 }
 
 export const CircleTag: React.FC<CircleTagProps> = ({
   icon,
   grade,
   className,
+  onClick,
 }) => {
   const getGrade = () => {
     switch (grade) {
@@ -42,7 +44,8 @@ export const CircleTag: React.FC<CircleTagProps> = ({
   return (
     // 사용시 bg-color를 꼭 설정해야 함
     <div
-      className={`w-[26px] h-[26px] shrink-0 text-center rounded-full flex justify-center items-center ${className}`}
+      onClick={onClick}
+      className={`w-[26px] h-[26px] shrink-0 text-center rounded-full flex justify-center items-center cursor-pointer ${className}`}
     >
       {grade && <p className="font-bold text-white text-body2">{getGrade()}</p>}
       {icon && getIcon()}
