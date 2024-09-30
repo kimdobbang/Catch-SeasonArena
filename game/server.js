@@ -50,7 +50,7 @@ const userRoom = new Map(); // userRoom = <socketId, roomCode>
 // 전역변수 관리
 const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
-const KNOCKBACK_FORCE = 100;
+const KNOCKBACK_FORCE = 120;
 const KNOCKBACK_DURATION = 100; // 100ms
 
 // <<게임방 관리>>
@@ -85,6 +85,8 @@ function joinPlayer(
     rating: 500,
     protect: 1,
     skill: skill,
+    invincibility: false, // 무적
+    visible: false,
   };
 
   setWeapon(player, weapon);
@@ -92,7 +94,7 @@ function joinPlayer(
 
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
-      if (!rooms.get(roomCode).isStarted) {
+      if (rooms.get(roomCode) && !rooms.get(roomCode).isStarted) {
         rooms.get(roomCode).startTime = Date.now();
         rooms.get(roomCode).magnetic = getMagneticPoint();
         io.in(roomCode).emit("gameStart", rooms.get(roomCode).magnetic);
@@ -297,13 +299,13 @@ io.on("connection", (socket) => {
 setInterval(() => {
   rooms.forEach((room, roomCode) => {
     if (room.isEnd) {
-      // 10초 뒤에 방 삭제
+      // 20초 뒤에 방 삭제
       setTimeout(() => {
         if (rooms.has(roomCode)) {
           rooms.delete(roomCode);
-          console.log(`( 방 삭제 ) ${roomCode} 방이 10초 후에 삭제되었습니다.`);
+          console.log(`( 방 삭제 ) ${roomCode} 방이 20초 후에 삭제되었습니다.`);
         }
-      }, 10000); // 10초 (10000ms)
+      }, 20000); // 20초 (20000ms)
 
       return;
     }
@@ -374,7 +376,9 @@ setInterval(() => {
           } else {
             damage = 10;
           }
-          player.hp -= damage;
+          if (!player.invincibility) {
+            player.hp -= damage;
+          }
         }
       });
     }
@@ -463,7 +467,7 @@ function setPassive(player, passive) {
       player.protect = 0.8;
       break;
     case "6": // 곰
-      player.hp = 200;
+      player.protect = 0.5;
       break;
     case "10": // 다라미
       player.speed = 1.15;
@@ -507,6 +511,9 @@ function normalizeAngle(angle) {
 
 // 넉백 적용 함수
 function applyKnockback(attacker, target, dx, dy) {
+  if (!target.canMove) {
+    return;
+  }
   const angle = Math.atan2(dy, dx);
   const knockbackX = Math.cos(angle) * KNOCKBACK_FORCE * attacker.knockBack;
   const knockbackY = Math.sin(angle) * KNOCKBACK_FORCE * attacker.knockBack;
@@ -518,18 +525,20 @@ function applyKnockback(attacker, target, dx, dy) {
   target.y += target.velocityY;
 
   target.canMove = false;
-
+  const duration = attacker.weaponImage === "corn" ? 500 : KNOCKBACK_DURATION;
   setTimeout(() => {
     target.velocityX = 0;
     target.velocityY = 0;
     target.canMove = true;
-  }, KNOCKBACK_DURATION);
+  }, duration);
 }
 
 // 체력 감소 및 사망 처리 함수
 function applyDamage(attacker, target, roomCode) {
   const damage = 20 * attacker.attackPower;
-  target.hp -= damage * target.protect;
+  if (!target.invincibility) {
+    target.hp -= damage * target.protect;
+  }
   if (target.hp <= 0) {
     attacker.kill++;
     console.log(
@@ -618,6 +627,18 @@ function useSkill(room, attacker, skill, roomCode) {
     case "4": // 드래곤플라이
       useDragonfly(room, attacker);
       break;
+    case "7": // 뚜기 점프
+      useJump(room, attacker);
+      break;
+    case "8": // 버섯
+      useMushroom(room, attacker);
+      break;
+    case "11": // 갤럭시 문
+      useGalaxymoon(room, attacker);
+      break;
+    case "12": // 허수아비
+      useScarecrow(room, attacker);
+      break;
   }
 }
 
@@ -630,7 +651,7 @@ function useBomb(room, attacker) {
       const dx = target.x - bombX;
       const dy = target.y - bombY;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < 200) {
+      if (distance < 250 && !target.invincibility) {
         target.hp -= 30 * target.protect;
       }
     });
@@ -670,4 +691,50 @@ function useDragonfly(room, attacker) {
       `( 드래곤플라이 스킬 ) ${attacker.nickname}가 1초 후에 자기장 내의 랜덤 위치로 이동했습니다: (${newPosX}, ${newPosY})`
     );
   }, 1000);
+}
+
+function useJump(room, attacker) {}
+
+function useMushroom(room, attacker) {
+  const mushroomX = attacker.x;
+  const mushroomY = attacker.y;
+
+  room.players.forEach((target, socketId) => {
+    if (target.socketId === attacker.socketId) {
+      return;
+    }
+    const dx = target.x - mushroomX;
+    const dy = target.y - mushroomY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 150 && !target.invincibility) {
+      target.hp -= 20 * target.protect;
+    }
+  });
+}
+
+function useGalaxymoon(room, attacker) {
+  attacker.visible = true;
+  attacker.canMove = false;
+
+  setTimeout(() => {
+    attacker.visible = false;
+  }, 10000);
+
+  setTimeout(() => {
+    attacker.canMove = true;
+    room.players.forEach((target, socketId) => {
+      if (target.socketId !== attacker.socketId && !target.invincibility) {
+        target.hp -= 10;
+      }
+    });
+  }, 2000);
+}
+
+function useScarecrow(room, attacker) {
+  attacker.invincibility = true;
+  attacker.canMove = false;
+  setTimeout(() => {
+    attacker.invincibility = false;
+    attacker.canMove = true;
+  }, 3000);
 }
