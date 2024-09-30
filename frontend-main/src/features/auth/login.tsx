@@ -1,4 +1,4 @@
-// /src/feature/auth/ogin.tsx
+// /src/feature/auth/login.tsx
 import config from "@/config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -42,9 +42,8 @@ export const Login: React.FC = () => {
       const { data, accessToken } = await loginUser({ email, password });
 
       if (accessToken) {
-        localStorage.setItem("access_token", accessToken);
         dispatch(setToken(accessToken));
-        dispatch(setUser(data));
+        dispatch(setUser({ email: data.email, nickName: data.nickName }));
         navigate("/main");
       }
     } catch (error) {

@@ -7,13 +7,10 @@ import { setToken } from "@/app/redux/slice/authSlice";
 export const OAuthCallbackPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // 로딩 상태와 오류 메시지 상태 추가
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchTokenFromUrl = () => {
-    // const params = new URLSearchParams(window.location.search);
-    // const accessToken = params.get("accessToken");
     const pathSegments = location.pathname.split("/");
     const accessToken = pathSegments[pathSegments.length - 1];
 

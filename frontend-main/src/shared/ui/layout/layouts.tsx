@@ -11,7 +11,7 @@ export const Layout = () => {
   );
 };
 
-// header와 tab이 있는 레이아웃
+// header와 BottonNavBar이 있는 레이아웃
 export const MainLayout = () => {
   return (
     <div className="flex flex-col w-full h-full">
