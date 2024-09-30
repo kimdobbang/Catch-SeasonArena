@@ -10,7 +10,7 @@ export { GoogleLoginButton } from "./buttons/auth/google-login-button";
 export { IconTextButton } from "./buttons/icon-text-button";
 export { PrimaryButton } from "@atoms/buttons/primary-button";
 export { BottomNavButton } from "@atoms/buttons/bottom-nav-button";
-
+export { SquareIconButton } from "@atoms/buttons/square-icon-button";
 // input
 
 export { InputField } from "./input/input-field";
@@ -34,7 +34,7 @@ export { Sub2Text } from "@atoms/texts/sub2-text";
 export { ItemCell } from "@atoms/item-cell";
 
 export { AvatarFace } from "@atoms/symbols/avatars/avatar-face";
-export { AvatarBody } from "@atoms/symbols/avatars/avatar";
+export { AvatarBody } from "@atoms/symbols/avatars/avatar-body";
 export { ProgressBar } from "@atoms/symbols/tiers/progress-bar";
 
 export { TierBadge } from "./symbols/tiers/tier-badge";
