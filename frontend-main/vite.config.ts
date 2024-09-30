@@ -20,13 +20,13 @@ export default defineConfig({
       strategies: "injectManifest", // injectManifest를 사용하여 직접 만든 Service Worker에 설정을 주입
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
-        name: "Vite PWA Project",
-        short_name: "Vite PWA Project",
+        name: "캐치캐치! 시즌아레나 by 시즌핑",
+        short_name: "캐치! 시즌핑",
         theme_color: "#ffffff",
         icons: [
           {
-            src: "pwa-64x64.png",
-            sizes: "64x64",
+            src: "pwa-76x76.png",
+            sizes: "76x76",
             type: "image/png",
           },
           {
@@ -35,16 +35,10 @@ export default defineConfig({
             type: "image/png",
           },
           {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
+            src: "pwa-310x310.png",
+            sizes: "310x310",
             type: "image/png",
             purpose: "any",
-          },
-          {
-            src: "maskable-icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "maskable",
           },
         ],
       },
