@@ -1,4 +1,4 @@
-import TierSilver from "@/assets/icons/tier-silver.svg?react";
+import TierSilver from "@/assets/symbols/tiers/tier-silver.svg?react";
 import Pencil from "@/assets/icons/pencil.svg?react";
 import { Body2Text } from "../../atoms";
 

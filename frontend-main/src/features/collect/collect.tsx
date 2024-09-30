@@ -101,9 +101,33 @@ export const Collect = () => {
   };
 
   const sendImagesToServer = async () => {
+    const formData = new FormData();
+
+    // 이미지 배열의 각 이미지 URL을 Blob 형태로 변환하여 FormData에 추가
+    capturedImages.forEach((image, index) => {
+      // base64 문자열을 Blob으로 변환
+      const byteString = atob(image.split(",")[1]);
+      const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
+
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      const blob = new Blob([ab], { type: mimeString });
+      formData.append(
+        `image${index + 1}`,
+        blob,
+        `captured-image-${index + 1}.png`,
+      );
+    });
+
     try {
-      const response = await axios.post("/api/upload", {
-        images: capturedImages,
+      const response = await axios.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       console.log("Images sent to server:", response.data);
     } catch (error) {
@@ -124,7 +148,7 @@ export const Collect = () => {
   return (
     <div className="relative w-full h-full">
       <video
-        className="w-full h-full object-cover"
+        className="object-cover w-full h-full"
         ref={videoRef}
         autoPlay
         playsInline
@@ -144,7 +168,7 @@ export const Collect = () => {
 
       <button
         onClick={autoCapture}
-        className="absolute bottom-5 left-1/2 transform -translate-x-1/2 p-2 bg-blue-500 text-white"
+        className="absolute p-2 text-white transform -translate-x-1/2 bg-blue-500 bottom-5 left-1/2"
       >
         자동 캡처 시작
       </button>
@@ -162,7 +186,7 @@ export const Collect = () => {
               />
               <button
                 onClick={() => downloadImage(img, index)}
-                className="absolute bottom-1 right-1 bg-gray-700 text-white p-1 rounded text-xs"
+                className="absolute p-1 text-xs text-white bg-gray-700 rounded bottom-1 right-1"
               >
                 다운로드
               </button>
