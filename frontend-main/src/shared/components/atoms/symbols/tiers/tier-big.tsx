@@ -1,10 +1,10 @@
 // 티어 아이콘 큰거 작은거 두가진데 svg소스 다있나몰라
-import BronzeTier from "@/assets/icons/tier-bronze.svg?react";
-import SilverTier from "@/assets/icons/tier-silver.svg?react";
-import GoldTier from "@/assets/icons/tier-gold.svg?react";
-import PlatinumTier from "@/assets/icons/tier-platinum.svg?react";
-import DiamondTier from "@/assets/icons/tier-diamond.svg?react";
-import RubyTier from "@/assets/icons/tier-ruby.svg?react";
+import BronzeTier from "@/assets/symbols/tiers/tier-bronze.svg?react";
+import SilverTier from "@/assets/symbols/tiers/tier-silver.svg?react";
+import GoldTier from "@/assets/symbols/tiers/tier-gold.svg?react";
+import PlatinumTier from "@/assets/symbols/tiers/tier-platinum.svg?react";
+import DiamondTier from "@/assets/symbols/tiers/tier-diamond.svg?react";
+import RubyTier from "@/assets/symbols/tiers/tier-ruby.svg?react";
 import { getTierByRating } from "@/app/types/tier";
 
 interface TierBigProps {

@@ -27,9 +27,22 @@ export const TierSmall: React.FC<TierSmallProps> = ({
   };
 
   const getBackgroundClass = () => {
-    if (tier) {
-      return `bg-catch-tier-${tier}`;
-    } else return "bg-catch-tier-Silver";
+    switch (tier) {
+      case "Bronze":
+        return "bg-catch-tier-Bronze";
+      case "Silver":
+        return "bg-catch-tier-Silver";
+      case "Gold":
+        return "bg-catch-tier-Gold";
+      case "Platinum":
+        return "bg-catch-tier-Platinum";
+      case "Diamond":
+        return "bg-catch-tier-Diamond";
+      case "Ruby":
+        return "bg-catch-tier-Ruby";
+      default:
+        return "bg-catch-tier-Silver"; // 기본값
+    }
   };
 
   return (
