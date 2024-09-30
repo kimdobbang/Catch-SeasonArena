@@ -7,17 +7,16 @@ import userReducer from "./slice/userSlice";
 
 // redux-persist 설정
 const persistConfig = {
-  key: "root", // persist key 설정
-  storage: sessionStorage, // sessionStorage 사용
-  whitelist: ["auth", "user"], // 저장할 slice 이름 지정
+  key: "root",
+  storage: sessionStorage, // 장착 (스탯, 티어 ,장비) 세션이 아니라 로컬에 해야할까?
+  whitelist: ["auth", "user"],
 };
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  user: userReducer,
+  auth: authReducer, // 인증정보
+  user: userReducer, // 사용자정보
 });
 
-// persistReducer로 감싸기
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // 스토어 설정
