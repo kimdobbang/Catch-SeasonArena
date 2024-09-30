@@ -20,8 +20,8 @@ export const AvatarFace: React.FC<AvatarFaceProps> = ({
   number,
   emotion = "normal",
   className = "",
-  width,
-  height,
+  width = 150,
+  height = 150,
 }) => {
   const getAvatarComponent = () => {
     switch (number) {

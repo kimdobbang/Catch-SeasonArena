@@ -1,6 +1,5 @@
-import TierSilver from "@/assets/symbols/tiers/tier-silver.svg?react";
 import Pencil from "@/assets/icons/pencil.svg?react";
-import { Body2Text } from "../../atoms";
+import { Body2Text, TierBadge } from "../../atoms";
 
 interface UserNameContainerProps {
   nickname: string;
@@ -32,9 +31,7 @@ export const UserNameContainer: React.FC<UserNameContainerProps> = ({
       className={`bg-gradient-to-r p-3 from-catch-sub-300 to-catch-main-400 flex flex-row rounded-xl w-[293px] h-[77px] bg-catch-main-400 ${className}`}
     >
       <div className="w-[20%] h-full flex items-center justify-center">
-        <div className="bg-catch-gray-000 rounded-md w-[50px] h-[50px] flex items-center justify-center">
-          <TierSilver />
-        </div>
+        <TierBadge rating={2100} />
       </div>
 
       <div className="pl-3 w-[70%] h-full flex flex-col justify-center">
