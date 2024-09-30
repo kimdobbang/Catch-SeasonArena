@@ -18,16 +18,16 @@ const initialState: UserState = {
   nickName: "닉네임을 수정하세요",
   rating: 500,
   tier: getTierByRating(500),
-  selectedAvatar: 1,
+  selectedAvatar: 2,
   stats: {
     hp: 100,
     coverage: 10,
-    speed: 10,
+    speed: 11,
   },
   equipment: {
-    weapon: null,
-    active: null,
-    passive: null,
+    weapon: 1,
+    active: 2,
+    passive: 3,
   },
 };
 
