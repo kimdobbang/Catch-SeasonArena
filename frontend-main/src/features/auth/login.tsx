@@ -1,9 +1,9 @@
-// /src/feature/auth/ogin.tsx
+// /src/feature/auth/login.tsx
 import config from "@/config";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginUser } from "@/app/apis/authApi";
+import { loginUser, fetchUserInfo } from "@/app/apis/authApi";
 import { setToken, setUser } from "@/app/redux/slice/authSlice";
 import { ServiceTitle, Copyright } from "@ui/index";
 import {
@@ -18,7 +18,6 @@ import {
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -39,12 +38,16 @@ export const Login: React.FC = () => {
     }
 
     try {
-      const { data, accessToken } = await loginUser({ email, password });
+      const { accessToken } = await loginUser({ email, password });
 
       if (accessToken) {
-        localStorage.setItem("access_token", accessToken);
         dispatch(setToken(accessToken));
-        dispatch(setUser(data));
+
+        const userInfo = await fetchUserInfo(accessToken);
+        dispatch(
+          setUser({ email: userInfo.email, nickName: userInfo.nickName }),
+        );
+
         navigate("/main");
       }
     } catch (error) {
