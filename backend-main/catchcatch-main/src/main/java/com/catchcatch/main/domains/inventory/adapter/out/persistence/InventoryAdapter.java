@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class InventoryAdapterPort implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
+public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
 	FindInventoriesByEmailPort {
 
 	private final InventoryRepository inventoryRepository;
