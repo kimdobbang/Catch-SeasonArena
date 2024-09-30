@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,17 +15,19 @@ import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/main/inventories/items")
 @RequiredArgsConstructor
-public class FindInventoryController {
+@Slf4j
+public class FindInventoriesController {
 
 	private final FindInventoriesUseCase findInventoriesUseCase;
 	private final HttpResponseUtil responseUtil;
 
-	@GetMapping
-	public ResponseEntity<?> findInventories(String email) {
+	@GetMapping("/{email}")
+	public ResponseEntity<?> findInventories(@PathVariable("email") String email) {
 		List <Inventory> inventories =  findInventoriesUseCase.findInventories(email);
 		List<FindInventoriesResponseDto> inventoriesResponseDtos = new ArrayList<>();
 		for (Inventory inventory : inventories) {
@@ -33,4 +36,5 @@ public class FindInventoryController {
 		}
 		return responseUtil.createResponse(inventoriesResponseDtos);
 	}
+
 }

@@ -2,6 +2,7 @@ package com.catchcatch.main.domains.inventory.adapter.out.persistence;
 
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.global.entity.BaseTimeEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "inventory")
 @Getter
-public class InventoryEntity {
+public class InventoryEntity extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
