@@ -30,16 +30,11 @@ export const store = configureStore({
         ignoredPaths: [
           "user.collections.createdAt",
           "user.collections.updatedAt",
-        ], // 직렬화 검사에서 제외
+        ],
       },
     }),
 });
 
-// redux-persist를 사용한 persistor 설정
 export const persistor = persistStore(store);
-
-// RootState 타입 정의
 export type RootState = ReturnType<typeof store.getState>;
-
-// AppDispatch 타입 정의
 export type AppDispatch = typeof store.dispatch;

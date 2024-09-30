@@ -34,7 +34,7 @@ export const Login: React.FC = () => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      console.log("로그인 정보를 입력하세요.");
+      setErrorMessage("로그인 정보를 입력하세요.");
       return;
     }
 
@@ -48,17 +48,14 @@ export const Login: React.FC = () => {
         navigate("/main");
       }
     } catch (error) {
-      setErrorMessage("로그인 실패");
+      setErrorMessage("입력 정보를 확인 바랍니다 ㅜ.ㅜ");
       console.error("로그인 에러:", error);
     }
   };
 
   return (
     <div className="flex flex-col justify-around h-screen bg-catch-sub-100">
-      {/* 상단 로고 및 서비스 타이틀 */}
       <ServiceTitle />
-
-      {/* 이메일 및 비밀번호 입력 필드 */}
       <div className="flex flex-col w-full max-w-xs mx-auto space-y-4">
         <InputField
           label="Email"
@@ -74,16 +71,21 @@ export const Login: React.FC = () => {
           value={password}
           onChange={setPassword}
         />
-        <div className="flex justify-end w-full">
-          <IconTextButton
-            label="회원가입"
-            Icon={<Leave width="1rem" />}
-            onClick={goSignUp}
-          />
+        <div className="flex justify-end">
+          <div>
+            {errorMessage && (
+              <div className="flex text-catch-main-400">{errorMessage}</div>
+            )}
+          </div>
+          <div className="flex items-end ml-2">
+            <IconTextButton
+              label="회원가입"
+              Icon={<Leave width="1rem" />}
+              onClick={goSignUp}
+            />
+          </div>
         </div>
-        {errorMessage && <div className="text-red-500">{errorMessage}</div>}
       </div>
-      {/* 로그인 버튼들 */}
       <div className="flex flex-col items-center w-full max-w-xs mx-auto space-y-4">
         <DefaultLoginButton onClick={handleLogin} />
         <KakaoLoginButton onClick={() => handleOAuthLogin("kakao")} />
