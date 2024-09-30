@@ -113,7 +113,7 @@ function joinPlayer(
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
-    if (room.players.size == 2 && !room.isStarted) {
+    if (room.players.size == 6 && !room.isStarted) {
       rooms.get(roomCode).startTime = Date.now();
       rooms.get(roomCode).magnetic = getMagneticPoint();
       io.in(roomCode).emit("gameStart", room.magnetic);
