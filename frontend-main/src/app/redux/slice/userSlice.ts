@@ -22,7 +22,7 @@ const initialState: UserState = {
   stats: {
     hp: 100,
     coverage: 10,
-    speed: 11,
+    speed: 10,
   },
   equipment: {
     weapon: 1,
