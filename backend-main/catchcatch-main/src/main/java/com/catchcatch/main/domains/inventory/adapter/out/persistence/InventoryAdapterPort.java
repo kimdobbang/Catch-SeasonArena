@@ -1,8 +1,11 @@
 package com.catchcatch.main.domains.inventory.adapter.out.persistence;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
+import com.catchcatch.main.domains.inventory.application.port.out.FindInventoriesByEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.global.exception.CustomException;
@@ -12,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class InventoryAdapterPort implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort {
+public class InventoryAdapterPort implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
+	FindInventoriesByEmailPort {
 
 	private final InventoryRepository inventoryRepository;
 
@@ -29,5 +33,10 @@ public class InventoryAdapterPort implements DeleteInventoryPort, FindInventoryB
 				CustomException.NOT_EXISTS_INVENTORY_EXCEPTION));
 
 		return inventoryEntity;
+	}
+
+	@Override
+	public List<InventoryEntity> findInventoriesByEmail(String email) {
+		return inventoryRepository.findAllByMember_Email(email);
 	}
 }
