@@ -8,14 +8,14 @@ import lombok.Getter;
 public class Rank {
 
 	private String nickName;
-	private Integer rank;
+	private Integer rate;
 
-	public Rank(String nickName, Integer rank) {
+	public Rank(String nickName, Integer rate) {
 		this.nickName = nickName;
-		this.rank = rank;
+		this.rate = rate;
 	}
 
 	public static RedisRankEntity rankToRedisRankEntity(Rank rank) {
-		return new RedisRankEntity(rank.getNickName(), rank.getRank());
+		return new RedisRankEntity(rank.getNickName(), rank.getRate());
 	}
 }
