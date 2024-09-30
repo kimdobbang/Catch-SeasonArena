@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { PrimaryButton, Sub2Text, TitleText } from "@/shared/components/atoms";
-import Avartar from "@/assets/symbols/avartar1.svg?react";
+import Avatar from "@/assets/symbols/avatars/avatar1-sad.svg";
 
 export const ItemFail = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const ItemFail = () => {
         <TitleText color="red">FAILURE</TitleText>
       </div>
       <div className="w-full h-[50%] flex flex-col  items-center">
-        <Avartar className="w-[360px] h-[360px]" />
+        <Avatar />
         <Sub2Text>
           수집 가능한 아이템인지
           <br />
