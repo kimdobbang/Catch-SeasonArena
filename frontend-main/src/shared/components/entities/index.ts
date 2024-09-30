@@ -12,3 +12,5 @@ export { ItemCell } from "@/shared/components/atoms/item-cell";
 export { ItemLibrary } from "./inventory/items-library";
 export { InventoryUserInfo } from "./inventory/inventory-userinfo";
 export { InGameStats } from "./inventory/ingame-stats";
+export { EquippedItems } from "@entities/inventory/equipped-Items";
+export { EquippedCell } from "@entities/inventory/equipped-cell";
