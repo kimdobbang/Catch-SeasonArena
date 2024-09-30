@@ -87,3 +87,18 @@ export const loginUser = async (
 
   return { data, accessToken };
 };
+
+export const fetchUserInfo = async (accessToken: string): Promise<UserInfo> => {
+  const response = await fetch(`${config.API_BASE_URL}/api/auth/members/info`, {
+    headers: {
+      method: "GET",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
+  }
+
+  return response.json();
+};
