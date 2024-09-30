@@ -14,17 +14,17 @@ export const ProgressBar: React.FC<ProgressProps> = ({ rating, className }) => {
   const getGradientColor = () => {
     switch (tier) {
       case "Bronze":
-        return "linear-gradient(to right, #f6f6f6, #9D4900)";
+        return "linear-gradient(to right, #9D4900, #C0C0C0)";
       case "Silver":
-        return "linear-gradient(to right, #f6f6f6, #C0C0C0)";
+        return "linear-gradient(to right, #C0C0C0, #FFB028)";
       case "Gold":
-        return "linear-gradient(to right, #f6f6f6, #FFB028)";
+        return "linear-gradient(to right, #FFB028, #27E2A4)";
       case "Platinum":
-        return "linear-gradient(to right, #f6f6f6, #27E2A4)";
+        return "linear-gradient(to right, #27E2A4, #41CAFF)";
       case "Diamond":
-        return "linear-gradient(to right, #f6f6f6, #41CAFF)";
+        return "linear-gradient(to right, #41CAFF, #F5005A)";
       case "Ruby":
-        return "linear-gradient(to right, #f6f6f6, #F5005A)";
+        return "linear-gradient(to right, #F5005A, #F5005A)";
       default:
         return "linear-gradient(to right, #f6f6f6, #C0C0C0)"; // 기본 색상
     }
@@ -32,20 +32,35 @@ export const ProgressBar: React.FC<ProgressProps> = ({ rating, className }) => {
 
   // 비율 계산
   const getValue = () => {
-    // 현재 레이팅이 해당 티어의 최소값과 최대값 사이에서 몇 퍼센트인지 계산
     return ((rating - min) / (max - min)) * 100;
   };
 
   return (
-    <div className="w-full h-8 overflow-hidden bg-gray-300 rounded-lg">
+    <div className="relative w-full">
+      {/* Progress bar wrapper */}
+      <div className="relative w-full h-8 overflow-hidden bg-gray-300 rounded-lg">
+        {/* Progress bar itself */}
+        <div
+          className={`${className} h-8 flex items-center justify-center text-white`}
+          style={{
+            width: `${getValue()}%`, // 진행률을 백분율로 설정
+            backgroundImage: getGradientColor(), // 티어에 따른 색상 적용
+          }}
+        >
+          {/* 진행 바 위에는 텍스트 없음 */}
+        </div>
+      </div>
+
+      {/* Rating 텍스트, 진행된 만큼 바로 아래에 위치 */}
       <div
-        className={`${className} h-8 text-sm font-semibold text-center flex items-center justify-center text-white`}
+        className="absolute text-sm font-semibold text-gray-700"
         style={{
-          width: `${getValue()}%`, // 진행률을 백분율로 설정
-          backgroundImage: getGradientColor(), // 티어에 따른 색상 적용
+          left: `${getValue()}%`, // 진행된 만큼의 위치에 고정
+          transform: "translateX(-50%)", // 텍스트 중앙 정렬
+          top: "40px", // 진행 바 아래에 위치시키기 위해 top 조정
         }}
       >
-        {rating} Points {/* 진행률 바 위에 현재 rating 값 표시 */}
+        {rating} Points
       </div>
     </div>
   );

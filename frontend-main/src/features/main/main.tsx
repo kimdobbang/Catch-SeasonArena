@@ -11,7 +11,7 @@ export const Main = () => {
   return (
     <div className="w-full h-full ">
       메인 컴포넌트
-      <TierProgressBar rating={400} />
+      <TierProgressBar rating={2100} />
     </div>
   );
 };
