@@ -12,9 +12,11 @@ import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j(topic = "main")
 public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
 	FindInventoriesByEmailPort {
 
@@ -32,6 +34,7 @@ public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdA
 			.orElseThrow(() -> new ExceptionResponse(
 				CustomException.NOT_EXISTS_INVENTORY_EXCEPTION));
 
+		log.error("BE/MAIN - error : {}", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
 		return inventoryEntity;
 	}
 
