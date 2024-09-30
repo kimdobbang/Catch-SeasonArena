@@ -37,5 +37,5 @@ export { AvatarFace } from "@atoms/symbols/avatars/avatar-face";
 export { AvatarBody } from "@atoms/symbols/avatars/avatar";
 export { ProgressBar } from "@atoms/symbols/tiers/progress-bar";
 
-export { TierBig } from "./symbols/tiers/tier-big";
-export { TierSmall } from "./symbols/tiers/tier-small";
+export { TierBadge } from "./symbols/tiers/tier-badge";
+export { TierInitial } from "./symbols/tiers/tier-initial";

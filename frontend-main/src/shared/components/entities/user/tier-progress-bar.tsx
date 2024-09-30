@@ -1,6 +1,6 @@
 import { tierRanges, getTierByRating } from "@/app/types/tier";
-import { ProgressBar } from "../../atoms";
-import { TierSmall } from "../../atoms/symbols/tiers/tier-small";
+import { Caption1Text, ProgressBar } from "../../atoms";
+import { TierInitial } from "../../atoms/symbols/tiers/tier-initial";
 
 interface TierProgressProps {
   rating: number;
@@ -23,11 +23,18 @@ export const TierProgressBar: React.FC<TierProgressProps> = ({
 
   return (
     <div
-      className={`${className} gap-2 flex flex-row w-full h-auto justify-center items-center`}
+      className={`${className} gap-2 flex flex-row w-full h-auto justify-center`}
     >
-      <TierSmall rating={tier ? min : 0} size="big" />
+      <div className="mt-1">
+        <TierInitial rating={tier ? min : 0} size="big" />
+        <Caption1Text>{min}</Caption1Text>
+      </div>
+
       <ProgressBar rating={rating} />
-      <TierSmall rating={tier ? max + 1 : 500} size="big" />
+      <div>
+        <TierInitial rating={tier ? max + 1 : 500} size="big" />
+        <Caption1Text>{max}</Caption1Text>
+      </div>
     </div>
   );
 };

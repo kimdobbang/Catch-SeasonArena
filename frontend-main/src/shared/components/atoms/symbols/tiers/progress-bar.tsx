@@ -39,13 +39,13 @@ export const ProgressBar: React.FC<ProgressProps> = ({ rating, className }) => {
   return (
     <div className="w-full h-8 overflow-hidden bg-gray-300 rounded-lg">
       <div
-        className={`${className} h-8 text-sm font-semibold text-center text-black`}
+        className={`${className} h-8 text-sm font-semibold text-center flex items-center justify-center text-white`}
         style={{
           width: `${getValue()}%`, // 진행률을 백분율로 설정
           backgroundImage: getGradientColor(), // 티어에 따른 색상 적용
         }}
       >
-        {rating} {/* 진행률 바 위에 현재 rating 값 표시 */}
+        {rating} Points {/* 진행률 바 위에 현재 rating 값 표시 */}
       </div>
     </div>
   );

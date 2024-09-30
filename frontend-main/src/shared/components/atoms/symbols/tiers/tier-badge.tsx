@@ -7,11 +7,11 @@ import DiamondTier from "@/assets/symbols/tiers/tier-diamond.svg?react";
 import RubyTier from "@/assets/symbols/tiers/tier-ruby.svg?react";
 import { getTierByRating } from "@/app/types/tier";
 
-interface TierBigProps {
+interface TierBadgeProps {
   rating: number;
   className?: string;
 }
-export const TierBig: React.FC<TierBigProps> = ({ rating, className }) => {
+export const TierBadge: React.FC<TierBadgeProps> = ({ rating, className }) => {
   const getTierIcon = () => {
     const tier = getTierByRating(rating);
 

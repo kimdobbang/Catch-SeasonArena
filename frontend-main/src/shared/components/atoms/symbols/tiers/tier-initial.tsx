@@ -1,12 +1,12 @@
 import { getTierByRating } from "@/app/types/tier";
 
-interface TierSmallProps {
+interface TierInitialProps {
   rating: number; // 레이팅
   size: "small" | "big"; // 모양 동일, 크기만 다름
   className?: string; // 추가 속성
 }
 
-export const TierSmall: React.FC<TierSmallProps> = ({
+export const TierInitial: React.FC<TierInitialProps> = ({
   rating,
   size,
   className = "",

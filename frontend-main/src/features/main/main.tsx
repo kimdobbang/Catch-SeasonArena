@@ -1,4 +1,3 @@
-import { TierBig, TierSmall } from "@/shared/components/atoms";
 import { TierProgressBar } from "@/shared/components/entities";
 
 export const Main = () => {
@@ -13,10 +12,6 @@ export const Main = () => {
     <div className="w-full h-full ">
       메인 컴포넌트
       <TierProgressBar rating={400} />
-      <TierBig rating={2000} />
-      <TierSmall rating={400} size="big" />
-      <TierSmall rating={1501} size="small" />
-      <TierSmall rating={2501} size="big" className="bg-red-500" />
     </div>
   );
 };
