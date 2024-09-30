@@ -18,7 +18,6 @@ export const OAuthCallbackPage = () => {
     const accessToken = pathSegments[pathSegments.length - 1];
 
     if (accessToken) {
-      localStorage.setItem("token", accessToken);
       console.log("OAuth 로그인 성공, 토큰 저장 완료:", accessToken);
       dispatch(setToken(accessToken));
       navigate("/main");
