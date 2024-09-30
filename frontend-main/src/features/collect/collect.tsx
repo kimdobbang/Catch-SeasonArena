@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 export const Collect = () => {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -8,13 +9,14 @@ export const Collect = () => {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
   const capturedLen = useRef(0);
+  const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
   let interval: ReturnType<typeof setInterval> | undefined;
 
   useEffect(() => {
     const initCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+          video: { facingMode },
         });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -33,7 +35,11 @@ export const Collect = () => {
         tracks.forEach((track) => track.stop());
       }
     };
-  }, []);
+  }, [facingMode]);
+
+  const switchCamera = () => {
+    setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
+  };
 
   const autoCapture = () => {
     interval = setInterval(() => {
@@ -173,7 +179,14 @@ export const Collect = () => {
         자동 캡처 시작
       </button>
 
-      <button onClick={() => navigate("processing")}>게임으로 이동</button>
+      <button
+        onClick={switchCamera}
+        className="absolute p-2 text-white transform -translate-x-1/2 bg-green-500 bottom-16 left-1/2"
+      >
+        카메라 전환
+      </button>
+
+      <button onClick={() => navigate("processing")}>수집 게임으로 이동</button>
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
         <h3 className="text-lg font-bold">Captured Images:</h3>
         <div className="flex flex-wrap gap-2">
