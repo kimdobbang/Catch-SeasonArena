@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 import {
   Body1Text,
   PrimaryButton,
@@ -17,21 +19,24 @@ import { NavBarBackground } from "@/shared/ui";
 export const Main = () => {
   const navigate = useNavigate();
   const goToGamePage = () => {
-    navigate("/game"); // 예를 들어 react-router-dom의 navigate 사용
+    navigate("/game");
   };
 
   const goToRankingPage = () => {
-    navigate("/ranking"); // 예를 들어 react-router-dom의 navigate 사용
+    navigate("/ranking");
   };
 
   const goToCollectionBookPage = () => {
-    navigate("/collectionbook"); // 예를 들어 react-router-dom의 navigate 사용
+    navigate("/collectionbook");
   };
 
   const goToCombinationPage = () => {
-    navigate("/combination"); // 예를 들어 react-router-dom의 navigate 사용
+    navigate("/combination");
   };
 
+  const userRating = useSelector((state: RootState) => state.user.rating);
+
+  const userNickname = useSelector((state: RootState) => state.user.nickName);
   // main 페이지에서 토큰 확인 및 로그인 상태 체크 예시
   // useEffect(() => {
   //   const token = localStorage.getItem("accessToken");
@@ -55,13 +60,20 @@ export const Main = () => {
           width={300}
           height={300}
         />
-        <Body1Text className="text-left text-catch-main-400">
-          2024 Autumn
-        </Body1Text>
+        <div className="w-full px-4">
+          {/* w-full로 부모 요소를 꽉 채우고 px-4로 padding 추가 */}
+          <Body1Text className="!text-left text-catch-main-400 ">
+            2024 Autumn
+          </Body1Text>
+        </div>
       </div>
       <div className="w-full h-[70%] flex flex-col items-center gap-6">
-        <UserNameContainer className="mt-4" nickname="김도이" rating={2100} />
-        <TierProgressBar rating={2100} />
+        <UserNameContainer
+          className="mt-4"
+          nickname={userNickname}
+          rating={userRating}
+        />
+        <TierProgressBar rating={userRating} />
         <PrimaryButton
           onClick={goToGamePage}
           size="small"
