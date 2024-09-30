@@ -74,7 +74,7 @@ const config = {
 let ROOMCODE;
 let gameStarted = false;
 let playerGroup;
-let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체}
+let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체, visible, galaxymoon}
 let MAGNETIC = {};
 let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
@@ -84,24 +84,25 @@ let skillCooldown = 10000;
 let cooldownText;
 
 function preload() {
-  this.load.image("player1", "./assets/player1.png");
-  this.load.image("player2", "./assets/player2.png");
-  this.load.image("player3", "./assets/player3.png");
-  this.load.image("player4", "./assets/player4.png");
+  this.load.image("player1", "./assets/player/player1.png");
+  this.load.image("player2", "./assets/player/player2.png");
+  this.load.image("player3", "./assets/player/player3.png");
+  this.load.image("player4", "./assets/player/player4.png");
 
-  this.load.image("weapon", "./assets/sword.png");
+  this.load.image("weapon", "./assets/weapon/sword.png");
 
-  this.load.image("bomb", "./assets/bomb.png");
+  this.load.image("bomb", "./assets/skill/bomb.png");
+  this.load.image("scarecrow", "./assets/skill/scarecrow.png");
 
-  this.load.spritesheet("effects1", "./assets/effects1.png", {
+  this.load.spritesheet("effects1", "./assets/sprite/effects1.png", {
     frameWidth: 64,
     frameHeight: 64,
   });
-  this.load.spritesheet("effects2", "./assets/effects2.png", {
+  this.load.spritesheet("effects2", "./assets/sprite/effects2.png", {
     frameWidth: 64,
     frameHeight: 64,
   });
-  this.load.spritesheet("effects3", "./assets/effects3.png", {
+  this.load.spritesheet("effects3", "./assets/sprite/effects3.png", {
     frameWidth: 64,
     frameHeight: 64,
   });
@@ -121,10 +122,10 @@ function preload() {
     this.anims.create({
       key: "4",
       frames: this.anims.generateFrameNumbers("effects2", {
-        start: 15,
-        end: 19,
+        start: 5,
+        end: 9,
       }),
-      frameRate: 10,
+      frameRate: 20,
       repeat: 0,
     });
     // jump 애니메이션
@@ -140,9 +141,29 @@ function preload() {
     // mushroom 애니메이션
     this.anims.create({
       key: "8",
-      frames: this.anims.generateFrameNumbers("effects2", {
+      frames: this.anims.generateFrameNumbers("effects3", {
         start: 130,
         end: 134,
+      }),
+      frameRate: 10,
+      repeat: 0,
+    });
+    // galaxymoon 시전 애니메이션
+    this.anims.create({
+      key: "11-1",
+      frames: this.anims.generateFrameNumbers("effects2", {
+        start: 80,
+        end: 83,
+      }),
+      frameRate: 10,
+      repeat: 4,
+    });
+    // galaxymoon 피격 애니메이션
+    this.anims.create({
+      key: "11-2",
+      frames: this.anims.generateFrameNumbers("effects2", {
+        start: 125,
+        end: 129,
       }),
       frameRate: 10,
       repeat: 0,
@@ -387,7 +408,7 @@ function create() {
           players[key].x,
           players[key].y
         );
-        if (tempDist < 850) {
+        if (tempDist < 850 || clientPlayers[socket.id].visible) {
           const pointX = players[key].x / (5000 / 80) + 300;
           const pointY = players[key].y / (5000 / 80) + 20;
           if (tempDist === 0) {
@@ -511,6 +532,12 @@ function createPlayer(scene, players) {
     // 공격중인지 여부 (초기세팅 false)
     clientPlayers[player.socketId].isAttacking = false;
 
+    // 시야변수 설정 (초기세팅 false)
+    clientPlayers[player.socketId].visible = false;
+
+    // 갤럭시문 변수 설정 (초기세팅 false)
+    clientPlayers[player.socketId].galaxymoon = false;
+
     // 스킬 설정 & 카메라 따라가기 구현
     if (socket.id === player.socketId) {
       setSkill(player.skill);
@@ -525,7 +552,7 @@ function createPlayer(scene, players) {
   });
 }
 
-// 스킬 초기화
+// 스킬 설정
 function setSkill(skill) {
   switch (skill) {
     case "3": // 솔 폭탄
@@ -541,7 +568,7 @@ function setSkill(skill) {
       skillCooldown = 20000;
       break;
     case "11": // 갤럭시 문
-      skillCooldown = 50000;
+      skillCooldown = 70000;
       break;
     case "12": // 허수아비
       skillCooldown = 50000;
@@ -607,6 +634,18 @@ function useSkill(scene, player, skill) {
     case "4":
       useDragonfly(scene, player);
       break;
+    case "7":
+      useJump(scene, player);
+      break;
+    case "8":
+      useMushroom(scene, player);
+      break;
+    case "11":
+      useGalaxymoon(scene, player);
+      break;
+    case "12":
+      useScarecrow(scene, player);
+      break;
   }
 }
 
@@ -616,36 +655,113 @@ function useBomb(scene, player) {
   const bomb = scene.add.image(bombX, bombY, "bomb").setScale(0.1);
   setTimeout(() => {
     bomb.destroy();
-    const explosion = scene.add.sprite(bombX, bombY, "effects1").setScale(7);
+    const explosion = scene.add.sprite(bombX, bombY, "effects1").setScale(12);
     explosion.play("3");
   }, 3000);
 }
 
 function useDragonfly(scene, player) {
-  const portal = scene.add
-    .circle(player.player.x, player.player.y, 60, 0x0000ff)
-    .setAlpha(0.7);
-
-  portal.setScrollFactor(
-    player.player.scrollFactorX,
-    player.player.scrollFactorY
-  );
-
   scene.tweens.add({
-    targets: portal,
-    scale: 1.1,
-    duration: 800,
-    onComplete: () => {
-      portal.destroy();
-    },
-  });
-
-  scene.tweens.add({
-    targets: player.player,
+    targets: clientPlayers[player.socketId].player,
     alpha: 0.5,
     duration: 1000,
     onComplete: () => {
-      player.player.alpha = 1;
+      clientPlayers[player.socketId].player.alpha = 1;
     },
   });
+  setTimeout(() => {
+    const dragonflyX = player.x;
+    const dragonflyY = player.y;
+    const portal = scene.add
+      .sprite(dragonflyX, dragonflyY, "effects2")
+      .setScale(2.5);
+    portal.play("4");
+    portal.on("animationcomplete", () => {
+      portal.destroy();
+    });
+  }, 500);
+}
+
+function useMushroom(scene, player) {
+  const mushroomX = player.x;
+  const mushroomY = player.y;
+  const explosion = scene.add
+    .sprite(mushroomX, mushroomY, "effects3")
+    .setScale(5);
+  explosion.play("8");
+}
+
+function useGalaxymoon(scene, player) {
+  // 텍스트를 화면 위쪽 중간에 추가
+  const galaxymoonText = scene.add.text(
+    scene.cameras.main.width / 2, // 화면 가로 중앙
+    150,
+    "Galaxymoon Launch Detected", // 표시할 텍스트
+    {
+      font: "20px Arial", // 폰트 설정
+      fill: "#ff0000", // 글자 색상
+      align: "center", // 가운데 정렬
+    }
+  );
+  galaxymoonText.setOrigin(0.5, 0);
+  galaxymoonText.setScrollFactor(0);
+
+  clientPlayers[player.socketId].visible = true;
+  setTimeout(() => {
+    clientPlayers[player.socketId].visible = false;
+  }, 10000);
+
+  // 시전자 애니메이션
+  const galaxymoon = scene.add
+    .sprite(player.x, player.y, "effects2")
+    .setScale(2.5);
+  galaxymoon.play("11-1");
+  galaxymoon.on("animationcomplete", () => {
+    galaxymoon.destroy();
+  });
+
+  clientPlayers[player.socketId].isAttacking = true;
+  setTimeout(() => {
+    clientPlayers[player.socketId].isAttacking = false;
+    // 피격자 애니메이션
+    clientPlayers[player.socketId].galaxymoon = true;
+    Object.values(clientPlayers).forEach((clientPlayer) => {
+      if (clientPlayer.galaxymoon) {
+        return;
+      }
+      const galaxymooned = scene.add
+        .sprite(clientPlayer.player.x, clientPlayer.player.y - 40, "effects2")
+        .setScale(3);
+      galaxymooned.play("11-2");
+      galaxymooned.on("animationcomplete", () => {
+        galaxymooned.destroy();
+      });
+    });
+    clientPlayers[player.socketId].galaxymoon = false;
+    galaxymoonText.destroy();
+  }, 2000);
+}
+
+function useScarecrow(scene, player) {
+  const clientPlayer = clientPlayers[player.socketId].player;
+  const weapon = clientPlayers[player.socketId].weapon;
+
+  clientPlayer.setAlpha(0);
+  weapon.setAlpha(0);
+  scene.time.delayedCall(
+    3000,
+    () => {
+      clientPlayer.setAlpha(1);
+      weapon.setAlpha(1);
+    },
+    [],
+    scene
+  );
+
+  const scarecrow = scene.add
+    .image(player.x, player.y, "scarecrow")
+    .setScale(0.2);
+  setTimeout(() => {
+    scarecrow.destroy();
+  }, 3000);
 }
