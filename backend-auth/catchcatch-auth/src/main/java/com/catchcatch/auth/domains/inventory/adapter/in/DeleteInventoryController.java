@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/auth/inventories/items")
-@Slf4j(topic = "main")
+@Slf4j(topic = "auth")
 @RequiredArgsConstructor
 public class DeleteInventoryController {
 
@@ -45,7 +45,6 @@ public class DeleteInventoryController {
 				return ResponseEntity.status(e.status()).body(errorResponse);
 			} catch (Exception jsonException) {
 				log.error("BE/MAIN - delete inventory error: {}", jsonException.getMessage());
-				System.err.println("JSON 파싱 에러 발생: " + jsonException.getMessage());
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("서버 에러.");
 			}
