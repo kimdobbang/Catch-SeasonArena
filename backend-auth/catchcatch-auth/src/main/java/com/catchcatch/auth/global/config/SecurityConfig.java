@@ -1,5 +1,6 @@
 package com.catchcatch.auth.global.config;
 
+import com.catchcatch.auth.domains.member.domain.Role;
 import com.catchcatch.auth.global.security.auth.repository.RefreshTokenRepository;
 import com.catchcatch.auth.global.security.exceptionHandler.CustomExceptionHandler;
 import com.catchcatch.auth.global.security.jwt.JwtAuthenticationFilter;
@@ -60,8 +61,9 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
 
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**","/api/auth/**").permitAll()
-                .anyRequest().authenticated());
+                //.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**","/api/auth/**").permitAll()
+            .requestMatchers("/api/auth/**").hasRole("USER")
+            .anyRequest().authenticated());
 
         http.oauth2Login((oauth) ->
                 oauth.userInfoEndpoint(c -> c.userService(oAuth2Service))
