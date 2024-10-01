@@ -75,10 +75,6 @@ export const AppRouter = () => {
               element: <MainPage />,
             },
             {
-              path: "/ranking",
-              element: <RankingPage />,
-            },
-            {
               path: "/inventory",
               element: <InventoryPage />,
             },
@@ -91,6 +87,10 @@ export const AppRouter = () => {
             {
               path: "/avatar",
               element: <AvatarPage />,
+            },
+            {
+              path: "/ranking",
+              element: <RankingPage />,
             },
           ],
         },

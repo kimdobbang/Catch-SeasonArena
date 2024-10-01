@@ -23,7 +23,7 @@ export const CircleAvatar = ({
   return (
     <div className="w-auto h-auto">
       <div
-        className={`${className} w-[96px] h-[96px] flex items-center justify-center rounded-full border border-catch-sub-300`}
+        className={`${className} flex items-center justify-center rounded-full border border-catch-sub-300`}
       >
         <AvatarFace
           number={number}
