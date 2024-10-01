@@ -54,7 +54,7 @@ public class FindInventoriesControllerTest {
 	public void init() {
 		MemberEntity member = MemberEntity.builder()
 				.memberId(1L).build();
-		ItemEntity item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
+		ItemEntity item = new ItemEntity(1L, "test", Season.AUTOM, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
 		inventories = new ArrayList<>();
 		inventories.add(new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item),1, false));
 	}

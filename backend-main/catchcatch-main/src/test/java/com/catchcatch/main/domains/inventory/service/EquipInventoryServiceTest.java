@@ -55,7 +55,7 @@ public class EquipInventoryServiceTest {
 	public void init() throws Exception {
 		member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
-		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
+		item = new ItemEntity(1L, "test", Season.AUTOM, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
 	}
 
 	@Test
