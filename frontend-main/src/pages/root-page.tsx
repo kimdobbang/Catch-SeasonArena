@@ -1,7 +1,7 @@
 // import config from "@/config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SplashPage } from "./splash-page";
+import { SplashPage } from "@/pages/index";
 
 export const RootPage = () => {
   const navigate = useNavigate();
