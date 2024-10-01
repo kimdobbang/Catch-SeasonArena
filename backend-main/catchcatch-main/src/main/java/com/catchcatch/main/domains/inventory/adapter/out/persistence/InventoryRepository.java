@@ -11,4 +11,5 @@ public interface InventoryRepository extends JpaRepository<InventoryEntity, Long
 
 	Optional<InventoryEntity> findByIdAndMember_Email(Long id, String email);
 	List<InventoryEntity> findAllByMember_Email(String email);
+	List<InventoryEntity> findAllByMember_EmailAndIsEquipped(String email, Boolean isEquipped);
 }
