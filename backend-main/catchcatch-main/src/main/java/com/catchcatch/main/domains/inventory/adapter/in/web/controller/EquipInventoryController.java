@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.catchcatch.main.domains.inventory.adapter.in.web.message.SuccessUnEquipInventoryMessage;
+import com.catchcatch.main.domains.inventory.adapter.in.web.message.SuccessEquipInventoryMessage;
 import com.catchcatch.main.domains.inventory.application.port.in.EquipInventoryUseCase;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 
@@ -27,8 +27,8 @@ public class EquipInventoryController {
 		equipInventoryUseCase.equipInventory(inventoryId, memberEmail);
 
 		ResponseEntity<?> response = responseUtil.createSuccessResponse(
-			SuccessUnEquipInventoryMessage.SUCCESS_UN_EQUIP_INVENTORY.getMessage(),
-			SuccessUnEquipInventoryMessage.SUCCESS_UN_EQUIP_INVENTORY,
+			SuccessEquipInventoryMessage.SUCCESS_EQUIP_INVENTORY.getMessage(),
+			SuccessEquipInventoryMessage.SUCCESS_EQUIP_INVENTORY,
 			200
 		);
 
