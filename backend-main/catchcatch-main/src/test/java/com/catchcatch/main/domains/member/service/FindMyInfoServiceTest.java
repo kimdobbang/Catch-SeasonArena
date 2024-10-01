@@ -2,6 +2,7 @@ package com.catchcatch.main.domains.member.service;
 
 import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
 import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryByEmailPort;
+import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.FindMyInfoResponseDto;
 import com.catchcatch.main.domains.member.application.port.out.FindMemberPort;
 import com.catchcatch.main.domains.member.application.service.FindMyInfoServiceImpl;
@@ -34,7 +35,7 @@ public class FindMyInfoServiceTest {
     private Member member;
 
     @Mock
-    private List<InventoryEntity> inventoryEntities;
+    private List<Inventory> inventoryEntities;
 
     @Mock
     private List<Long> equipItems;

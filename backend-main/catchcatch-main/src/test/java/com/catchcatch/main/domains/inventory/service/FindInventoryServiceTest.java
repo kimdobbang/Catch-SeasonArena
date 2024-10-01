@@ -19,11 +19,15 @@ import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEn
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoriesByEmailPort;
 import com.catchcatch.main.domains.inventory.application.service.FindInventoryServiceImpl;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
+import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.domains.member.domain.Member;
 
 @ExtendWith(MockitoExtension.class)
 public class FindInventoryServiceTest {
@@ -34,23 +38,24 @@ public class FindInventoryServiceTest {
 	@Mock
 	private FindInventoriesByEmailPort findInventoriesByEmailPort;
 
-	private List<InventoryEntity> inventoryEntities;
+	private List<Inventory> inventories;
 
 	@BeforeEach
 	public void init() {
 		MemberEntity member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
-		ItemEntity item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, "EFFEC", "TEST", "IMAGE", Grade.LEGEND);
-		InventoryEntity inventoryEntity = new InventoryEntity(1L, member, item, 1, false);
-		inventoryEntities = new ArrayList<>();
-		inventoryEntities.add(inventoryEntity);
+		ItemEntity item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE",
+			Grade.LEGEND);
+		Inventory inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
+		inventories = new ArrayList<>();
+		inventories.add(inventory);
 	}
 
 	@Test
 	@DisplayName("인벤토리 찾기 성공 테스트")
 	public void 인벤토리_찾기_테스트() {
 		//given
-		BDDMockito.given(findInventoriesByEmailPort.findInventoriesByEmail("test")).willReturn(inventoryEntities);
+		BDDMockito.given(findInventoriesByEmailPort.findInventoriesByEmail("test")).willReturn(inventories);
 
 		//when
 		List<Inventory> inventories = inventoryService.findInventories("test");

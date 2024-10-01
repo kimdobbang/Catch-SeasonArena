@@ -26,9 +26,8 @@ public class UnEquipInventoryServiceImpl implements UnEquipInventoryUseCase {
 	@Transactional
 	@Override
 	public void unEquipInventory(Long inventoryId, String memberEmail) {
-		InventoryEntity inventoryEntity = findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(
+		Inventory inventory = findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(
 			inventoryId, memberEmail);
-		Inventory inventory = Inventory.createInventory(inventoryEntity);
 
 		if (!inventory.getIsEquipped()) {
 			log.error("BE/MAIN - 이미 장착 해제 중 : {}", CustomException.INVENTORY_ALREADY_UN_EQUIPPED_EXCEPTION);

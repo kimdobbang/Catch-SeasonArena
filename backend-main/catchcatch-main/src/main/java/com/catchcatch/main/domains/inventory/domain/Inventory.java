@@ -2,7 +2,9 @@ package com.catchcatch.main.domains.inventory.domain;
 
 import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
+import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.domains.member.domain.Member;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,13 +13,13 @@ import lombok.Getter;
 public class Inventory {
 
 	private Long id;
-	private MemberEntity member;
-	private ItemEntity item;
+	private Member member;
+	private Item item;
 	private Integer durability;
 	private Boolean isEquipped;
 
 	@Builder
-	public Inventory(Long id, MemberEntity member, ItemEntity item, Integer durability, Boolean isEquipped) {
+	public Inventory(Long id, Member member, Item item, Integer durability, Boolean isEquipped) {
 		this.id = id;
 		this.member = member;
 		this.item = item;
@@ -25,23 +27,13 @@ public class Inventory {
 		this.isEquipped = isEquipped;
 	}
 
-	public static Inventory createInventory(InventoryEntity inventoryEntity) {
+	public static Inventory fromInventoryEntity(InventoryEntity inventoryEntity) {
 		return Inventory.builder()
 			.id(inventoryEntity.getId())
-			.member(inventoryEntity.getMember())
-			.item(inventoryEntity.getItem())
+			.member(Member.fromMemberEntity(inventoryEntity.getMember()))
+			.item(Item.fromEntity(inventoryEntity.getItem()))
 			.durability(inventoryEntity.getDurability())
 			.isEquipped(inventoryEntity.getIsEquipped())
-			.build();
-	}
-
-	public static InventoryEntity InventoryToInventoryEntity(Inventory inventory) {
-		return InventoryEntity.builder()
-			.id(inventory.getId())
-			.member(inventory.getMember())
-			.item(inventory.getItem())
-			.durability(inventory.getDurability())
-			.isEquipped(inventory.getIsEquipped())
 			.build();
 	}
 

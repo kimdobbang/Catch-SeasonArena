@@ -1,6 +1,7 @@
 package com.catchcatch.main.domains.inventory.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +16,15 @@ import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventor
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.application.service.DeleteInventoryServiceImpl;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
+import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
+import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.domains.member.domain.Member;
 import com.catchcatch.main.domains.member.domain.Role;
 import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
@@ -32,17 +41,24 @@ public class DeleteInventoryServiceTest {
 	@Mock
 	private FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
 
-	@Mock
-	private MemberEntity memberEntity;
+	private MemberEntity member;
+	private ItemEntity item;
 
-	@Mock
-	private InventoryEntity inventoryEntity;
+	private Inventory inventory;
+
+	@BeforeEach
+	public void init() throws Exception {
+		member = MemberEntity.builder()
+			.memberId(1L).email("test").build();
+		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
+		 inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
+	}
 
 	@Test
 	@DisplayName("인벤토리 삭제 성공 테스트")
 	public void 인벤토리_삭제_성공() {
 		//given
-		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willReturn(inventoryEntity);
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willReturn(inventory);
 		BDDMockito.doNothing().when(deleteInventoryPort).deleteInventory(Mockito.any(Inventory.class));
 
 		//when then

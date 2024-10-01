@@ -21,11 +21,15 @@ import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryB
 import com.catchcatch.main.domains.inventory.application.port.out.UpdateInventoryPort;
 import com.catchcatch.main.domains.inventory.application.service.EquipInventoryServiceImpl;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
+import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.domains.member.domain.Member;
 import com.catchcatch.main.global.exception.CustomException;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,30 +48,27 @@ public class EquipInventoryServiceTest {
 	private FindEquipInventoryListPort findEquipInventoryListPort;
 
 	private Inventory inventory;
-	private InventoryEntity inventoryEntity;
-	MemberEntity member;
-	ItemEntity item;
+	private MemberEntity member;
+	private ItemEntity item;
 
 	@BeforeEach
 	public void init() throws Exception {
 		member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
-		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, "EFFEC", "TEST", "IMAGE", Grade.LEGEND);
+		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
 	}
 
 	@Test
 	@DisplayName("장착 성공 서비스")
 	public void 장착_성공_서비스() {
 		//given
-		inventory = new Inventory(1L, member, item, 1, false);
-		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
-		List<InventoryEntity> inventoryEntities = new ArrayList<>();
-		inventoryEntities.add(inventoryEntity);
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, false);
+		List<Inventory> inventories = new ArrayList<>();
+		inventories.add(inventory);
 
-		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventoryEntities);
+		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventories);
 		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
-			.willReturn(inventoryEntity);
-		inventory.equipInventory();
+			.willReturn(inventory);
 		BDDMockito.doNothing().when(updateInventoryPort).updateInventory(any(Inventory.class));
 
 		//when then
@@ -78,14 +79,14 @@ public class EquipInventoryServiceTest {
 	@DisplayName("장착 실패 장착 개수 3개 초과 서비스")
 	public void 장착_실패_장착_개수_3개_초과_서비스() {
 		//given
-		inventory = new Inventory(1L, member, item, 1, false);
-		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
-		List<InventoryEntity> inventoryEntities = new ArrayList<>();
-		inventoryEntities.add(inventoryEntity);
-		inventoryEntities.add(inventoryEntity);
-		inventoryEntities.add(inventoryEntity);
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, false);
 
-		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventoryEntities);
+		List<Inventory> inventories = new ArrayList<>();
+		inventories.add(inventory);
+		inventories.add(inventory);
+		inventories.add(inventory);
+
+		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventories);
 
 		//when then
 		Assertions.assertThatThrownBy(() -> equipInventoryService.equipInventory(1L, "test"))
@@ -97,14 +98,14 @@ public class EquipInventoryServiceTest {
 	@DisplayName("장착 실패 이미 장착 중 서비스")
 	public void 장착_실패_이미_장착중__서비스() {
 		//given
-		inventory = new Inventory(1L, member, item, 1, true);
-		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
-		List<InventoryEntity> inventoryEntities = new ArrayList<>();
-		inventoryEntities.add(inventoryEntity);
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
 
-		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventoryEntities);
+		List<Inventory> inventories = new ArrayList<>();
+		inventories.add(inventory);
+
+		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventories);
 		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
-			.willReturn(inventoryEntity);
+			.willReturn(inventory);
 
 		//when then
 		Assertions.assertThatThrownBy(() -> equipInventoryService.equipInventory(1L, "test"))

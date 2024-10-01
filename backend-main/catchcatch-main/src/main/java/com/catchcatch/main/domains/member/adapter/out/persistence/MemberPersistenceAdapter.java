@@ -24,12 +24,12 @@ public class MemberPersistenceAdapter implements ExistsMemberPort, UpdateMemberP
 
     @Override
     public void updateMember(Member member) {
-        memberEntityRepository.save(MemberEntity.createMemberEntityToDomain(member));
+        memberEntityRepository.save(MemberEntity.fromMember(member));
     }
 
     @Override
     public Member findMember(String email) {
-        return Member.createMemberToEntity(memberEntityRepository.findByEmailAndIsDeleted(email, false)
+        return Member.fromMemberEntity(memberEntityRepository.findByEmailAndIsDeleted(email, false)
                 .orElseThrow(()-> new ExceptionResponse(CustomException.NOT_EXISTS_MEMBER_EXCEPTION)));
     }
 }

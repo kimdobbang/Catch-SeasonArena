@@ -38,9 +38,8 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 			throw new ExceptionResponse(CustomException.INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION);
 		}
 
-		InventoryEntity inventoryEntity = findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(
+		Inventory inventory = findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(
 			inventoryId, memberEmail);
-		Inventory inventory = Inventory.createInventory(inventoryEntity);
 
 		if (inventory.getIsEquipped()) {
 			log.error("BE/MAIN - 이미 장착중 : {}", CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);

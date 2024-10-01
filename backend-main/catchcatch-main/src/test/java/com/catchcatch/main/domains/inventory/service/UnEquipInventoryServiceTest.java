@@ -17,11 +17,15 @@ import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryB
 import com.catchcatch.main.domains.inventory.application.port.out.UpdateInventoryPort;
 import com.catchcatch.main.domains.inventory.application.service.UnEquipInventoryServiceImpl;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
+import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.domains.member.domain.Member;
 import com.catchcatch.main.global.exception.CustomException;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,14 +42,14 @@ public class UnEquipInventoryServiceTest {
 
 	private Inventory inventory;
 	private InventoryEntity inventoryEntity;
-	MemberEntity member;
-	ItemEntity item;
+	private MemberEntity member;
+	private ItemEntity item;
 
 	@BeforeEach
 	public void init() throws Exception {
 		member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
-		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, "EFFEC", "TEST", "IMAGE", Grade.LEGEND);
+		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
 	}
 
 	@Test
@@ -53,12 +57,10 @@ public class UnEquipInventoryServiceTest {
 	public void 장착_해제_성공_서비스() {
 
 		//given
-		inventory = new Inventory(1L,member,item,1, true);
-		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
-		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willReturn(inventoryEntity);
-		inventory.unEquipInventory();
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
+			.willReturn(inventory);
 		BDDMockito.doNothing().when(updateInventoryPort).updateInventory(any(Inventory.class));
-
 
 		//when then
 		Assertions.assertThatNoException().isThrownBy(() -> unEquipInventoryService.unEquipInventory(1L, "test"));
@@ -69,10 +71,10 @@ public class UnEquipInventoryServiceTest {
 	public void 장착_해제_실패_서비스() {
 
 		//given
-		inventory = new Inventory(1L,member,item,1, false);
-		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
-		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willReturn(inventoryEntity);
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, false);
 
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
+			.willReturn(inventory);
 
 		//when then
 		Assertions.assertThatThrownBy(() -> unEquipInventoryService.unEquipInventory(1L, "test"))

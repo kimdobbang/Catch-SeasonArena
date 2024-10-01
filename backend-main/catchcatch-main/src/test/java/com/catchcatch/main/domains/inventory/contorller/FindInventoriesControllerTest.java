@@ -21,11 +21,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.catchcatch.main.domains.inventory.adapter.in.web.controller.FindInventoriesController;
 import com.catchcatch.main.domains.inventory.application.port.in.FindInventoriesUseCase;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
+import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.domains.member.domain.Member;
 import com.catchcatch.main.domains.member.domain.Role;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 
@@ -50,9 +54,9 @@ public class FindInventoriesControllerTest {
 	public void init() {
 		MemberEntity member = MemberEntity.builder()
 				.memberId(1L).build();
-		ItemEntity item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, "EFFEC", "TEST", "IMAGE", Grade.LEGEND);
+		ItemEntity item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
 		inventories = new ArrayList<>();
-		inventories.add(new Inventory(1L,member,item,1, false));
+		inventories.add(new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item),1, false));
 	}
 
 	@Test
