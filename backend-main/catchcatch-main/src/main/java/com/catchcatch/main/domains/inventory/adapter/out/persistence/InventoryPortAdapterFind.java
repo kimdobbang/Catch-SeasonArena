@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
-import com.catchcatch.main.domains.inventory.application.port.out.EquipInventoryListPort;
+import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryListPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoriesByEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.UpdateInventoryPort;
@@ -19,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
-public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
-	FindInventoriesByEmailPort, UpdateInventoryPort, EquipInventoryListPort {
+public class InventoryPortAdapterFind implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
+	FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryListPort {
 
 	private final InventoryRepository inventoryRepository;
 
