@@ -31,10 +31,11 @@ public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdA
 	@Override
 	public InventoryEntity findInventoryByIdAndMemberEmail(Long id, String email) {
 		InventoryEntity inventoryEntity = inventoryRepository.findByIdAndMember_Email(id, email)
-			.orElseThrow(() -> new ExceptionResponse(
-				CustomException.NOT_EXISTS_INVENTORY_EXCEPTION));
+			.orElseThrow(() -> {
+				log.error("BE/MAIN - errorse", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
+				return new ExceptionResponse(CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
+			});
 
-		log.error("BE/MAIN - error : {}", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
 		return inventoryEntity;
 	}
 
