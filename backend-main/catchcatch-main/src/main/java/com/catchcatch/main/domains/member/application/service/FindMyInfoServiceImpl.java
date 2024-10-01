@@ -21,6 +21,7 @@ public class FindMyInfoServiceImpl implements FindMyInfoUseCase {
     private final FindMemberPort findMemberPort;
     private final FindEquipInventoryByEmailPort findEquipInventoryByEmailPort;
 
+    @Transactional
     @Override
     public FindMyInfoResponseDto findMyInfo(String email){
         Member member = findMemberPort.findMember(email);
