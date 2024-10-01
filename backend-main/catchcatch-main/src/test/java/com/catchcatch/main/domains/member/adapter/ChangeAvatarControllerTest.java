@@ -1,6 +1,6 @@
 package com.catchcatch.main.domains.member.adapter;
 
-import com.catchcatch.main.domains.member.adapter.in.web.ChangeAvatarController;
+import com.catchcatch.main.domains.member.adapter.in.web.controller.ChangeAvatarController;
 import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeAvatarRequestDto;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.ChangeAvatarResponseDto;
 import com.catchcatch.main.domains.member.application.port.in.ChangeAvatarUseCase;
@@ -42,7 +42,7 @@ public class ChangeAvatarControllerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        requestDto = new ChangeAvatarRequestDto("avatar", 1L);
+        requestDto = new ChangeAvatarRequestDto("avatar", "test@test.com");
         responseDto = new ChangeAvatarResponseDto(requestDto.avatar());
     }
 

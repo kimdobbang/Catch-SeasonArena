@@ -12,35 +12,34 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import com.catchcatch.main.domains.inventory.adapter.in.web.controller.DeleteInventoryController;
-import com.catchcatch.main.domains.inventory.application.port.in.DeleteInventoryUseCase;
+import com.catchcatch.main.domains.inventory.adapter.in.web.controller.UnEquipInventoryController;
+import com.catchcatch.main.domains.inventory.application.port.in.UnEquipInventoryUseCase;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 
 @WebMvcTest(
-	controllers = DeleteInventoryController.class
+	controllers = UnEquipInventoryController.class
 )
 @MockBean(JpaMetamodelMappingContext.class)
-public class DeleteInventoryEntityControllerTest {
+public class UnEquipInventoryControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockBean
-	private DeleteInventoryUseCase deleteInventoryUseCase;
+	private UnEquipInventoryUseCase unEquipInventoryUseCase;
 
 	@MockBean
-	private HttpResponseUtil responseUtil;
+	private HttpResponseUtil httpResponseUtil;
 
 	@Test
-	@DisplayName("인벤토리 삭제 테스트")
-	public void 인벤토리_삭제_테스트() throws Exception {
+	@DisplayName("장착 해제 컨트롤러 테스트")
+	public void 장착_헤제_컨트롤러_테스트() throws Exception {
 
 		//given
-		BDDMockito.doNothing().when(deleteInventoryUseCase).deleteInventory(1L, "test1");
+		BDDMockito.doNothing().when(unEquipInventoryUseCase).unEquipInventory(1L,"test");
 
 		//when then
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/api/main/inventories/items/1/member/test")
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/api/main/inventories/items/unequipment/1/member/test")
 			.contentType(MediaType.APPLICATION_JSON)
 		);
 

@@ -54,7 +54,7 @@ public class MemberEntity extends BaseTimeEntity {
         this.isDeleted = isDeleted;
     }
 
-    public static MemberEntity createMemberEntityToDomain(Member member) {
+    public static MemberEntity fromMember(Member member) {
         return MemberEntity.builder()
                 .memberId(member.getMemberId())
                 .email(member.getEmail())

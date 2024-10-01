@@ -1,5 +1,7 @@
 package com.catchcatch.main.domains.item.adapter.out.persistence;
 
+import com.catchcatch.main.domains.item.domain.Item;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 @Table(name = "item")
 public class ItemEntity {
 
@@ -47,4 +51,17 @@ public class ItemEntity {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Grade grade;
+
+	public static ItemEntity fromItem(Item item) {
+		return ItemEntity.builder()
+			.id(item.getId())
+			.name(item.getName())
+			.season(item.getSeason())
+			.type(item.getType())
+			.effect(item.getEffect())
+			.description(item.getDescription())
+			.image(item.getImage())
+			.grade(item.getGrade())
+			.build();
+	}
 }

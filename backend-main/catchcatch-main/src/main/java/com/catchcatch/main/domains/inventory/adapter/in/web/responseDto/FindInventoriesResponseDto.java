@@ -1,6 +1,7 @@
 package com.catchcatch.main.domains.inventory.adapter.in.web.responseDto;
 
 import com.catchcatch.main.domains.inventory.domain.Inventory;
+import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 
 import lombok.Builder;
 
@@ -16,7 +17,7 @@ public record FindInventoriesResponseDto(
 		return FindInventoriesResponseDto.builder()
 			.id(inventory.getId())
 			.findInventoriesItemResponseDto(
-				FindInventoriesItemResponseDto.createFindInventoriesItemResponseDto(inventory.getItem()))
+				FindInventoriesItemResponseDto.fromItemEntity(ItemEntity.fromItem(inventory.getItem())))
 			.durability(inventory.getDurability())
 			.isEquipped(inventory.getIsEquipped())
 			.build();

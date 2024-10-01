@@ -22,12 +22,8 @@ public class FindInventoryServiceImpl implements FindInventoriesUseCase {
 
 	@Override
 	public List<Inventory> findInventories(String userEmail) {
-		List<InventoryEntity> inventoryEntities = findInventoriesByEmailPort.findInventoriesByEmail(userEmail);
-		List<Inventory> inventories = new ArrayList<>();
-		for(InventoryEntity inventoryEntity : inventoryEntities) {
-			Inventory inventory = Inventory.createInventory(inventoryEntity);
-			inventories.add(inventory);
-		}
+		List<Inventory> inventories = findInventoriesByEmailPort.findInventoriesByEmail(userEmail);
+
 		return inventories;
 	}
 }

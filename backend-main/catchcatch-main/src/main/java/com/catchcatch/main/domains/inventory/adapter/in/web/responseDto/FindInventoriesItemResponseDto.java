@@ -19,7 +19,7 @@ public record FindInventoriesItemResponseDto(
 	String image
 ) {
 
-	public static FindInventoriesItemResponseDto createFindInventoriesItemResponseDto(ItemEntity itemEntity) {
+	public static FindInventoriesItemResponseDto fromItemEntity(ItemEntity itemEntity) {
 		return FindInventoriesItemResponseDto.builder()
 			.id(itemEntity.getId())
 			.name(itemEntity.getName())

@@ -1,5 +1,7 @@
 package com.catchcatch.main.domains.inventory.service;
 
+import static org.mockito.ArgumentMatchers.*;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -8,13 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
-import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
-import com.catchcatch.main.domains.inventory.application.service.DeleteInventoryServiceImpl;
+import com.catchcatch.main.domains.inventory.application.port.out.UpdateInventoryPort;
+import com.catchcatch.main.domains.inventory.application.service.UnEquipInventoryServiceImpl;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
@@ -25,57 +26,60 @@ import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
 import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
 import com.catchcatch.main.domains.member.domain.Member;
-import com.catchcatch.main.domains.member.domain.Role;
 import com.catchcatch.main.global.exception.CustomException;
-import com.catchcatch.main.global.exception.ExceptionResponse;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteInventoryServiceTest {
+public class UnEquipInventoryServiceTest {
 
 	@InjectMocks
-	private DeleteInventoryServiceImpl deleteInventoryService;
-
-	@Mock
-	private DeleteInventoryPort deleteInventoryPort;
+	private UnEquipInventoryServiceImpl unEquipInventoryService;
 
 	@Mock
 	private FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
 
-	private MemberEntity member;
-	private ItemEntity item;
+	@Mock
+	private UpdateInventoryPort updateInventoryPort;
 
 	private Inventory inventory;
+	private InventoryEntity inventoryEntity;
+	private MemberEntity member;
+	private ItemEntity item;
 
 	@BeforeEach
 	public void init() throws Exception {
 		member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
 		item = new ItemEntity(1L, "test", Season.FALL, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
-		 inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
 	}
 
 	@Test
-	@DisplayName("인벤토리 삭제 성공 테스트")
-	public void 인벤토리_삭제_성공() {
+	@DisplayName("장착 해제 성공 서비스")
+	public void 장착_해제_성공_서비스() {
+
 		//given
-		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willReturn(inventory);
-		BDDMockito.doNothing().when(deleteInventoryPort).deleteInventory(Mockito.any(Inventory.class));
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
+			.willReturn(inventory);
+		BDDMockito.doNothing().when(updateInventoryPort).updateInventory(any(Inventory.class));
 
 		//when then
-		Assertions.assertThatNoException().isThrownBy(() -> deleteInventoryService.deleteInventory(1L, "test"));
-
+		Assertions.assertThatNoException().isThrownBy(() -> unEquipInventoryService.unEquipInventory(1L, "test"));
 	}
 
 	@Test
-	@DisplayName("인벤토리 삭제 실패 테슽트")
-	public void 인벤토리_삭제_실패() {
+	@DisplayName("장착 해제 실패 장착하지 않음 서비스")
+	public void 장착_해제_실패_서비스() {
 
-		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willThrow(new ExceptionResponse(CustomException.NOT_EXISTS_INVENTORY_EXCEPTION));
+		//given
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, false);
 
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
+			.willReturn(inventory);
 
 		//when then
-		Assertions.assertThatThrownBy(() -> deleteInventoryService.deleteInventory(1L, "test"))
+		Assertions.assertThatThrownBy(() -> unEquipInventoryService.unEquipInventory(1L, "test"))
 			.isInstanceOf(Exception.class)
-			.hasFieldOrPropertyWithValue("customException", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
+			.hasFieldOrPropertyWithValue("customException", CustomException.INVENTORY_ALREADY_UN_EQUIPPED_EXCEPTION);
 	}
+
 }
