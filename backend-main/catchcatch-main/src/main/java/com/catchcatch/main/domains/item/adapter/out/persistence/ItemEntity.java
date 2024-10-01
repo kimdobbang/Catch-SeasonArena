@@ -39,7 +39,7 @@ public class ItemEntity {
 	private String effect;
 
 	@Column(nullable = false)
-	private String description;
+	private Description description;
 
 	@Column(nullable = false)
 	private String image;

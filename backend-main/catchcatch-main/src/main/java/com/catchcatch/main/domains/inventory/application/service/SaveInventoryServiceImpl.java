@@ -19,7 +19,7 @@ public class SaveInventoryServiceImpl implements SaveInventoryUseCase {
 	private final SaveInventoryPort saveInventoryPort;
 	private final FindItemPort findItemPort;
 	private final FindMemberPort findMemberPort;
-	
+
 	@Override
 	@Transactional
 	public Item saveInventory(String email, Long inventoryId) {
