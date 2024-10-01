@@ -2,19 +2,20 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { createBrowserRouter } from "react-router-dom";
-import { NotPwaPage } from "@/pages/not-pwa-page";
-import { LoginPage } from "@/pages/login-page";
-import { SignupPage } from "@/pages/signup-page";
 import { HeaderLayout, Layout, MainLayout } from "@/shared/ui/index";
-import { Main } from "@/features/main/main";
-import { Ranking } from "@/features/main/ranking";
-import { Inventory } from "@/features/inventory/inventory";
-import { RootPage } from "@/pages/root-page";
-import { CollectPage } from "@/pages/collect-page";
-import { CollectGamePage } from "@/pages/collect-game-page";
-import { CollectResultPage } from "@/pages/collect-result-page";
-import { OAuthCallbackPage } from "@/pages/oauth-callback-page";
-import { AvatarPage } from "@/pages/avatar-page";
+import {
+  RootPage,
+  NotPwaPage,
+  OAuthCallbackPage,
+  SignupPage,
+  LoginPage,
+  MainPage,
+  AvatarPage,
+  RankingPage,
+  CollectPage,
+  CollectResultPage,
+  InventoryPage,
+} from "@/pages/index";
 
 // PrivateRoute 컴포넌트
 const PrivateRoute = () => {
@@ -71,15 +72,15 @@ export const AppRouter = () => {
           children: [
             {
               path: "/main",
-              element: <Main />,
+              element: <MainPage />,
             },
             {
               path: "/ranking",
-              element: <Ranking />,
+              element: <RankingPage />,
             },
             {
               path: "/inventory",
-              element: <Inventory />,
+              element: <InventoryPage />,
             },
           ],
         },
@@ -100,10 +101,6 @@ export const AppRouter = () => {
             {
               index: true,
               element: <CollectPage />,
-            },
-            {
-              path: "processing",
-              element: <CollectGamePage />,
             },
             {
               path: "result",

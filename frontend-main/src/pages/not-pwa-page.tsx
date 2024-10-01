@@ -17,8 +17,8 @@ export const NotPwaPage = () => {
   const goToInventory = () => {
     navigate("/inventory");
   };
-  const goToAvartar = () => {
-    navigate("/avartar");
+  const goToAvatar = () => {
+    navigate("/avatar");
   };
 
   const goToGame = () => {
@@ -62,7 +62,7 @@ export const NotPwaPage = () => {
         </button>
       </div>
       <div>
-        <button onClick={goToAvartar} className="bg-catch-tier-bronze">
+        <button onClick={goToAvatar} className="bg-catch-tier-bronze">
           아바타
         </button>
       </div>

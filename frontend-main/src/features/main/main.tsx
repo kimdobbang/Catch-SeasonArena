@@ -9,8 +9,8 @@ import {
 import {
   TierProgressBar,
   UserNameContainer,
+  CircleAvatar,
 } from "@/shared/components/entities";
-import { CircleAvatar } from "@/shared/components/entities/user/circle-avatar";
 import Ranking from "@/assets/icons/ranking.svg?react";
 import CollectionBook from "@/assets/icons/collectionbook.svg?react";
 import CardGame from "@/assets/icons/card-game.svg?react";
@@ -38,7 +38,9 @@ export const Main = () => {
     navigate("/avatar");
   };
   const userRating = useSelector((state: RootState) => state.user.rating);
-
+  const userAvatar = useSelector(
+    (state: RootState) => state.user.selectedAvatar,
+  );
   const userNickname = useSelector((state: RootState) => state.user.nickName);
   // main 페이지에서 토큰 확인 및 로그인 상태 체크 예시
   // useEffect(() => {
@@ -58,8 +60,8 @@ export const Main = () => {
       >
         <CircleAvatar
           avatarIcon={true}
-          number={1}
-          emotion="sad"
+          number={userAvatar}
+          emotion="normal"
           width={300}
           height={300}
           onClick={goToAvatarChange}

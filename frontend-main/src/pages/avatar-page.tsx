@@ -1,4 +1,4 @@
-import { Avatar } from "@/features/main/avatar";
+import { Avatar } from "@/features";
 
 export const AvatarPage = () => {
   return <Avatar />;

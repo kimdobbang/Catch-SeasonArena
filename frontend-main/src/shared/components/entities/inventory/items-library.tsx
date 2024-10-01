@@ -50,17 +50,14 @@ export const ItemLibrary = () => {
     (item) => item.itemType === selectedCategory,
   );
 
-  // 필요 페이지 수
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
-  // 현재 페이지에 해당하는 아이템 슬라이스
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = filteredItems.slice(
     startIndex,
     startIndex + itemsPerPage,
   );
 
-  // 페이지 변경 핸들러
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -73,7 +70,6 @@ export const ItemLibrary = () => {
     }
   };
 
-  // TabBar에서 선택된 카테고리 변경 핸들러
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setCurrentPage(1);
@@ -85,7 +81,6 @@ export const ItemLibrary = () => {
       <TabBar categoryType="ItemType" onCategoryChange={handleCategoryChange} />
       <div className="bg-catch-sub-100">
         <div className="grid grid-cols-4 grid-rows-2 gap-4 mx-6">
-          {/* 현재 페이지에 맞는 아이템만 렌더링 */}
           {currentItems.map((itemData, index) => (
             <ItemCell
               key={index}
