@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.catchcatch.main.domains.inventory.application.port.in.SaveInventoryUseCase;
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoriesByEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
+import com.catchcatch.main.domains.inventory.application.port.out.SaveInventoryPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
@@ -18,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
 public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
-	FindInventoriesByEmailPort {
+	FindInventoriesByEmailPort, SaveInventoryPort {
 
 	private final InventoryRepository inventoryRepository;
 
@@ -41,5 +43,10 @@ public class InventoryAdapter implements DeleteInventoryPort, FindInventoryByIdA
 	@Override
 	public List<InventoryEntity> findInventoriesByEmail(String email) {
 		return inventoryRepository.findAllByMember_Email(email);
+	}
+	
+	@Override
+	public void saveInventory(Inventory inventory) {
+		inventoryRepository.save(Inventory.InventoryToInventoryEntity(inventory));
 	}
 }

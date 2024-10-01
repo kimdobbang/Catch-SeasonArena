@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public enum Grade {
 	NORMAL,
-	PARE,
+	RARE,
 	LEGEND
 }
