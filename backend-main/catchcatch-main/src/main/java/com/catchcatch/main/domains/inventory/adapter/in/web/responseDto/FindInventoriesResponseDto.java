@@ -16,8 +16,7 @@ public record FindInventoriesResponseDto(
 	public static FindInventoriesResponseDto createFindInventoriesResponseDto(Inventory inventory) {
 		return FindInventoriesResponseDto.builder()
 			.id(inventory.getId())
-			.findInventoriesItemResponseDto(
-				FindInventoriesItemResponseDto.fromItemEntity(ItemEntity.fromItem(inventory.getItem())))
+			.findInventoriesItemResponseDto(FindInventoriesItemResponseDto.fromItem(inventory.getItem()))
 			.durability(inventory.getDurability())
 			.isEquipped(inventory.getIsEquipped())
 			.build();

@@ -3,6 +3,7 @@ package com.catchcatch.main.domains.inventory.adapter.in.web.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class UnEquipInventoryController {
 	private final UnEquipInventoryUseCase unEquipInventoryUseCase;
 	private final HttpResponseUtil responseUtil;
 
-	@PatchMapping("/{inventory_id}/member/{member_email}")
+	@PutMapping("/{inventory_id}/member/{member_email}")
 	public ResponseEntity<?> unEquipInventory(@PathVariable("inventory_id") Long inventoryId, @PathVariable("member_email") String memberEmail) {
 		unEquipInventoryUseCase.unEquipInventory(inventoryId, memberEmail);
 		ResponseEntity<?> response = responseUtil.createSuccessResponse(

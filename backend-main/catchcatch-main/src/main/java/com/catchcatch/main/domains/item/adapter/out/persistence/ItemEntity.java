@@ -40,9 +40,11 @@ public class ItemEntity {
 	private Type type;
 
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private Effect effect;
 
 	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private Description description;
 
 	@Column(nullable = false)
