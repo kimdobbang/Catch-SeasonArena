@@ -26,6 +26,7 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 	// 우선 내 장착 아이템이 3개이상이면 exception
 	// 현재 아이템이 장착 중이면 exception
 
+	@Transactional
 	@Override
 	public void equipInventory(Long inventoryId, String memberEmail) {
 		int equipInventorySize = findEquipInventoryListPort.inventoryList(memberEmail).size();
