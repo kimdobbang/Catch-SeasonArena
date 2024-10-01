@@ -36,8 +36,8 @@ class_name_to_item_id = {
     'moon': 11
 }
 
-# 외부 API 엔드포인트
-api_url = "https://j11b106.p.ssafy.io/api/main/inventories/items"
+# Spring 서버에 API 요청을 보낼 URL
+base_api_url = "https://j11b106.p.ssafy.io/api/main/inventories/items"
 
 @app.post("/api/ai/collections")
 async def detect_objects(
@@ -75,13 +75,19 @@ async def detect_objects(
 
     # 신뢰도 0.8 이상인 탐지 결과가 있을 때만 전송
     if detectResult:
+        # itemId를 경로에 포함하기 위해 detectResult에서 추출
+        itemId = detectResult["itemId"]
+
+        # Spring 서버에 보낼 최종 URL 생성
+        final_api_url = f"{base_api_url}/{itemId}/{email}"
+
+        # 데이터를 전송할 payload 생성
         payload = {
-            "email": email,  # 이메일 추가
             "detectResult": detectResult  # 탐지 결과 추가
         }
 
         # Spring 서버에 REST 요청을 보내기
-        response = requests.post(api_url, json=payload)
+        response = requests.post(final_api_url, json=payload)
         
         # 받은 응답에서 필요한 데이터를 추출
         if response.status_code == 200:
@@ -97,8 +103,15 @@ async def detect_objects(
                 "effect": response_data['data']['effect'],
             }
 
-            return {"status": "success", "data": processed_result}
+            # processed_result와 detectResult 함께 반환
+            return {
+                "status": "success", 
+                "data": {
+                    "processed_result": processed_result,
+                    "detect_result": detectResult  # detectResult도 함께 반환
+                }
+            }
         else:
-            return {"status": "failure", "message": "잘못된 api요청"}
+            return {"status": "failure", "message": "잘못된 API 요청"}
     else:
         return {"status": "failure", "message": "No detection"}
