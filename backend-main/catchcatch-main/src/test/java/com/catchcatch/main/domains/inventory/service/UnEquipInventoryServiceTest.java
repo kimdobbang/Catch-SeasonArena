@@ -22,6 +22,7 @@ import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
+import com.catchcatch.main.global.exception.CustomException;
 
 @ExtendWith(MockitoExtension.class)
 public class UnEquipInventoryServiceTest {
@@ -61,6 +62,22 @@ public class UnEquipInventoryServiceTest {
 
 		//when then
 		Assertions.assertThatNoException().isThrownBy(() -> unEquipInventoryService.unEquipInventory(1L, "test"));
+	}
+
+	@Test
+	@DisplayName("장착 해제 실패 장착하지 않음 서비스")
+	public void 장착_해제_실패_서비스() {
+
+		//given
+		inventory = new Inventory(1L,member,item,1, false);
+		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test")).willReturn(inventoryEntity);
+
+
+		//when then
+		Assertions.assertThatThrownBy(() -> unEquipInventoryService.unEquipInventory(1L, "test"))
+			.isInstanceOf(Exception.class)
+			.hasFieldOrPropertyWithValue("customException", CustomException.INVENTORY_ALREADY_UN_EQUIPPED_EXCEPTION);
 	}
 
 }
