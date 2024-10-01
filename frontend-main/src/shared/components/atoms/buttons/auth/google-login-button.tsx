@@ -1,9 +1,11 @@
 import GoogleLogo from "@/assets/icons/google-logo.svg?react";
 import { LoginButton } from "./logo-button";
 
-export const GoogleLoginButton: React.FC<{ onClick?: () => void }> = ({
-  onClick,
-}) => {
+interface GoogleLoginButtonProps {
+  onClick?: () => void;
+}
+
+export const GoogleLoginButton = ({ onClick }: GoogleLoginButtonProps) => {
   return (
     <LoginButton
       onClick={onClick}

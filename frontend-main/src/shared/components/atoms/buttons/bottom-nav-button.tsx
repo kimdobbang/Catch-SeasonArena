@@ -9,12 +9,12 @@ interface BottomNavButtonProps {
   className?: string;
 }
 
-export const BottomNavButton: React.FC<BottomNavButtonProps> = ({
+export const BottomNavButton = ({
   onClick,
   icon,
   shape,
   className,
-}) => {
+}: BottomNavButtonProps) => {
   const getSquareBtnIcon = (icon: string) => {
     switch (icon) {
       case "inventory":

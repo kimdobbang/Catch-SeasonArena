@@ -8,16 +8,18 @@ interface CircleAvatarProps {
   width?: string | number; // width (선택 입력)
   height?: string | number; // height (선택 입력)
   className?: string; // 추가 적용할 속성
+  onClick?: () => void;
 }
 
-export const CircleAvatar: React.FC<CircleAvatarProps> = ({
+export const CircleAvatar = ({
   number = 1,
   emotion = "normal",
   avatarIcon = false,
   width = 96, // 기본 width
   height = 96, // 기본 height
   className,
-}) => {
+  onClick,
+}: CircleAvatarProps) => {
   return (
     <div className="w-auto h-auto">
       <div
@@ -34,6 +36,7 @@ export const CircleAvatar: React.FC<CircleAvatarProps> = ({
         <CircleTag
           icon="person"
           className="relative left-16 bottom-6 bg-catch-sub-400"
+          onClick={onClick}
         />
       )}
     </div>

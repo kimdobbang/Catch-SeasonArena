@@ -4,12 +4,12 @@ interface NewItemTagProps {
   className?: string;
 }
 
-export const NewItemTag: React.FC<NewItemTagProps> = ({ text, className }) => {
+export const NewItemTag = ({ text, className }: NewItemTagProps) => {
   return (
     <div
       className={`w-[60px] h-[24px] bg-catch-sub-400 shrink-0 text-center ${className}`}
     >
-      <p className="text-body2 text-white">{text || `NEW`}</p>
+      <p className="text-white text-body2">{text || `NEW`}</p>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { createBrowserRouter } from "react-router-dom";
 import { HeaderLayout, Layout, MainLayout } from "@/shared/ui/index";
-
 import {
   RootPage,
   NotPwaPage,
@@ -90,7 +89,7 @@ export const AppRouter = () => {
           errorElement: <div>에러발생 3</div>,
           children: [
             {
-              path: "/avartar",
+              path: "/avatar",
               element: <AvatarPage />,
             },
           ],

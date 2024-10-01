@@ -6,12 +6,12 @@ interface ItemCellProps {
   itemType: string;
 }
 
-export const ItemCell: React.FC<ItemCellProps> = ({
+export const ItemCell = ({
   onClick,
   item,
   symbol,
   itemType,
-}) => {
+}: ItemCellProps) => {
   return (
     <div
       className={`flex items-center bg-catch-gray-000 justify-center p-2 cursor-pointer ${itemType === "equipment" ? "border-catch-gray-300" : "border-catch-gray-200"} ${onClick ? "hover:bg-catch-gray-200 hover:text-white" : ""}`}

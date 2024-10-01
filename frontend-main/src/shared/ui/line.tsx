@@ -4,6 +4,6 @@ interface LineProps {
 }
 
 // 사용할 때 bg-color 를 className에 꼭 입력해야 함
-export const Line: React.FC<LineProps> = ({ className }) => {
+export const Line = ({ className }: LineProps) => {
   return <div className={`w-[160px] h-[5px] rounded-xl ${className} `}></div>;
 };

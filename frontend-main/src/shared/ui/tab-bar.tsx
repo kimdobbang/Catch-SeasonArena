@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { seasonNames, itemTypeNames } from "@/app/types/common";
 
 type CategoryType = "Season" | "ItemType";
@@ -8,10 +8,7 @@ interface TabBarProps {
   onCategoryChange?: (category: string) => void;
 }
 
-export const TabBar: React.FC<TabBarProps> = ({
-  categoryType,
-  onCategoryChange,
-}) => {
+export const TabBar = ({ categoryType, onCategoryChange }: TabBarProps) => {
   const categories = categoryType === "Season" ? seasonNames : itemTypeNames;
 
   const [activeTab, setActiveTab] = useState<string>(

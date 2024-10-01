@@ -7,10 +7,7 @@ interface TierProgressProps {
   className?: string;
 }
 
-export const TierProgressBar: React.FC<TierProgressProps> = ({
-  rating,
-  className,
-}) => {
+export const TierProgressBar = ({ rating, className }: TierProgressProps) => {
   const tier = getTierByRating(rating);
   if (!tier || !tierRanges[tier]) {
     console.log("Invalid tier:", tier);

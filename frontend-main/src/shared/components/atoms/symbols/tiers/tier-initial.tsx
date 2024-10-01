@@ -6,11 +6,11 @@ interface TierInitialProps {
   className?: string; // 추가 속성
 }
 
-export const TierInitial: React.FC<TierInitialProps> = ({
+export const TierInitial = ({
   rating,
   size,
   className = "",
-}) => {
+}: TierInitialProps) => {
   const tier = getTierByRating(rating);
 
   const getAlphabet = () => {

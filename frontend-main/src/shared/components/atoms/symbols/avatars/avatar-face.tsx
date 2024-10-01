@@ -1,4 +1,3 @@
-import React from "react";
 import Avatar1 from "@/assets/symbols/avatars/avatar1.svg?react";
 import Avatar1Sad from "@/assets/symbols/avatars/avatar1-sad.svg?react";
 import Avatar2 from "@/assets/symbols/avatars/avatar2.svg?react";
@@ -16,13 +15,13 @@ interface AvatarFaceProps {
   height?: string | number;
 }
 
-export const AvatarFace: React.FC<AvatarFaceProps> = ({
+export const AvatarFace = ({
   number,
   emotion = "normal",
   className = "",
   width = 150,
   height = 150,
-}) => {
+}: AvatarFaceProps) => {
   const getAvatarComponent = () => {
     switch (number) {
       case 1:

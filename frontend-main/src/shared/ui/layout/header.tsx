@@ -6,7 +6,7 @@ interface HeaderProps {
   onClick?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ className, onClick }) => {
+export const Header = ({ className, onClick }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,10 +22,10 @@ export const Header: React.FC<HeaderProps> = ({ className, onClick }) => {
         return { title: "홈", showBackIcon: false };
       case "/ranking":
         return { title: "랭킹", showBackIcon: false };
-      case "/avartar":
+      case "/avatar":
         return { title: "아바타", showBackIcon: true };
-      case "/dictionary":
-        return { title: "김싸피의 가을 도감", showBackIcon: true };
+      case "/collectionbook":
+        return { title: "가을 도감", showBackIcon: true };
       case "/inventory":
         return { title: "배낭", showBackIcon: true };
       case "/combine":

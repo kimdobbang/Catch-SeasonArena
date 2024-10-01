@@ -5,9 +5,6 @@ interface Caption2TextProps {
   className?: string;
 }
 
-export const Caption2Text: React.FC<Caption2TextProps> = ({
-  children,
-  className,
-}) => {
+export const Caption2Text = ({ children, className }: Caption2TextProps) => {
   return <p className={`text-center text-caption2 ${className}`}>{children}</p>;
 };

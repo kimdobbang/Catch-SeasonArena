@@ -1,4 +1,3 @@
-import React from "react";
 import Avatar1Body from "@/assets/symbols/avatars/avatar1-body.svg?react";
 import Avatar2Body from "@/assets/symbols/avatars/avatar2-body.svg?react";
 import Avatar3Body from "@/assets/symbols/avatars/avatar3-body.svg?react";
@@ -11,12 +10,12 @@ interface AvatarBodyProps {
   height?: string | number;
 }
 
-export const AvatarBody: React.FC<AvatarBodyProps> = ({
+export const AvatarBody = ({
   number,
   className = "",
   width,
   height,
-}) => {
+}: AvatarBodyProps) => {
   const getAvatarBodyComponent = () => {
     switch (number) {
       case 1:

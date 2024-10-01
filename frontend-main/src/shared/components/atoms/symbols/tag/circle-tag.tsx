@@ -11,12 +11,12 @@ interface CircleTagProps {
   onClick?: () => void;
 }
 
-export const CircleTag: React.FC<CircleTagProps> = ({
+export const CircleTag = ({
   icon,
   grade,
   className,
   onClick,
-}) => {
+}: CircleTagProps) => {
   const getGrade = () => {
     switch (grade) {
       case "normal":

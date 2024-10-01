@@ -10,3 +10,6 @@ export { Main } from "@/features/main/main";
 export { Collect } from "@/features/collect/collect";
 // export { CollectionBook} "@/features/collectionbook/collectionbook"
 export { Inventory } from "@/features/inventory/inventory";
+
+// 메인 관련
+export { Avatar } from "@/features/main/avatar";

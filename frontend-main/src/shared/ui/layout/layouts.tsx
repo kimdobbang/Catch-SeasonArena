@@ -36,7 +36,9 @@ export const HeaderLayout = () => {
   return (
     <div className="w-full h-full">
       <Header />
-      <Outlet />
+      <div className="w-full" style={{ height: "calc(100% - 65px)" }}>
+        <Outlet />
+      </div>
     </div>
   );
 };

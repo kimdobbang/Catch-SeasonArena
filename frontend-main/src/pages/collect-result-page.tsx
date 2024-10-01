@@ -7,7 +7,7 @@ import { ItemFail } from "@entities/index";
 //   success: boolean;
 // }
 
-export const CollectResultPage: React.FC = () => {
+export const CollectResultPage = () => {
   // const [result, setResult] = useState<"success" | "fail" | null>(null); // 상태 타입 지정
 
   // useEffect(() => {

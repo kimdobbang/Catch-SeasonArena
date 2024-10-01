@@ -1,5 +1,5 @@
 // src/features/auth/signup.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputField, SignupButton, IconTextButton, Leave } from "@atoms/index";
 import { ServiceTitle, Copyright } from "@ui/index";
@@ -7,7 +7,7 @@ import { signUpUser, checkEmailExists } from "@/app/apis/authApi";
 import { useDispatch } from "react-redux";
 import { setToken, setUser } from "@/app/redux/slice/authSlice";
 
-export const Signup: React.FC = () => {
+export const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

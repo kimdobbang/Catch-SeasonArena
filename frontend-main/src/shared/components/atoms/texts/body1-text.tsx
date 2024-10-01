@@ -5,10 +5,7 @@ interface Body1TextProps {
   className?: string;
 }
 
-export const Body1Text: React.FC<Body1TextProps> = ({
-  children,
-  className,
-}) => {
+export const Body1Text = ({ children, className }: Body1TextProps) => {
   return (
     <p
       className={`text-catch-gray-500 text-center text-body1 font-bold ${className}`}
