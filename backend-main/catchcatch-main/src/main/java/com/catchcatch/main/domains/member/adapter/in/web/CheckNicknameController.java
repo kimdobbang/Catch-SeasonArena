@@ -1,4 +1,4 @@
-package com.catchcatch.main.domains.member.adapter.in.web.controller;
+package com.catchcatch.main.domains.member.adapter.in.web;
 
 import com.catchcatch.main.domains.member.adapter.in.web.message.SuccessCheckNicknameMessage;
 import com.catchcatch.main.domains.member.application.port.in.CheckNicknameUseCase;

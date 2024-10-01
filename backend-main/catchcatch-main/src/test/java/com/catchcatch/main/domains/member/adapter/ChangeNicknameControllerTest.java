@@ -1,6 +1,6 @@
 package com.catchcatch.main.domains.member.adapter;
 
-import com.catchcatch.main.domains.member.adapter.in.web.controller.ChangeNicknameController;
+import com.catchcatch.main.domains.member.adapter.in.web.ChangeNicknameController;
 import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeNicknameRequestDto;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.ChangeNicknameResponseDto;
 import com.catchcatch.main.domains.member.application.port.in.ChangeNicknameUseCase;
@@ -44,7 +44,7 @@ public class ChangeNicknameControllerTest {
     void setUp() throws Exception {
         requestDto = new ChangeNicknameRequestDto(
                 "변경후닉네임",
-                "test@test.com"
+                1L
         );
         responseDto = new ChangeNicknameResponseDto(
                 requestDto.nickname()
