@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface FindMyInfoClient {
 
     @GetMapping(value = "/{email}", consumes = "application/json")
-    public ResponseEntity<?> findMyInfo(@PathVariable("email") String email);
+    ResponseEntity<?> findMyInfo(@PathVariable("email") String email);
 }
