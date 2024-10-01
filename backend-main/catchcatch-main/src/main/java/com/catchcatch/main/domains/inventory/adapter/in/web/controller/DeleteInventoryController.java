@@ -35,7 +35,7 @@ public class DeleteInventoryController {
 			200
 		);
 
-		log.info("BE/MAIN - response : {}", response);
+		log.info("BE/MAIN - response 인벤토리 삭제 성공 : {}", response);
 
 		return response;
 	}
