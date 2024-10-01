@@ -1,4 +1,4 @@
-package com.catchcatch.main.domains.domain;
+package com.catchcatch.main.domains.member.domain;
 
 import com.catchcatch.main.domains.member.domain.Member;
 import org.assertj.core.api.Assertions;

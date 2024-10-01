@@ -1,4 +1,4 @@
-package com.catchcatch.main.domains.adapter;
+package com.catchcatch.main.domains.member.adapter;
 
 import com.catchcatch.main.domains.member.adapter.in.web.ChangeNicknameController;
 import com.catchcatch.main.domains.member.adapter.in.web.requestdto.ChangeNicknameRequestDto;
