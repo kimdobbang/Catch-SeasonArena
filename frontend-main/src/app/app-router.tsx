@@ -104,10 +104,6 @@ export const AppRouter = () => {
               element: <CollectPage />,
             },
             {
-              path: "processing",
-              element: <CollectGamePage />,
-            },
-            {
               path: "result",
               element: <CollectResultPage />,
             },
