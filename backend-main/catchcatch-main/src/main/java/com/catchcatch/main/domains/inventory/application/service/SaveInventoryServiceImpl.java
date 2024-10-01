@@ -6,6 +6,9 @@ import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
 import com.catchcatch.main.domains.item.domain.Item;
 import com.catchcatch.main.domains.item.port.in.FindItemUseCase;
+import com.catchcatch.main.domains.item.port.out.FindItemPort;
+import com.catchcatch.main.domains.member.application.port.out.FindMemberPort;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +17,13 @@ import org.springframework.stereotype.Service;
 public class SaveInventoryServiceImpl implements SaveInventoryUseCase {
 
 	private final SaveInventoryPort saveInventoryPort;
-	private final FindItemUseCase findItemUseCase;
+	private final FindItemPort findItemPort;
+	private final FindMemberPort findMemberPort;
+	
 	@Override
+	@Transactional
 	public Item saveInventory(String email, Long inventoryId) {
-		Item item = findItemUseCase.findItemById(inventoryId);
+		Item item = Item.fromEntity(findItemPort.findItemById(inventoryId));
 		Grade grade = item.getGrade();
 		int durability = (grade == Grade.NORMAL) ? 5 : (grade == Grade.RARE) ? 10 : 15;
 
@@ -25,7 +31,7 @@ public class SaveInventoryServiceImpl implements SaveInventoryUseCase {
 								.id(inventoryId)
 								.member(null)
 								.isEquipped(false)
-								.item(item)
+								.item(null)
 								.durability(durability)
 								.build();
 		saveInventoryPort.saveInventory(inventory);
