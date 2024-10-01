@@ -46,6 +46,6 @@ public class Inventory {
 	}
 
 	public void unEquipInventory() {
-		this.isEquipped = false;
+		this.isEquipped = ! this.isEquipped;
 	}
 }
