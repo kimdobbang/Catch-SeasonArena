@@ -18,7 +18,8 @@ public enum Effect {
     MUSHROOM("이것은 버섯스킬이다"),
     CORN("이것은 옥수수스킬이다"),
     SQUIRREL("이것은 다람쥐스킬이다"),
-    MOON("이것은 달스킬이다");
+    MOON("이것은 달스킬이다"),
+    SCARECROW("이것은 허수아비스킬이다");
 
     private final String effect;
 

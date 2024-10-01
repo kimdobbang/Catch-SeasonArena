@@ -18,7 +18,8 @@ public enum Description {
     MUSHROOM("이것은 버섯이다"),
     CORN("이것은 옥수수다"),
     SQUIRREL("이것은 다람쥐다"),
-    MOON("이것은 달이다");
+    MOON("이것은 달이다"),
+    SCARECROW("이것은 허수아비스킬이다");
 
     private final String description;
 
