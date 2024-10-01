@@ -65,8 +65,10 @@ public class SecurityConfig {
         http.formLogin((formLogin) -> formLogin.disable());
         http.httpBasic((httpBasic) -> httpBasic.disable());
         http.authorizeHttpRequests((requests) -> requests
-                //.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**","/api/auth/**").permitAll()
-            .requestMatchers("/api/auth/**").hasRole("USER")
+                .requestMatchers("/api/auth/members/info/**").hasRole("USER")
+                .requestMatchers("/api/auth/inventories/**").hasRole("USER")
+                .requestMatchers("/api/auth/v3/api-docs/**", "/api/auth/swagger-ui/**", "/api/auth/swagger-resources/**").permitAll()
+                .requestMatchers("/api/auth/members/**").permitAll()
             .anyRequest().authenticated());
 
         http.oauth2Login((oauth) ->
