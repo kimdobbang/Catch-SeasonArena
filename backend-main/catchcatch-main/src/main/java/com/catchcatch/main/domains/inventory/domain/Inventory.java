@@ -44,8 +44,4 @@ public class Inventory {
 			.isEquipped(inventory.getIsEquipped())
 			.build();
 	}
-
-	public void unEquipInventory() {
-		this.isEquipped = false;
-	}
 }

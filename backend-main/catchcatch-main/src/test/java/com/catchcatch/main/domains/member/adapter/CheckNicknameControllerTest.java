@@ -1,6 +1,6 @@
 package com.catchcatch.main.domains.member.adapter;
 
-import com.catchcatch.main.domains.member.adapter.in.web.CheckNicknameController;
+import com.catchcatch.main.domains.member.adapter.in.web.controller.CheckNicknameController;
 import com.catchcatch.main.domains.member.application.port.in.CheckNicknameUseCase;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 import org.junit.jupiter.api.BeforeEach;
