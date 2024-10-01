@@ -1,13 +1,12 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { getTierByRating } from "@/app/types/tier";
-import { EquippedItems, InGameStats } from "@entities/index"; // InGameStats 컴포넌트 가져오기
+import { EquippedItems, InGameStats } from "@entities/index";
 import { AvatarBody } from "@atoms/index";
 import { TierBadge } from "../../atoms";
 import { Body1Text } from "@atoms/index";
 
 export const InventoryUserInfo = () => {
-  // Redux 상태에서 유저 정보 가져오기
   const { selectedAvatar, rating } = useSelector(
     (state: RootState) => state.user,
   );
