@@ -5,7 +5,6 @@ import com.catchcatch.main.domains.inventory.application.port.out.SaveInventoryP
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Grade;
 import com.catchcatch.main.domains.item.domain.Item;
-import com.catchcatch.main.domains.item.port.in.FindItemUseCase;
 import com.catchcatch.main.domains.item.port.out.FindItemPort;
 import com.catchcatch.main.domains.member.application.port.out.FindMemberPort;
 import jakarta.transaction.Transactional;

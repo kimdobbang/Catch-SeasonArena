@@ -1,8 +1,10 @@
 package com.catchcatch.main.domains.inventory.adapter.in.web.responseDto;
 
+import com.catchcatch.main.domains.item.adapter.out.persistence.Description;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Season;
 import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
+import com.catchcatch.main.domains.item.adapter.out.persistence.Effect;
 
 import lombok.Builder;
 
@@ -12,8 +14,8 @@ public record FindInventoriesItemResponseDto(
 	String name,
 	Season season,
 	Type type,
-	String effect,
-	String description,
+	Effect effect,
+	Description description,
 	String image
 ) {
 

@@ -36,7 +36,7 @@ public class ItemEntity {
 	private Type type;
 
 	@Column(nullable = false)
-	private String effect;
+	private Effect effect;
 
 	@Column(nullable = false)
 	private Description description;

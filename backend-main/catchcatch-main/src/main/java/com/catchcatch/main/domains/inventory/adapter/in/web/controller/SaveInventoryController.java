@@ -22,7 +22,7 @@ public class SaveInventoryController {
 	private final SaveInventoryUseCase saveInventoryUseCase;
 	private final HttpResponseUtil responseUtil;
 
-	@PostMapping
+	@PostMapping("{inventoryId}/{member-email}")
 	public ResponseEntity<?> saveInventory(@PathVariable("inventoryId") Long inventoryId , @PathVariable("member-email") String memberEmail) {
 		log.info("BE/MAIN - request memberEmail : {}", memberEmail);
 		Item item = saveInventoryUseCase.saveInventory(memberEmail, inventoryId);
