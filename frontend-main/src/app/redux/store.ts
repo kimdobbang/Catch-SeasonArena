@@ -5,10 +5,9 @@ import sessionStorage from "redux-persist/lib/storage/session";
 import authReducer from "./slice/authSlice";
 import userReducer from "./slice/userSlice";
 
-// redux-persist 설정
 const persistConfig = {
   key: "root",
-  storage: sessionStorage, // 장착 (스탯, 티어 ,장비) 세션이 아니라 로컬에 해야할까?
+  storage: sessionStorage,
   whitelist: ["auth", "user"],
 };
 
@@ -19,7 +18,6 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// 스토어 설정
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
