@@ -7,12 +7,7 @@ interface LeaveProps {
   className?: string;
 }
 
-export const Leave: React.FC<LeaveProps> = ({
-  width,
-  height,
-  color,
-  className,
-}) => {
+export const Leave = ({ width, height, color, className }: LeaveProps) => {
   return (
     <LeaveIcon
       className={`${className || ""} ${color || ""}`} // className과 color를 동시 적용

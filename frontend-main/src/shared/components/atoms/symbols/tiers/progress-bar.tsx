@@ -5,7 +5,7 @@ interface ProgressProps {
   className?: string;
 }
 
-export const ProgressBar: React.FC<ProgressProps> = ({ rating, className }) => {
+export const ProgressBar = ({ rating, className }: ProgressProps) => {
   const tier = getTierByRating(rating);
   const min = tierRanges[tier].min;
   const max = tierRanges[tier].max;

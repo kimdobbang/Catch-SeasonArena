@@ -6,11 +6,11 @@ interface UserNameContainerProps {
   rating: number;
   className?: string;
 }
-export const UserNameContainer: React.FC<UserNameContainerProps> = ({
+export const UserNameContainer = ({
   nickname = "닉네임",
   rating = 800,
   className,
-}) => {
+}: UserNameContainerProps) => {
   return (
     <div
       className={`bg-gradient-to-r p-3 from-catch-sub-300 to-catch-main-400 flex flex-row rounded-xl w-[293px] h-[77px] bg-catch-main-400 ${className}`}

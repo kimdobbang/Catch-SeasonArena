@@ -1,6 +1,6 @@
 // /src/feature/auth/login.tsx
 import config from "@/config";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser, fetchUserInfo } from "@/app/apis/authApi";
@@ -15,7 +15,7 @@ import {
   Leave,
 } from "@atoms/index";
 
-export const Login: React.FC = () => {
+export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");

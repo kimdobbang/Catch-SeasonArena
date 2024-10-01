@@ -1,7 +1,7 @@
 import ServiceTitleSymbol from "@/assets/symbols/service-title.svg?react";
 import { Leave } from "@atoms/index";
 
-export const ServiceTitle: React.FC = () => {
+export const ServiceTitle = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-row mr-24">

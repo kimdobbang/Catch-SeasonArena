@@ -6,7 +6,7 @@ interface HeaderProps {
   onClick?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ className, onClick }) => {
+export const Header = ({ className, onClick }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 

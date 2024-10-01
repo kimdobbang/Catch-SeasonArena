@@ -10,7 +10,7 @@ interface IconTextButtonProps {
   disabled?: boolean; // Add disabled prop
 }
 
-export const IconTextButton: React.FC<IconTextButtonProps> = ({
+export const IconTextButton = ({
   label,
   Icon,
   showIcon = true,
@@ -18,7 +18,7 @@ export const IconTextButton: React.FC<IconTextButtonProps> = ({
   onClick,
   colorClass = "text-catch-gray-300 border-catch-gray-300 active:bg-catch-gray-300 active:text-white",
   disabled = false, // Default to false
-}) => {
+}: IconTextButtonProps) => {
   return (
     <button
       className={`w-20 px-2 py-1 text-caption1 transition duration-200 ease-in border rounded-lg focus:outline-none flex ${

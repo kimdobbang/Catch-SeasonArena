@@ -11,7 +11,7 @@ interface CircleAvatarProps {
   onClick?: () => void;
 }
 
-export const CircleAvatar: React.FC<CircleAvatarProps> = ({
+export const CircleAvatar = ({
   number = 1,
   emotion = "normal",
   avatarIcon = false,
@@ -19,7 +19,7 @@ export const CircleAvatar: React.FC<CircleAvatarProps> = ({
   height = 96, // 기본 height
   className,
   onClick,
-}) => {
+}: CircleAvatarProps) => {
   return (
     <div className="w-auto h-auto">
       <div

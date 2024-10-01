@@ -6,11 +6,7 @@ interface DescBoxProps {
   skill: string;
 }
 
-export const DescriptionBox: React.FC<DescBoxProps> = ({
-  type,
-  grade,
-  skill,
-}) => {
+export const DescriptionBox = ({ type, grade, skill }: DescBoxProps) => {
   const getType = () => {
     switch (type) {
       case "weapon":

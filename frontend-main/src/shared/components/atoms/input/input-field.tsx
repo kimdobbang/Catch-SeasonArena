@@ -10,7 +10,7 @@ interface InputFieldProps {
   hasBottomLine?: boolean; //optional
 }
 
-export const InputField: React.FC<InputFieldProps> = ({
+export const InputField = ({
   label,
   placeholder,
   type = "text",
@@ -20,7 +20,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   borderColor = "border-catch-sub-400",
   focusBorderColor = "focus:border-catch-main-700",
   hasBottomLine = true,
-}) => {
+}: InputFieldProps) => {
   return (
     <div className="relative w-full">
       <input

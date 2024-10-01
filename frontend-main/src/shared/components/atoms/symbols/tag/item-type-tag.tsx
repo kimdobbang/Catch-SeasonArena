@@ -7,11 +7,7 @@ interface ItemTypeTagProps {
   color?: "orange" | "gray"; // 색깔
 }
 
-export const ItemTypeTag: React.FC<ItemTypeTagProps> = ({
-  type = "sword",
-  className,
-  color,
-}) => {
+export const ItemTypeTag = ({ type, className, color }: ItemTypeTagProps) => {
   const getColor = () => {
     switch (color) {
       case "orange":
@@ -25,7 +21,7 @@ export const ItemTypeTag: React.FC<ItemTypeTagProps> = ({
 
   const getType = () => {
     switch (type) {
-      case "sword":
+      case "weapon":
         return "무기";
       case "active":
         return "액티브";

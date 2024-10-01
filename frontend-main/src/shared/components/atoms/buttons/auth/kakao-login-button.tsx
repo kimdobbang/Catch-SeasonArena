@@ -1,9 +1,11 @@
 import KakaoLogo from "@/assets/icons/kakao-logo.svg?react";
 import { LoginButton } from "./logo-button";
 
-export const KakaoLoginButton: React.FC<{ onClick?: () => void }> = ({
-  onClick,
-}) => {
+interface KakaoLoginButtonProps {
+  onClick?: () => void;
+}
+
+export const KakaoLoginButton = ({ onClick }: KakaoLoginButtonProps) => {
   return (
     <LoginButton
       onClick={onClick}

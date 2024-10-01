@@ -2,9 +2,7 @@ import { Leave } from "@atoms/index";
 
 type NavBarBackgroundProps = { className: string };
 
-export const NavBarBackground: React.FC<NavBarBackgroundProps> = ({
-  className,
-}) => {
+export const NavBarBackground = ({ className }: NavBarBackgroundProps) => {
   return (
     <div
       className={`h-[150px] w-full bg-catch-sub-100 rounded-t-[60%] -z-10 ${className}`}

@@ -1,9 +1,10 @@
 import { Leave } from "@atoms/index";
 import { LoginButton } from "./logo-button";
 
-export const DefaultLoginButton: React.FC<{ onClick?: () => void }> = ({
-  onClick,
-}) => {
+interface DefaultLoginButtonProps {
+  onClick?: () => void;
+}
+export const DefaultLoginButton = ({ onClick }: DefaultLoginButtonProps) => {
   return (
     <LoginButton
       onClick={onClick}

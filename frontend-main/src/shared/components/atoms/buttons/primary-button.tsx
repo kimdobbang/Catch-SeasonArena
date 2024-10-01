@@ -33,13 +33,13 @@ const getSize = (size: string) => {
   }
 };
 
-export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
+export const PrimaryButton = ({
   onClick,
   color,
   size,
   children,
   showIcon,
-}) => {
+}: PrimaryButtonProps) => {
   return (
     <button
       onClick={onClick}

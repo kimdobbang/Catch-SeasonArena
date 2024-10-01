@@ -5,7 +5,7 @@ interface BottomNavBarProps {
   className?: string;
 }
 
-export const BottomNavBar: React.FC<BottomNavBarProps> = ({ className }) => {
+export const BottomNavBar = ({ className }: BottomNavBarProps) => {
   const navigate = useNavigate();
 
   const goMain = () => {

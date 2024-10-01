@@ -4,11 +4,7 @@ interface TitleTextProps {
   className?: string;
 }
 
-export const TitleText: React.FC<TitleTextProps> = ({
-  children,
-  color,
-  className,
-}) => {
+export const TitleText = ({ children, color, className }: TitleTextProps) => {
   const getColor = () => {
     switch (color) {
       case "green":

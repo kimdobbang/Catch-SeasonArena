@@ -9,10 +9,7 @@ interface EquippedCellProps {
   showCaption: boolean;
 }
 
-export const EquippedCell: React.FC<EquippedCellProps> = ({
-  itemType,
-  showCaption,
-}) => {
+export const EquippedCell = ({ itemType, showCaption }: EquippedCellProps) => {
   const equipments = useSelector((state: RootState) => state.user.equipment);
   const equippedItem = equipments[itemType];
 

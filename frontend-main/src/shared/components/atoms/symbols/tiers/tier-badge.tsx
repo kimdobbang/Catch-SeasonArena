@@ -11,7 +11,7 @@ interface TierBadgeProps {
   rating: number;
   className?: string;
 }
-export const TierBadge: React.FC<TierBadgeProps> = ({ rating, className }) => {
+export const TierBadge = ({ rating, className }: TierBadgeProps) => {
   const getTierIcon = () => {
     const tier = getTierByRating(rating);
 

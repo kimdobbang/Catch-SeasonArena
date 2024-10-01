@@ -5,10 +5,7 @@ interface Body2TextProps {
   className?: string;
 }
 
-export const Body2Text: React.FC<Body2TextProps> = ({
-  children,
-  className,
-}) => {
+export const Body2Text = ({ children, className }: Body2TextProps) => {
   return (
     <p className={`text-catch-gray-500 text-center text-body2 ${className}`}>
       {children}

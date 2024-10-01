@@ -11,12 +11,12 @@ interface SquareIconButtonProps {
   onClick?: () => void;
 }
 
-export const SquareIconButton: React.FC<SquareIconButtonProps> = ({
+export const SquareIconButton = ({
   icon,
   label,
   className,
   onClick,
-}) => {
+}: SquareIconButtonProps) => {
   return (
     <div className={`${className} flex flex-col items-center w-auto`}>
       {/* 버튼 아이콘 */}

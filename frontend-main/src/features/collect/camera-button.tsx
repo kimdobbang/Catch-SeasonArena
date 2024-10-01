@@ -5,11 +5,11 @@ interface CameraButtonProps {
   children?: ReactNode;
   onClick?: () => void;
 }
-export const CameraButton: React.FC<CameraButtonProps> = ({
+export const CameraButton = ({
   children,
   className,
   onClick,
-}) => {
+}: CameraButtonProps) => {
   return (
     <button
       onClick={onClick}

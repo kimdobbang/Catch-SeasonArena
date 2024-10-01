@@ -7,13 +7,13 @@ interface LoginButtonProps {
   disabled?: boolean;
 }
 
-export const SignupButton: React.FC<LoginButtonProps> = ({
+export const SignupButton = ({
   onClick,
   logo,
   bgColor,
   text,
   textColor,
-}) => {
+}: LoginButtonProps) => {
   return (
     <button
       className={`relative flex items-center justify-center w-64 h-10 ${bgColor} rounded-xl`}
