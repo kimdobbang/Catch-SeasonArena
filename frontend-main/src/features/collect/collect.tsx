@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CameraButton } from "./camera-button";
+import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
 
 export const Collect = () => {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ export const Collect = () => {
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
   const capturedLen = useRef(0);
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
+  const [email, setEmail] = useState(""); // 이메일 상태 추가
   let interval: ReturnType<typeof setInterval> | undefined;
 
   useEffect(() => {
@@ -54,7 +57,6 @@ export const Collect = () => {
           const videoWidth = videoRef.current.videoWidth;
           const videoHeight = videoRef.current.videoHeight;
 
-          // 비디오와 오버레이의 위치와 크기 정보 가져오기
           const {
             width: renderedWidth,
             height: renderedHeight,
@@ -69,15 +71,12 @@ export const Collect = () => {
             height: overlayHeight,
           } = overlayRef.current.getBoundingClientRect();
 
-          // 비디오 해상도와 렌더링된 크기 간의 비율 계산
           const scaleX = videoWidth / renderedWidth;
           const scaleY = videoHeight / renderedHeight;
 
-          // 오버레이 내부 영역의 시작 좌표를 비디오 기준으로 계산
           const sx = (overlayX - videoX) * scaleX;
           const sy = (overlayY - videoY) * scaleY;
 
-          // 오버레이의 크기를 비디오의 해상도에 맞게 조정하여 캡처
           context.drawImage(
             videoRef.current,
             sx,
@@ -90,7 +89,6 @@ export const Collect = () => {
             320,
           );
 
-          // 캔버스의 내용을 이미지 URL로 변환합니다.
           const imageUrl = canvasRef.current.toDataURL("image/png");
 
           setCapturedImages((prev) => [...prev, imageUrl]);
@@ -106,12 +104,15 @@ export const Collect = () => {
     }, 100); // 100ms마다 캡처
   };
 
+  // 서버로 이미지와 이메일 전송
   const sendImagesToServer = async () => {
     const formData = new FormData();
 
+    // 이메일 추가
+    formData.append("email", email);
+
     // 이미지 배열의 각 이미지 URL을 Blob 형태로 변환하여 FormData에 추가
     capturedImages.forEach((image, index) => {
-      // base64 문자열을 Blob으로 변환
       const byteString = atob(image.split(",")[1]);
       const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
 
@@ -123,29 +124,32 @@ export const Collect = () => {
 
       const blob = new Blob([ab], { type: mimeString });
       formData.append(
-        `image${index + 1}`,
+        `images`, // `images[]`로 배열로 보내기
         blob,
         `captured-image-${index + 1}.png`,
       );
     });
 
     try {
-      const response = await axios.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      const response = await axios.post(
+        "https://j11b106.p.ssafy.io/api/ai/collections",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         },
-      });
+      );
       console.log("Images sent to server:", response.data);
     } catch (error) {
       console.error("Error sending images to server:", error);
     }
   };
 
-  // 개별 이미지 다운로드 함수
   const downloadImage = (url: string, index: number) => {
     const link = document.createElement("a");
     link.href = url;
-    link.download = `captured-image-${index + 1}.png`; // 파일명을 유일하게 설정
+    link.download = `captured-image-${index + 1}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -153,38 +157,33 @@ export const Collect = () => {
 
   return (
     <div className="relative w-full h-full">
-      <video
-        className="object-cover w-full h-full"
-        ref={videoRef}
-        autoPlay
-        playsInline
-      />
+      <video className="w-full h-full" ref={videoRef} autoPlay playsInline />
 
-      {/* 오버레이: 캡처할 영역을 시각적으로 표시 */}
       <div
         ref={overlayRef}
-        className="absolute top-1/2 left-1/2 w-[320px] h-[320px] border-4 border-red-500"
-        style={{
-          transform: "translate(-50%, -50%)",
-          pointerEvents: "none",
-        }}
+        className="absolute top-1/2 left-1/2 w-[320px] h-[320px] border-4 border-opacity-80 border-white"
+        style={{ transform: "translate(-50%, -50%)", pointerEvents: "none" }}
       ></div>
-
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
-      <button
+      <CameraButton
         onClick={autoCapture}
-        className="absolute p-2 text-white transform -translate-x-1/2 bg-blue-500 bottom-5 left-1/2"
-      >
-        자동 캡처 시작
-      </button>
+        className="absolute transform -translate-x-1/2 bottom-5 left-1/2"
+      />
 
       <button
         onClick={switchCamera}
-        className="absolute p-2 text-white transform -translate-x-1/2 bg-green-500 bottom-16 left-1/2"
+        className="absolute p-2 bg-red-400 text-white transform -translate-x-1/2 bottom-[90%] left-[90%]"
       >
-        카메라 전환
+        <CameraChangeIcon />
       </button>
+      <input
+        type="email"
+        placeholder="이메일을 입력하세요"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)} // 이메일 입력 필드
+        className="text-black bg-white border "
+      />
 
       <button onClick={() => navigate("processing")}>수집 게임으로 이동</button>
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
