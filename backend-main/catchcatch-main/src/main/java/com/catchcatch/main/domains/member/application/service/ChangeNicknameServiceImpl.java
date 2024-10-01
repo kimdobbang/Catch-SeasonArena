@@ -27,7 +27,7 @@ public class ChangeNicknameServiceImpl implements ChangeNicknameUseCase {
     @Override
     @Transactional
     public ChangeNicknameResponseDto changeNickname(ChangeNicknameRequestDto requestDto) {
-        Member member = findMemberPort.findMember(requestDto.email());
+        Member member = findMemberPort.findMember(requestDto.memberId());
 
         if(existsMemberPort.existsMemberByNickname(requestDto.nickname(), false))
             throw new ExceptionResponse(CustomException.DUPLICATED_NICKNAME_EXCEPTION);

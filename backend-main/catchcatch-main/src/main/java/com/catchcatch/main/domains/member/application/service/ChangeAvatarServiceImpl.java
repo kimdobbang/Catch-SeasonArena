@@ -23,7 +23,7 @@ public class ChangeAvatarServiceImpl implements ChangeAvatarUseCase {
     @Override
     @Transactional
     public ChangeAvatarResponseDto changeAvatar(ChangeAvatarRequestDto changeAvatarRequestDto) {
-        Member member = findMemberPort.findMember(changeAvatarRequestDto.email());
+        Member member = findMemberPort.findMember(changeAvatarRequestDto.memberId());
         member.changeAvatar(changeAvatarRequestDto.avatar());
         updateMemberPort.updateMember(member);
         return new ChangeAvatarResponseDto(member.getAvatar());

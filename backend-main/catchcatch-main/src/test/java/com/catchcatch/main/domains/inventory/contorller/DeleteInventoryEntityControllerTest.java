@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.catchcatch.main.domains.inventory.adapter.in.web.controller.DeleteInventoryController;
 import com.catchcatch.main.domains.inventory.application.port.in.DeleteInventoryUseCase;
+import com.catchcatch.main.domains.member.adapter.in.web.ChangeAvatarController;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 
 @WebMvcTest(

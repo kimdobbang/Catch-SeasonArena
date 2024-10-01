@@ -36,7 +36,7 @@ public class ChangeAvatarServiceTest {
 
     @BeforeEach
     void setUp() {
-        requestDto = new ChangeAvatarRequestDto("avatar", "test@test.com");
+        requestDto = new ChangeAvatarRequestDto("avatar", 1L);
         responseDto = new ChangeAvatarResponseDto(requestDto.avatar());
     }
 
@@ -44,7 +44,7 @@ public class ChangeAvatarServiceTest {
     @DisplayName("아바타 변경 성공 테스트")
     public void 아바타_변경_성공_테스트(){
         //given
-        BDDMockito.given(findMemberPort.findMember(requestDto.email()))
+        BDDMockito.given(findMemberPort.findMember(requestDto.memberId()))
                 .willReturn(member);
         BDDMockito.doNothing().when(updateMemberPort).updateMember(member);
 
