@@ -19,7 +19,7 @@ import { NavBarBackground } from "@/shared/ui";
 export const Main = () => {
   const navigate = useNavigate();
   const goToGamePage = () => {
-    navigate("/game");
+    window.location.href = "/game";
   };
 
   const goToRankingPage = () => {
