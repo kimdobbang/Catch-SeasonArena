@@ -23,9 +23,9 @@ public class UnEquipInventoryServiceImpl implements UnEquipInventoryUseCase {
 
 	@Transactional
 	@Override
-	public void unEquipInventory(Long inventoryId, String userEmail) {
+	public void unEquipInventory(Long inventoryId, String memberEmail) {
 		InventoryEntity inventoryEntity = findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(
-			inventoryId, userEmail);
+			inventoryId, memberEmail);
 		Inventory inventory = Inventory.createInventory(inventoryEntity);
 
 		if (!inventory.getIsEquipped()) {
