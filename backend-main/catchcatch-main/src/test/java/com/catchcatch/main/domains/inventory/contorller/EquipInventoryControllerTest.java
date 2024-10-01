@@ -45,6 +45,5 @@ public class EquipInventoryControllerTest {
 		);
 
 		resultActions.andExpect(MockMvcResultMatchers.status().isOk());
-
 	}
 }
