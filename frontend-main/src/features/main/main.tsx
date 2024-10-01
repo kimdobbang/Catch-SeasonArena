@@ -34,6 +34,9 @@ export const Main = () => {
     navigate("/combination");
   };
 
+  const goToAvatarChange = () => {
+    navigate("/avatar");
+  };
   const userRating = useSelector((state: RootState) => state.user.rating);
 
   const userNickname = useSelector((state: RootState) => state.user.nickName);
@@ -59,6 +62,7 @@ export const Main = () => {
           emotion="sad"
           width={300}
           height={300}
+          onClick={goToAvatarChange}
         />
         <div className="w-full px-4">
           {/* w-full로 부모 요소를 꽉 채우고 px-4로 padding 추가 */}

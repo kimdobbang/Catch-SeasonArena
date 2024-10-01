@@ -8,13 +8,13 @@ import { SignupPage } from "@/pages/signup-page";
 import { HeaderLayout, Layout, MainLayout } from "@/shared/ui/index";
 import { Main } from "@/features/main/main";
 import { Ranking } from "@/features/main/ranking";
-import { Avartar } from "@/features/main/avartar";
 import { Inventory } from "@/features/inventory/inventory";
 import { RootPage } from "@/pages/root-page";
 import { CollectPage } from "@/pages/collect-page";
 import { CollectGamePage } from "@/pages/collect-game-page";
 import { CollectResultPage } from "@/pages/collect-result-page";
 import { OAuthCallbackPage } from "@/pages/oauth-callback-page";
+import { AvatarPage } from "@/pages/avatar-page";
 
 // PrivateRoute 컴포넌트
 const PrivateRoute = () => {
@@ -88,8 +88,8 @@ export const AppRouter = () => {
           errorElement: <div>에러발생 3</div>,
           children: [
             {
-              path: "/avartar",
-              element: <Avartar />,
+              path: "/avatar",
+              element: <AvatarPage />,
             },
           ],
         },
