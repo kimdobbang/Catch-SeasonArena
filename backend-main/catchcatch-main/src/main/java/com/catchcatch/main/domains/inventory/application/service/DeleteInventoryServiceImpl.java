@@ -20,6 +20,7 @@ public class DeleteInventoryServiceImpl implements DeleteInventoryUseCase {
 	private final FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
 
 
+	@Transactional
 	@Override
 	public void deleteInventory(Long inventoryId, String userEmail) {
 		InventoryEntity inventoryEntity = findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(inventoryId, userEmail);
