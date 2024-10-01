@@ -12,10 +12,12 @@ import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j(topic = "main")
 public class UnEquipInventoryServiceImpl implements UnEquipInventoryUseCase {
 
 	private final FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
@@ -29,6 +31,7 @@ public class UnEquipInventoryServiceImpl implements UnEquipInventoryUseCase {
 		Inventory inventory = Inventory.createInventory(inventoryEntity);
 
 		if (!inventory.getIsEquipped()) {
+			log.error("BE/MAIN - 이미 장착 해제 중 : {}", CustomException.INVENTORY_ALREADY_UN_EQUIPPED_EXCEPTION);
 			throw new ExceptionResponse(CustomException.INVENTORY_ALREADY_UN_EQUIPPED_EXCEPTION);
 		}
 

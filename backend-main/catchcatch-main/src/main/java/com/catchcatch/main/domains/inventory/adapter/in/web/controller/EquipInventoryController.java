@@ -32,7 +32,7 @@ public class EquipInventoryController {
 			200
 		);
 
-		log.info("BE/MAIN - response 인벤토리 장착 해제 : {}", response);
+		log.info("BE/MAIN - response 인벤토리 장착: {}", response);
 		return response;
 	}
 

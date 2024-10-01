@@ -13,10 +13,12 @@ import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j(topic = "main")
 public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 
 	private final FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
@@ -32,6 +34,7 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 		int equipInventorySize = findEquipInventoryListPort.inventoryList(memberEmail).size();
 
 		if (equipInventorySize >= 3) {
+			log.error("BE/MAIN - 장착 3개 초과 : {}", CustomException.INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION);
 			throw new ExceptionResponse(CustomException.INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION);
 		}
 
@@ -40,6 +43,7 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 		Inventory inventory = Inventory.createInventory(inventoryEntity);
 
 		if (inventory.getIsEquipped()) {
+			log.error("BE/MAIN - 이미 장착중 : {}", CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
 			throw new ExceptionResponse(CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
 		}
 
