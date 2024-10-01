@@ -92,4 +92,23 @@ public class EquipInventoryServiceTest {
 			.isInstanceOf(Exception.class)
 			.hasFieldOrPropertyWithValue("customException", CustomException.INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION);
 	}
+
+	@Test
+	@DisplayName("장착 실패 이미 장착 중 서비스")
+	public void 장착_실패_이미_장착중__서비스() {
+		//given
+		inventory = new Inventory(1L, member, item, 1, true);
+		inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
+		List<InventoryEntity> inventoryEntities = new ArrayList<>();
+		inventoryEntities.add(inventoryEntity);
+
+		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventoryEntities);
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
+			.willReturn(inventoryEntity);
+
+		//when then
+		Assertions.assertThatThrownBy(() -> equipInventoryService.equipInventory(1L, "test"))
+			.isInstanceOf(Exception.class)
+			.hasFieldOrPropertyWithValue("customException", CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
+	}
 }
