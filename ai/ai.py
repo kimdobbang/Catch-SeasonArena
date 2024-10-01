@@ -80,10 +80,25 @@ async def detect_objects(
             "detectResult": detectResult  # 탐지 결과 추가
         }
 
-        # REST 요청을 보내기
+        # Spring 서버에 REST 요청을 보내기
         response = requests.post(api_url, json=payload)
+        
+        # 받은 응답에서 필요한 데이터를 추출
+        if response.status_code == 200:
+            # 응답 JSON을 파싱
+            response_data = response.json()
 
-    if response.status_code == 200:
-        return {"status": "success"}
+            # 필요한 데이터를 추출하여 원하는 객체로 변환
+            processed_result = {
+                "name": response_data['data']['name'],
+                "itemId": response_data['data']['itemId'],
+                "type": response_data['data']['type'],
+                "grade": response_data['data']['grade'],
+                "effect": response_data['data']['effect'],
+            }
+
+            return {"status": "success", "data": processed_result}
+        else:
+            return {"status": "failure", "message": "잘못된 api요청"}
     else:
-        return {"status": "failure"}
+        return {"status": "failure", "message": "No detection"}
