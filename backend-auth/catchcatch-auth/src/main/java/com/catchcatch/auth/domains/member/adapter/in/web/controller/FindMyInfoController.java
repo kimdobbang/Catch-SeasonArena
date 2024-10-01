@@ -1,4 +1,4 @@
-package com.catchcatch.auth.domains.member.adapter.in.web;
+package com.catchcatch.auth.domains.member.adapter.in.web.controller;
 
 import com.catchcatch.auth.domains.member.adapter.out.persistence.client.FindMyInfoClient;
 import com.catchcatch.auth.domains.member.domain.Member;
@@ -34,7 +34,6 @@ public class FindMyInfoController {
     @GetMapping
     public ResponseEntity<?> findMyInfo(Authentication authentication) {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
-
         try{
             ResponseEntity<?> response = findMyInfoClient.findMyInfo(member.getEmail());
             return response;
