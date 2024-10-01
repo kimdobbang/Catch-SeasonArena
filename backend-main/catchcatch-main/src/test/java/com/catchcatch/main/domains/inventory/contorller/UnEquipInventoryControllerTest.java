@@ -39,7 +39,7 @@ public class UnEquipInventoryControllerTest {
 		BDDMockito.doNothing().when(unEquipInventoryUseCase).unEquipInventory(1L,"test");
 
 		//when then
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/api/main/inventories/items/equipment/1/member/test")
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/api/main/inventories/items/unequipment/1/member/test")
 			.contentType(MediaType.APPLICATION_JSON)
 		);
 
