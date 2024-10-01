@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { TierRanking } from "./tier-ranking";
-import { TotalRanking } from "./total-ranking";
+import { TierRankingTab } from "./tier-ranking-tab";
+import { TotalRankingTab } from "./total-ranking-tab";
 import { RankingTabButton } from "./ranking-tab-button";
 import { Body1Text } from "@/shared/components/atoms";
 
 const tabs = [
-  { index: 0, name: "전체 순위", content: <TotalRanking /> },
-  { index: 1, name: "티어 순위", content: <TierRanking /> },
+  { index: 0, name: "전체 순위", content: <TotalRankingTab /> },
+  { index: 1, name: "티어 순위", content: <TierRankingTab /> },
 ];
 
 export const RankingListContainer = () => {
