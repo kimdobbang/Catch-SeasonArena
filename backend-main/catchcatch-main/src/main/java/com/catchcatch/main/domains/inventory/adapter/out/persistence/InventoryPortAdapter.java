@@ -2,6 +2,7 @@ package com.catchcatch.main.domains.inventory.adapter.out.persistence;
 
 import java.util.List;
 
+import com.catchcatch.main.domains.inventory.application.port.out.*;
 import org.springframework.stereotype.Component;
 
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
@@ -19,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
-public class InventoryPortAdapterFind implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
-	FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryListPort {
+public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
+	FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryByEmailPort, FindEquipInventoryListPort {
 
 	private final InventoryRepository inventoryRepository;
 
@@ -56,5 +57,10 @@ public class InventoryPortAdapterFind implements DeleteInventoryPort, FindInvent
 	public List<InventoryEntity> inventoryList(String email) {
 		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_EmailAndIsEquipped(email, true);
 		return inventoryEntities;
+	}
+
+	@Override
+	public List<InventoryEntity> findEquipInventoryByEmail(String email) {
+		return inventoryRepository.findAllByMember_EmailAndIsEquipped(email, true);
 	}
 }

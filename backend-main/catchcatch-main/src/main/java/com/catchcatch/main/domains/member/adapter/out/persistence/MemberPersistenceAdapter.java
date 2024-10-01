@@ -28,8 +28,8 @@ public class MemberPersistenceAdapter implements ExistsMemberPort, UpdateMemberP
     }
 
     @Override
-    public Member findMember(Long memberId) {
-        return Member.createMemberToEntity(memberEntityRepository.findByMemberIdAndIsDeleted(memberId, false)
+    public Member findMember(String email) {
+        return Member.createMemberToEntity(memberEntityRepository.findByEmailAndIsDeleted(email, false)
                 .orElseThrow(()-> new ExceptionResponse(CustomException.NOT_EXISTS_MEMBER_EXCEPTION)));
     }
 }

@@ -42,7 +42,7 @@ public class ChangeNicknameServiceTest {
     void setUp() {
         requestDto = new ChangeNicknameRequestDto(
                 "변경 후  닉네임",
-                1L
+                "test@test.com"
         );
     }
 
@@ -52,7 +52,7 @@ public class ChangeNicknameServiceTest {
         //given
         BDDMockito.given(existsMemberPort.existsMemberByNickname(requestDto.nickname(), false))
                         .willReturn(false);
-        BDDMockito.given(findMemberPort.findMember(requestDto.memberId()))
+        BDDMockito.given(findMemberPort.findMember(requestDto.email()))
                 .willReturn(member);
         BDDMockito.doNothing().when(member).changeNickname(requestDto.nickname());
 
@@ -65,7 +65,7 @@ public class ChangeNicknameServiceTest {
     @DisplayName("닉네임 중복 변경 실패 테스트")
     public void 닉네임_중복_변경_실패_테스트(){
         //given
-        BDDMockito.given(findMemberPort.findMember(requestDto.memberId()))
+        BDDMockito.given(findMemberPort.findMember(requestDto.email()))
                         .willReturn(member);
         BDDMockito.given(existsMemberPort.existsMemberByNickname(requestDto.nickname(), false))
                 .willReturn(true);
