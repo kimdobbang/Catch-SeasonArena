@@ -4,5 +4,5 @@ import com.catchcatch.main.domains.member.domain.Member;
 
 public interface FindMemberPort {
 
-    Member findMember(Long memberId);
+    Member findMember(String email);
 }
