@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "FindInventoriesClient", url = "http://localhost:8081/api/main/inventories/items")
+@FeignClient(name = "FindInventoriesClient", url = "https://j11b106.p.ssafy.io/api/main/inventories/items")
 public interface FindInventoriesClient {
 
 	@GetMapping(value = "/{memberEmail}", consumes = "application/json")
