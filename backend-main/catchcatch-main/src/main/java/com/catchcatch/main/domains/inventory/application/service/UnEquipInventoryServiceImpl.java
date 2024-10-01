@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UnEquipInventoryImpl implements UnEquipInventoryUseCase {
+public class UnEquipInventoryServiceImpl implements UnEquipInventoryUseCase {
 
 	private final FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
 	private final UpdateInventoryPort updateInventoryPort;
@@ -33,5 +33,6 @@ public class UnEquipInventoryImpl implements UnEquipInventoryUseCase {
 		}
 
 		inventory.unEquipInventory();
+		updateInventoryPort.updateInventory(inventory);
 	}
 }
