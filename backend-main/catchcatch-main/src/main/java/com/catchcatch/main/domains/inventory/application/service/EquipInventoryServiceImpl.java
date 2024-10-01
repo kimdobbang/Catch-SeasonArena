@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
 import com.catchcatch.main.domains.inventory.application.port.in.EquipInventoryUseCase;
-import com.catchcatch.main.domains.inventory.application.port.out.EquipInventoryListPort;
+import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryListPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.UpdateInventoryPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
@@ -21,14 +21,14 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 
 	private final FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
 	private final UpdateInventoryPort updateInventoryPort;
-	private final EquipInventoryListPort equipInventoryListPort;
+	private final FindEquipInventoryListPort findEquipInventoryListPort;
 
 	// 우선 내 장착 아이템이 3개이상이면 exception
 	// 현재 아이템이 장착 중이면 exception
 
 	@Override
 	public void equipInventory(Long inventoryId, String memberEmail) {
-		int equipInventorySize = equipInventoryListPort.inventoryList(memberEmail).size();
+		int equipInventorySize = findEquipInventoryListPort.inventoryList(memberEmail).size();
 
 		if (equipInventorySize >= 3) {
 			throw new ExceptionResponse(CustomException.INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION);
@@ -42,7 +42,7 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 			throw new ExceptionResponse(CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
 		}
 
-		inventory.unEquipInventory();
+		inventory.equipInventory();
 		updateInventoryPort.updateInventory(inventory);
 	}
 }
