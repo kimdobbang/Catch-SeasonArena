@@ -5,6 +5,11 @@ import java.util.List;
 import com.catchcatch.main.domains.inventory.application.port.out.*;
 import org.springframework.stereotype.Component;
 
+import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
+import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryListPort;
+import com.catchcatch.main.domains.inventory.application.port.out.FindInventoriesByEmailPort;
+import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
+import com.catchcatch.main.domains.inventory.application.port.out.UpdateInventoryPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
@@ -16,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
 public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
-	FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryByEmailPort {
+	FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryByEmailPort, FindEquipInventoryListPort {
 
 	private final InventoryRepository inventoryRepository;
 
@@ -46,6 +51,12 @@ public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryB
 	public void updateInventory(Inventory inventory) {
 		InventoryEntity inventoryEntity = Inventory.InventoryToInventoryEntity(inventory);
 		inventoryRepository.save(inventoryEntity);
+	}
+
+	@Override
+	public List<InventoryEntity> inventoryList(String email) {
+		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_EmailAndIsEquipped(email, true);
+		return inventoryEntities;
 	}
 
 	@Override

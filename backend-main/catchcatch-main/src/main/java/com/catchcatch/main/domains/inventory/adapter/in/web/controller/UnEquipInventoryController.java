@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/main/inventories/items/equipment")
+@RequestMapping("/api/main/inventories/items/unequipment")
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
 public class UnEquipInventoryController {
