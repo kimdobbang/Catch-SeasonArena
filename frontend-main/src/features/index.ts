@@ -1,5 +1,8 @@
 // features/index.ts
 
+// custom hooks
+export { useItemFilter } from "@/app/hooks/useItemFilter";
+
 // auth관련
 export { Login } from "@/features/auth/login";
 export { Signup } from "@/features/auth/signup";
@@ -13,3 +16,7 @@ export { Inventory } from "@/features/inventory/inventory";
 
 // 메인 관련
 export { Avatar } from "@/features/main/avatar";
+
+// 인벤토리
+export { InventoryUserInfo } from "@/features/inventory/inventory-userinfo";
+export { InGameStats } from "@/features/inventory/ingame-stats";
