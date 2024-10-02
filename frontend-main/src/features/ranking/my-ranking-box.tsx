@@ -26,7 +26,7 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
       className={`flex flex-col bg-gradient-to-r from-catch-sub-300 to-catch-main-400 rounded-lg w-[90%] h-[80px] ${className}`}
     >
       <div className=" flex flex-row w-full h-[50%] justify-center items-center">
-        <div className="w-[30%] flex flex-row gap-2 items-center justify-center">
+        <div className="w-[25%] flex flex-row gap-2 items-center justify-center">
           <TierInitial size="small" rating={user.rating} />
           <CircleAvatar
             avatarIcon={false}
@@ -37,10 +37,10 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
             className="bg-catch-sub-200 "
           />
         </div>
-        <div className="w-[40%]">
+        <div className="w-[50%]">
           <Body1Text className="mr-2 text-white">{getNickname()}</Body1Text>
         </div>
-        <div className="w-[30%]">
+        <div className="w-[25%]">
           <Caption1Text className="mr-2 text-white">
             {user.rating} Points
           </Caption1Text>

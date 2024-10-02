@@ -10,10 +10,15 @@ export const Collect = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
+  const capturedImagesRef = useRef<string[]>([]); // useRef로 상태 값 추적
   const capturedLen = useRef(0);
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
   const [email, setEmail] = useState(""); // 이메일 상태 추가
   let interval: ReturnType<typeof setInterval> | undefined;
+
+  useEffect(() => {
+    console.log("Captured Images updated:", capturedImages);
+  }, [capturedImages]);
 
   useEffect(() => {
     const initCamera = async () => {
@@ -91,8 +96,14 @@ export const Collect = () => {
 
           const imageUrl = canvasRef.current.toDataURL("image/png");
 
-          setCapturedImages((prev) => [...prev, imageUrl]);
+          // 상태와 ref 둘 다 업데이트
+          setCapturedImages((prevCapturedImages) => {
+            const updatedImages = [...prevCapturedImages, imageUrl];
+            capturedImagesRef.current = updatedImages; // ref 업데이트
+            return updatedImages;
+          });
 
+          // 캡처된 이미지 수를 추적
           capturedLen.current++;
 
           if (capturedLen.current >= 20) {
@@ -104,15 +115,19 @@ export const Collect = () => {
     }, 100); // 100ms마다 캡처
   };
 
-  // 서버로 이미지와 이메일 전송
   const sendImagesToServer = async () => {
+    console.log("CAptured Images 배열: ", capturedImages);
     const formData = new FormData();
 
-    // 이메일 추가
-    formData.append("email", email);
+    // 이메일을 formData에 추가
+    formData.append("email", "seung@dd"); // 이메일을 "email"이라는 key로 추가
+
+    console.log("Captured Images for upload:", capturedImagesRef.current);
 
     // 이미지 배열의 각 이미지 URL을 Blob 형태로 변환하여 FormData에 추가
-    capturedImages.forEach((image, index) => {
+    capturedImagesRef.current.forEach((image, index) => {
+      console.log("Processing image:", index); // 각 이미지가 처리되는지 확인
+
       const byteString = atob(image.split(",")[1]);
       const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
 
@@ -123,17 +138,24 @@ export const Collect = () => {
       }
 
       const blob = new Blob([ab], { type: mimeString });
-      formData.append(
-        `images`, // `images[]`로 배열로 보내기
-        blob,
-        `captured-image-${index + 1}.png`,
-      );
+
+      // Blob의 정보 출력
+      console.log("Blob 생성 완료:", blob);
+      console.log("Blob 크기:", blob.size); // Blob의 크기 출력
+      console.log("Blob 타입:", blob.type); // Blob의 MIME 타입 출력
+
+      formData.append("formData", blob, `captured-image-${index + 1}.png`);
+    });
+
+    // FormData 확인을 위한 콘솔 로그 출력
+    formData.forEach((value, key) => {
+      console.log(key, value);
     });
 
     try {
       const response = await axios.post(
         "https://j11b106.p.ssafy.io/api/ai/collections",
-        formData,
+        formData, // 이미지 파일 배열과 이메일을 포함한 FormData 전송
         {
           headers: {
             "Content-Type": "multipart/form-data",
