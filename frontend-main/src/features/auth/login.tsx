@@ -27,7 +27,6 @@ export const Login = () => {
   };
 
   const handleOAuthLogin = (provider: "kakao" | "google") => {
-    window.localStorage.setItem("provider", provider);
     window.location.href = `${config.API_BASE_URL}/api/auth/oauth2/authorization/${provider}`;
   };
 
@@ -47,11 +46,10 @@ export const Login = () => {
         dispatch(
           setUser({ email: userInfo.email, nickName: userInfo.nickName }),
         );
-
         navigate("/main");
       }
     } catch (error) {
-      setErrorMessage("입력 정보를 확인 바랍니다 ㅜ.ㅜ");
+      setErrorMessage("입력 정보를 확인 바랍니다😅");
       console.error("로그인 에러:", error);
     }
   };

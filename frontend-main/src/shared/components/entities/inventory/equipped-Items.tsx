@@ -1,6 +1,4 @@
-//  # 착용 장비
-
-import { EquippedCell } from "@entities/index"; // InGameStats 컴포넌트 가져오기
+import { EquippedCell } from "@entities/index";
 
 export const EquippedItems = () => {
   return (

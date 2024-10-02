@@ -2,17 +2,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 
 export const InGameStats = () => {
-  // Redux에서 stats 정보 가져오기
   const { stats } = useSelector((state: RootState) => state.user);
 
-  // stats가 없을 때 기본값 설정
-  const defaultStats = {
-    hp: 100,
-    attackPower: 10,
-    speed: 10,
-  };
-
-  const currentStats = stats || defaultStats; // stats가 없을 때 기본값 사용
+  const currentStats = stats;
 
   return (
     <div className="flex-col space-y-2">
