@@ -46,7 +46,7 @@ async def detect_objects(
 ):
     detect_result = None
     highest_confidence = 0
-
+    detectResult = None
     # 각 파일에 대해 반복 처리
     for file in formData:
         # 이미지를 메모리로 읽어들이기
@@ -97,7 +97,7 @@ async def detect_objects(
             # 필요한 데이터를 추출하여 원하는 객체로 변환
             processed_result = {
                 "name": response_data['data']['name'],
-                "itemId": response_data['data']['itemId'],
+                "itemId": response_data['data']['id'],
                 "type": response_data['data']['type'],
                 "grade": response_data['data']['grade'],
                 "effect": response_data['data']['effect'],
