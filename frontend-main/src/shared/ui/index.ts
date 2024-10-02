@@ -16,3 +16,4 @@ export { Layout, MainLayout, HeaderLayout } from "./layout/layouts";
 
 //  ui
 export { TabBar } from "@ui/tab-bar";
+export { NumberPagination } from "@ui/number-pagination";
