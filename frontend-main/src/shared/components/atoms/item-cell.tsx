@@ -1,3 +1,4 @@
+// src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
 
 interface ItemCellProps {
@@ -22,7 +23,6 @@ export const ItemCell = ({ onClick, name, image }: ItemCellProps) => {
           <img src={image} alt={name} className="object-contain w-12 h-12" />
         ) : null}
       </div>
-      <div></div>
     </div>
   );
 };
