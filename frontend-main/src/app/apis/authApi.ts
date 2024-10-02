@@ -17,7 +17,7 @@ export interface LoginUserData {
 
 export const checkEmailExists = async (email: string): Promise<boolean> => {
   const response = await fetch(
-    `${config.API_BASE_URL}/api/auth/members/${encodeURIComponent(email)}`,
+    `${config.API_BASE_URL}/api/auth/members/email/${encodeURIComponent(email)}`,
     {
       method: "GET",
       headers: {
@@ -25,7 +25,6 @@ export const checkEmailExists = async (email: string): Promise<boolean> => {
       },
     },
   );
-  console.log("Checking email");
   console.log(response.ok);
   if (response.ok) {
     return true;
@@ -66,7 +65,6 @@ export const loginUser = async (
 ): Promise<{ data: UserInfo; accessToken: string | null }> => {
   const response = await fetch(
     `${config.API_BASE_URL}/api/auth/members/login`,
-    // "http://192.168.31.240:8080/api/auth/members/login",
     {
       method: "POST",
       headers: {
