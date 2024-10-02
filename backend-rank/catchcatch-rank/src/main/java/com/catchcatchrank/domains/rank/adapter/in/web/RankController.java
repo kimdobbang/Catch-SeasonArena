@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/rank/rankings")
-@Slf4j
+@Slf4j(topic = "rank")
 public class RankController {
 
 	private final GetMyRankingService getMyRankingService;
