@@ -1,3 +1,9 @@
+import { Ranking } from "@/features";
+
 export const RankingPage = () => {
-  return <></>;
+  return (
+    <div className="w-full h-full">
+      <Ranking />
+    </div>
+  );
 };

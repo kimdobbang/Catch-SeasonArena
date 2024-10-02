@@ -13,3 +13,4 @@ export { Inventory } from "@/features/inventory/inventory";
 
 // 메인 관련
 export { Avatar } from "@/features/main/avatar";
+export { Ranking } from "@/features/ranking/ranking";

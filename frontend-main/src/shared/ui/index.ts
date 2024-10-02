@@ -13,6 +13,7 @@ export { Header } from "./layout/header";
 export { BottomNavBar } from "./layout/bottom-nav-bar";
 export { NavBarBackground } from "./layout/nav-bar-background";
 export { Layout, MainLayout, HeaderLayout } from "./layout/layouts";
+export { Background } from "./layout/background";
 
 //  ui
 export { TabBar } from "@ui/tab-bar";
