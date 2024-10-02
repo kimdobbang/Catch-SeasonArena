@@ -1,3 +1,4 @@
+// src/features/inventory/inventory-userinfo.tsx
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { getTierByRating } from "@/app/types/tier";
@@ -15,18 +16,18 @@ export const InventoryUserInfo = () => {
   const userTier = getTierByRating(rating);
 
   return (
-    <div className="flex items-center h-[45%]">
+    <div className="flex items-center h-[30%]">
       <div className="w-[30%]">
         <AvatarBody number={selectedAvatar} height={200} width={200} />
       </div>
 
-      <div className="w-full ml-9 ">
-        <div className="flex">
+      <div className="w-full ml-10 ">
+        <div className="flex items-center">
           <TierBadge rating={rating} />
-          <Body1Text className="text-catch-tier-Bronze">{userTier}</Body1Text>
+          <Body1Text className=" text-catch-tier-Bronze">{userTier}</Body1Text>
         </div>
         <InGameStats />
-        <EquippedItems />
+        <EquippedItems showCaption={true} />
       </div>
     </div>
   );
