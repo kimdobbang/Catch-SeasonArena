@@ -18,8 +18,8 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaRankEntity;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
 
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;

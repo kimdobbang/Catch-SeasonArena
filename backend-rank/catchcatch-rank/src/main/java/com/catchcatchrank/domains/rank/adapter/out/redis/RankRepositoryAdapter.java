@@ -38,7 +38,7 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 
 	@Override
 	public void saveUserScore(Rank rank) {
-		RedisRankEntity rankEntity = Rank.rankToRedisRankEntity(rank);
+		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
 		String tier = getTier(rankEntity.getRate());
 		redisTemplate.opsForZSet().add(tier, rankEntity.getNickName(), rankEntity.getRate());
 
@@ -49,7 +49,7 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 	@Transactional
 	@Override
 	public void updateRank(Rank rank) {
-		RedisRankEntity rankEntity = Rank.rankToRedisRankEntity(rank);
+		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
 		String preTier = getUserTier(rankEntity.getNickName());
 		String changedTier = getTier(rankEntity.getRate());
 

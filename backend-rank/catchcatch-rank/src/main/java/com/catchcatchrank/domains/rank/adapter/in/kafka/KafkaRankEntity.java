@@ -1,4 +1,4 @@
-package com.catchcatchrank.domains.rank.adapter.out.kafka;
+package com.catchcatchrank.domains.rank.adapter.in.kafka;
 
 import com.catchcatchrank.domains.rank.domain.Rank;
 
@@ -15,7 +15,4 @@ public class KafkaRankEntity {
 	private String nickName;
 	private Integer rank;
 
-	public static Rank rankEntityToRank(KafkaRankEntity kafkaRankEntity) {
-		return new Rank(kafkaRankEntity.nickName, kafkaRankEntity.rank);
-	}
 }

@@ -13,18 +13,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
-import com.catchcatchrank.domains.rank.application.port.in.UpdateRankService;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
 import com.catchcatchrank.domains.rank.application.port.out.GetRatePort;
 import com.catchcatchrank.domains.rank.application.port.out.UpdateTierPort;
-import com.catchcatchrank.domains.rank.application.service.UpdateRankServiceImpl;
+import com.catchcatchrank.domains.rank.application.service.UpdateRankUseCaseImpl;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateRankServiceTest {
+public class UpdateRankUseCaseTest {
 
 	@InjectMocks
-	private UpdateRankServiceImpl updateRankService;
+	private UpdateRankUseCaseImpl updateRankService;
 
 	@Mock
 	private UpdateTierPort updateTierPort;

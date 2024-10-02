@@ -3,7 +3,7 @@ package com.catchcatchrank.domains.test;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,8 +1,8 @@
 package com.catchcatchrank.domains.rank.application.port.in;
 
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
 
-public interface UpdateRankService {
+public interface UpdateRankUseCase {
 
 	void updateRank(KafkaUpdateRankEntity kafkaUpdateRankEntity);
 }
