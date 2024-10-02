@@ -7,32 +7,33 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.catchcatch.main.domains.inventory.adapter.in.web.message.SuccessUnEquipInventoryMessage;
-import com.catchcatch.main.domains.inventory.application.port.in.UnEquipInventoryUseCase;
+import com.catchcatch.main.domains.inventory.adapter.in.web.message.SuccessEquipInventoryMessage;
+import com.catchcatch.main.domains.inventory.application.port.in.EquipInventoryUseCase;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/main/inventories/items/unequipment")
+@RequestMapping("/api/main/inventories/items/equipment")
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
-public class UnEquipInventoryController {
+public class EquipInventoryController {
 
-	private final UnEquipInventoryUseCase unEquipInventoryUseCase;
+	private final EquipInventoryUseCase equipInventoryUseCase;
 	private final HttpResponseUtil responseUtil;
 
 	@PutMapping("/{inventory_id}/member/{member_email}")
-	public ResponseEntity<?> unEquipInventory(@PathVariable("inventory_id") Long inventoryId, @PathVariable("member_email") String memberEmail) {
-		unEquipInventoryUseCase.unEquipInventory(inventoryId, memberEmail);
+	public ResponseEntity<?> equipInventory(@PathVariable("inventory_id") Long inventoryId, @PathVariable("member_email") String memberEmail) {
+		equipInventoryUseCase.equipInventory(inventoryId, memberEmail);
+
 		ResponseEntity<?> response = responseUtil.createSuccessResponse(
-			SuccessUnEquipInventoryMessage.SUCCESS_UN_EQUIP_INVENTORY.getMessage(),
-			SuccessUnEquipInventoryMessage.SUCCESS_UN_EQUIP_INVENTORY,
+			SuccessEquipInventoryMessage.SUCCESS_EQUIP_INVENTORY.getMessage(),
+			SuccessEquipInventoryMessage.SUCCESS_EQUIP_INVENTORY,
 			200
 		);
 
-		log.info("BE/MAIN - response 인벤토리 장착 해제 : {}", response);
+		log.info("BE/MAIN - response 인벤토리 장착: {}", response);
 		return response;
 	}
 

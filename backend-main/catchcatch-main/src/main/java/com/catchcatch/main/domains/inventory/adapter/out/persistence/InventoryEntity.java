@@ -1,5 +1,6 @@
 package com.catchcatch.main.domains.inventory.adapter.out.persistence;
 
+import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
 import com.catchcatch.main.global.entity.BaseTimeEntity;
@@ -43,11 +44,21 @@ public class InventoryEntity extends BaseTimeEntity {
 	private Boolean isEquipped;
 
 	@Builder
-	public InventoryEntity(Long id, MemberEntity member, ItemEntity item, Integer durability, Boolean isEquipped) {
+	private InventoryEntity(Long id, MemberEntity member, ItemEntity item, Integer durability, Boolean isEquipped) {
 		this.id = id;
 		this.member = member;
 		this.item = item;
 		this.durability = durability;
 		this.isEquipped = isEquipped;
+	}
+
+	public static InventoryEntity fromInventory(Inventory inventory) {
+		return InventoryEntity.builder()
+			.id(inventory.getId())
+			.member(MemberEntity.fromMember(inventory.getMember()))
+			.item(ItemEntity.fromItem(inventory.getItem()))
+			.durability(inventory.getDurability())
+			.isEquipped(inventory.getIsEquipped())
+			.build();
 	}
 }

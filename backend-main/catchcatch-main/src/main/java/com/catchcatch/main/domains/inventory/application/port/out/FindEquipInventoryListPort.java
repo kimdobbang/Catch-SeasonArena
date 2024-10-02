@@ -5,7 +5,7 @@ import java.util.List;
 import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 
-public interface FindInventoriesByEmailPort {
+public interface FindEquipInventoryListPort {
 
-	List<Inventory> findInventoriesByEmail(String email);
+	List<Inventory> inventoryList(String email);
 }
