@@ -27,11 +27,7 @@ public class SaveInventoryController {
 		log.info("BE/MAIN - request memberEmail : {}", memberEmail);
 		Item item = saveInventoryUseCase.saveInventory(memberEmail, inventoryId);
 
-		ResponseEntity<?> response = responseUtil.createSuccessResponse(
-			1,
-			item,
-			200
-		);
+		ResponseEntity<?> response = responseUtil.createResponse(item);
 
 		log.info("BE/MAIN - response : {}", response);
 
