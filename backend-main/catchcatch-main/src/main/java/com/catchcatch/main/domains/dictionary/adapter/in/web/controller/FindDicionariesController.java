@@ -1,6 +1,6 @@
 package com.catchcatch.main.domains.dictionary.adapter.in.web.controller;
 
-import com.catchcatch.main.domains.dictionary.application.port.in.FindDicionariesUseCase;
+import com.catchcatch.main.domains.dictionary.application.port.in.FindDictionariesUseCase;
 import com.catchcatch.main.domains.dictionary.application.port.out.web.response.DictionariesResponseDto;
 import com.catchcatch.main.global.util.HttpResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +20,10 @@ import java.util.List;
 public class FindDicionariesController {
 
     private final HttpResponseUtil responseUtil;
-    private final FindDicionariesUseCase findDicionariesUseCase;
+    private final FindDictionariesUseCase findDictionariesUseCase;
     @GetMapping("/{email}")
-    public ResponseEntity<?> findInventories(@PathVariable("email") String email) {
-        List<DictionariesResponseDto> dictionariesResponseDtoList = findDicionariesUseCase.getDictionaries(email);
+    public ResponseEntity<?> findDictionaries(@PathVariable("email") String email) {
+        List<DictionariesResponseDto> dictionariesResponseDtoList = findDictionariesUseCase.getDictionaries(email);
         return responseUtil.createResponse(dictionariesResponseDtoList);
     }
 }

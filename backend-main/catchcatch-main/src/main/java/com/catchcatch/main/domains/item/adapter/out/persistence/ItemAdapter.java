@@ -10,6 +10,8 @@ import com.catchcatch.main.global.exception.ExceptionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
@@ -25,5 +27,10 @@ public class ItemAdapter implements FindItemPort{
 		
 		log.error("BE/MAIN - error : {}", CustomException.NOT_EXISTS_ITEM_EXCEPTION);
 		return itemEntity;
+	}
+
+	@Override
+	public List<ItemEntity> findAllItem() {
+		return itemRepository.findAll();
 	}
 }

@@ -1,6 +1,7 @@
 package com.catchcatch.main.domains.dictionary.domain;
 
 import com.catchcatch.main.domains.dictionary.adapter.out.persistence.DictionariesEntity;
+import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -1,8 +1,10 @@
 package com.catchcatch.main.domains.dictionary.adapter.out.persistence;
 
+import com.catchcatch.main.domains.dictionary.domain.Dictionaries;
 import com.catchcatch.main.domains.member.adapter.out.persistence.MemberEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,4 +36,23 @@ public class DictionariesEntity {
     @Column(name = "count", nullable = false)
     private int count;
 
+    @Builder
+    public DictionariesEntity(Long id, MemberEntity member, Long itemId, LocalDateTime createdAt, LocalDateTime modifiedAt, int count) {
+        this.id = id;
+        this.member = member;
+        this.itemId = itemId;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.count = count;
+    }
+
+    public static DictionariesEntity fromDomain(MemberEntity member, Dictionaries dictionaries) {
+        return DictionariesEntity.builder()
+                .member(member)
+                .itemId(dictionaries.getItemId())
+                .createdAt(dictionaries.getCreatedAt())
+                .modifiedAt(dictionaries.getModifiedAt())
+                .count(dictionaries.getCount())
+                .build();
+    }
 }

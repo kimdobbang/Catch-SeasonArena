@@ -4,6 +4,6 @@ import com.catchcatch.main.domains.dictionary.application.port.out.web.response.
 
 import java.util.List;
 
-public interface FindDicionariesUseCase {
+public interface FindDictionariesUseCase {
     List<DictionariesResponseDto> getDictionaries(String email);
 }
