@@ -25,7 +25,7 @@ public class SaveInventoryServiceImpl implements SaveInventoryUseCase {
 	@Override
 	@Transactional
 	public Item saveInventory(String email, Long inventoryId) {
-		Item item = Item.fromEntity(findItemPort.findItemById(inventoryId));
+		Item item = findItemPort.findItemById(inventoryId);
 		Member member = findMemberPort.findMember(email);
 		Grade grade = item.getGrade();
 		int durability = (grade == Grade.NORMAL) ? 5 : (grade == Grade.RARE) ? 10 : 15;

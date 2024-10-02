@@ -4,7 +4,6 @@ import com.catchcatch.main.domains.dictionary.application.port.in.FindDictionari
 import com.catchcatch.main.domains.dictionary.application.port.out.FindDictionariesByEmailPort;
 import com.catchcatch.main.domains.dictionary.application.port.out.web.response.DictionariesResponseDto;
 import com.catchcatch.main.domains.dictionary.domain.Dictionaries;
-import com.catchcatch.main.domains.item.adapter.out.persistence.ItemEntity;
 import com.catchcatch.main.domains.item.port.out.FindItemPort;
 import com.catchcatch.main.domains.item.domain.Item;
 import lombok.RequiredArgsConstructor;
@@ -25,20 +24,18 @@ public class FindDictionariesServiceImpl implements FindDictionariesUseCase {
 
     @Override
     public List<DictionariesResponseDto> getDictionaries(String email) {
-
         List<Dictionaries> dictionariesList = findDictionariesByEmailPort.findDictionariesByEmail(email);
-
-        List<ItemEntity> allItems = findItemPort.findAllItem();
+        List<Item> allItems = findItemPort.findAllItem();
 
         Map<Long, Dictionaries> dictionariesMap = dictionariesList.stream()
                 .collect(Collectors.toMap(Dictionaries::getItemId, dictionaries -> dictionaries));
 
         return allItems.stream()
-                .map(itemEntity -> {
-                    Dictionaries dictionaries = dictionariesMap.get(itemEntity.getId());
+                .map(item -> {
+                    Dictionaries dictionaries = dictionariesMap.get(item.getId());
 
                     return DictionariesResponseDto.builder()
-                            .item(Item.fromEntity(itemEntity))
+                            .item(item)
                             .createdAt(dictionaries != null ? dictionaries.getCreatedAt() : null)
                             .modifiedAt(dictionaries != null ? dictionaries.getModifiedAt() : null)
                             .count(dictionaries != null ? dictionaries.getCount() : 0)
@@ -47,6 +44,4 @@ public class FindDictionariesServiceImpl implements FindDictionariesUseCase {
                 })
                 .collect(Collectors.toList());
     }
-
-
 }

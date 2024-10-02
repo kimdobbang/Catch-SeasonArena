@@ -34,4 +34,9 @@ public class Dictionaries {
                 .count(entity.getCount())
                 .build();
     }
+
+    public void update() {
+        this.count++;
+        this.modifiedAt = LocalDateTime.now();
+    }
 }

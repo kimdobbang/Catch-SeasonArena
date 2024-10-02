@@ -30,23 +30,16 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
                 .filter(dictionary -> dictionary.getItemId().equals(itemId))
                 .findFirst()
                 .orElse(null);
-        Dictionaries newDictionary = null;
-        if (existingDictionary == null) {
-            newDictionary = Dictionaries.builder()
+
+        Dictionaries newDictionary = Dictionaries.builder()
                     .userId(existingDictionary.getUserId())
                     .itemId(itemId)
                     .createdAt(LocalDateTime.now())
                     .modifiedAt(LocalDateTime.now())
                     .count(1)
                     .build();
-        } else {
-            newDictionary = Dictionaries.builder()
-                    .userId(existingDictionary.getUserId())
-                    .itemId(itemId)
-                    .createdAt(existingDictionary.getCreatedAt())
-                    .modifiedAt(LocalDateTime.now())
-                    .count(existingDictionary.getCount())
-                    .build();
+        if(existingDictionary != null){
+            newDictionary.update();
         }
         saveDictionariesPort.saveDictionaries(newDictionary);
     }
