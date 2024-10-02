@@ -34,10 +34,8 @@ export type ItemType = "weapon" | "active" | "passive";
 // 아래는 수정 or 삭제 예정
 export type InventoryItem = Pick<Item, "id" | "itemId" | "name" | "type">;
 
-export type ItemImage = `@/assets/symbols/items/${Item["itemId"]}.png`;
-
 export const generateItemImagePath = (itemId: number): string => {
-  return `@/assets/symbols/items/${itemId}.png`;
+  return `src/assets/symbols/items/${itemId}.png`;
 };
 
 // 타입별 한국어 이름 매핑

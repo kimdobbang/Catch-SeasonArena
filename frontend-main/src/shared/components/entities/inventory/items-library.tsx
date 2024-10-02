@@ -7,7 +7,7 @@ import { useItemFilter } from "@/features/index";
 
 const MemoizedTabBar = React.memo(TabBar);
 
-export const ItemLibrary = () => {
+export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
   const itemsPerPage = 8;
   const [items, setItems] = useState<Item[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -349,11 +349,14 @@ export const ItemLibrary = () => {
 
   return (
     <div>
+      {/* TabBar는 배경색 없이 별도로 */}
       <MemoizedTabBar
         categoryType="ItemType"
         onCategoryChange={handleCategoryChange}
       />
-      <div className="bg-catch-sub-100">
+
+      {/* TabBar 아래 영역에만 배경색을 적용하고 pt로 상단 공백을 줌 */}
+      <div className="pt-6 bg-catch-sub-100">
         <div className="grid grid-cols-4 grid-rows-2 gap-4 mx-6">
           {currentItems.map((itemData) => (
             <ItemCell
@@ -364,12 +367,14 @@ export const ItemLibrary = () => {
             />
           ))}
         </div>
+
         <NumberPagination
           currentPage={currentPage}
           totalPages={totalPages}
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
         />
+        {children}
       </div>
     </div>
   );

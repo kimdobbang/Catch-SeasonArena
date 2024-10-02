@@ -14,14 +14,15 @@ interface ItemCellProps {
   durability?: number;
 }
 
-export const ItemCell = ({ onClick, name, type, image }: ItemCellProps) => {
+export const ItemCell = ({ onClick, name, image }: ItemCellProps) => {
   return (
     <div onClick={onClick}>
-      <div className="flex items-center justify-center w-8 h-8">{image}</div>
-      <div>
-        <div>{type}</div>
-        <p>{name}</p>
+      <div className="flex items-center justify-center w-16 h-16 rounded-sm bg-catch-gray-000">
+        {image ? (
+          <img src={image} alt={name} className="object-contain w-12 h-12" />
+        ) : null}
       </div>
+      <div></div>
     </div>
   );
 };
