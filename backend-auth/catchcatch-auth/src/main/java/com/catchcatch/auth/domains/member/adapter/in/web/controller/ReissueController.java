@@ -1,4 +1,4 @@
-package com.catchcatch.auth.domains.member.adapter.in.web;
+package com.catchcatch.auth.domains.member.adapter.in.web.controller;
 
 import com.catchcatch.auth.domains.member.adapter.in.web.message.SuccessReissueMessage;
 import com.catchcatch.auth.domains.member.application.port.in.ReissueUseCase;

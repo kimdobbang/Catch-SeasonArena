@@ -5,9 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "FindMyInfoClient", url = "https://j11b106.p.ssafy.io/api/main/members/info")
-public interface FindMyInfoClient {
+@FeignClient(name = "CheckNicknameClient", url = "https://j11b106.p.ssafy.io/api/main/members")
+public interface CheckNicknameClient {
 
-    @GetMapping(value = "/{email}", consumes = "application/json")
-    ResponseEntity<?> findMyInfo(@PathVariable("email") String email);
+    @GetMapping(value = "/{nickname}", consumes = "application/json")
+    ResponseEntity<?> checkNickname(@PathVariable("nickname") String nickname);
 }

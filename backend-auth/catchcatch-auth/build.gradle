@@ -53,6 +53,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0'
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'io.github.openfeign:feign-okhttp:11.8'
 }
 
 tasks.named('test') {

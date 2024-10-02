@@ -1,4 +1,4 @@
-package com.catchcatch.auth.domains.member.adapter.in.web;
+package com.catchcatch.auth.domains.member.adapter.in.web.controller;
 
 import com.catchcatch.auth.domains.member.adapter.in.web.message.SuccessSignUpMessage;
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpRequestDto;
@@ -9,14 +9,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth/members")
