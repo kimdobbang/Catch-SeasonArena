@@ -2,7 +2,8 @@
 // 여러 도메인이나 모듈에서 전역으로 사용되는 타입을 정의
 
 export interface Collection {
-  id: number;
+  // 수정 필요
+  itemId: number;
   name: string;
   description: string;
   image: string;
@@ -15,6 +16,7 @@ export interface Collection {
 
 export interface Item {
   id: number;
+  itemId: number;
   name: string;
   type: ItemType;
   grade: ItemGrade;
@@ -25,10 +27,18 @@ export interface Item {
   durability: number;
 }
 
-// 타입 정의(대문자로 수정)
 export type ItemGrade = "normal" | "rare" | "legend";
 export type Season = "spring" | "summer" | "autumn" | "winter";
 export type ItemType = "weapon" | "active" | "passive";
+
+// 아래는 수정 or 삭제 예정
+export type InventoryItem = Pick<Item, "id" | "itemId" | "name" | "type">;
+
+export type ItemImage = `@/assets/symbols/items/${Item["itemId"]}.png`;
+
+export const generateItemImagePath = (itemId: number): string => {
+  return `@/assets/symbols/items/${itemId}.png`;
+};
 
 // 타입별 한국어 이름 매핑
 export const seasonNames: Record<Season, string> = {
