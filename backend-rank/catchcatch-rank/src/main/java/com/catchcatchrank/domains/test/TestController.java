@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.catchcatchrank.domains.member.adapter.out.persistence.MemberRepository;
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
 
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

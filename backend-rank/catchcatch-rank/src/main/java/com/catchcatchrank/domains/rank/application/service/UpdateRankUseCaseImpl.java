@@ -3,8 +3,8 @@ package com.catchcatchrank.domains.rank.application.service;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
-import com.catchcatchrank.domains.rank.application.port.in.UpdateRankService;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
+import com.catchcatchrank.domains.rank.application.port.in.UpdateRankUseCase;
 import com.catchcatchrank.domains.rank.application.port.out.GetRatePort;
 import com.catchcatchrank.domains.rank.application.port.out.UpdateTierPort;
 import com.catchcatchrank.domains.rank.domain.Rank;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j(topic = "rank")
-public class UpdateRankServiceImpl implements UpdateRankService {
+public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 
 	private final UpdateTierPort updateTierPort;
 	private final GetRatePort getRatePort;

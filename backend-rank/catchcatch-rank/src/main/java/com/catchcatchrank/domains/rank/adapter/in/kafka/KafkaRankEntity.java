@@ -1,4 +1,4 @@
-package com.catchcatchrank.domains.rank.adapter.out.kafka;
+package com.catchcatchrank.domains.rank.adapter.in.kafka;
 
 import com.catchcatchrank.domains.rank.domain.Rank;
 

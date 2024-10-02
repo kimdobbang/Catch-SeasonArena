@@ -11,17 +11,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaRankEntity;
-import com.catchcatchrank.domains.rank.adapter.out.redis.RankRepositoryAdapter;
+import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaRankEntity;
 import com.catchcatchrank.domains.rank.application.port.out.SaveRankPort;
-import com.catchcatchrank.domains.rank.application.service.SaveRankServiceImpl;
+import com.catchcatchrank.domains.rank.application.service.SaveRankUseCaseImpl;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
 @ExtendWith(MockitoExtension.class)
-public class SaveRankServiceTest {
+public class SaveRankUseCaseTest {
 
 	@InjectMocks
-	private SaveRankServiceImpl saveRankService;
+	private SaveRankUseCaseImpl saveRankService;
 
 	@Mock
 	private SaveRankPort saveRankPort;
