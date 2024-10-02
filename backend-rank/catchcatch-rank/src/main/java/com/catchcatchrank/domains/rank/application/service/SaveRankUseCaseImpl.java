@@ -22,7 +22,7 @@ public class SaveRankUseCaseImpl implements SaveRankUseCase {
 	@Transactional
 	@Override
 	public void saveRank(KafkaRankEntity kafkaRankEntity) {
-		Rank rank = KafkaRankEntity.rankEntityToRank(kafkaRankEntity);
+		Rank rank = Rank.fromKafkaRankEntity(kafkaRankEntity);
 		saveRankPort.saveUserScore(rank);
 	}
 }

@@ -15,7 +15,4 @@ public class KafkaRankEntity {
 	private String nickName;
 	private Integer rank;
 
-	public static Rank rankEntityToRank(KafkaRankEntity kafkaRankEntity) {
-		return new Rank(kafkaRankEntity.nickName, kafkaRankEntity.rank);
-	}
 }
