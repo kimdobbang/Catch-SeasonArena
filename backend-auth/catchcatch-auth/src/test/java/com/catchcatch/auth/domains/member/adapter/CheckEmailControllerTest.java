@@ -58,7 +58,7 @@ public class CheckEmailControllerTest {
     public void 이메일_중복_체크_성공_테스트() throws Exception{
         BDDMockito.doNothing().when(checkEmailUseCase).checkEmail(email);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/members/"+email)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/members/email/"+email)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
