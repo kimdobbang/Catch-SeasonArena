@@ -1,3 +1,4 @@
+// src/features/inventory/inventory.tsx
 import { ItemLibrary } from "@entities/index";
 import { InventoryUserInfo } from "@/features/index";
 import { BottomNavBar } from "@ui/index";

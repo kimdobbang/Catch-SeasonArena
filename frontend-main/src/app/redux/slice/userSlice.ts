@@ -10,8 +10,8 @@ export interface UserState extends UserInfo {
   rating: number;
   tier: Tier;
   selectedAvatar: number;
-  stats: UserStat; // 유저 스탯 (체력, 사거리, 속도)
-  equipment: UserEquipment<ItemType, number | null>; // 유저 장비 (무기, 패시브, 액티브)
+  stats: UserStat;
+  equipment: UserEquipment<ItemType, number | null>;
 }
 const initialState: UserState = {
   email: "user@example.com",

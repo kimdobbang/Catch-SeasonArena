@@ -1,7 +1,7 @@
-//src/shared/components/entities/inventory/item0library.tsx
+//src/shared/components/entities/inventory/items-library.tsx
 import React, { useState, useEffect, useCallback } from "react";
 import { Item, generateItemImagePath } from "@/app/types/common";
-import { ItemCell } from "@entities/index";
+import { ItemCell } from "@atoms/index";
 import { TabBar, NumberPagination } from "@ui/index";
 import { useItemFilter } from "@/features/index";
 
@@ -348,16 +348,14 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
   }, [currentPage]);
 
   return (
-    <div>
-      {/* TabBar는 배경색 없이 별도로 */}
+    <div className="flex flex-col">
       <MemoizedTabBar
         categoryType="ItemType"
         onCategoryChange={handleCategoryChange}
       />
 
-      {/* TabBar 아래 영역에만 배경색을 적용하고 pt로 상단 공백을 줌 */}
       <div className="pt-6 bg-catch-sub-100">
-        <div className="grid grid-cols-4 grid-rows-2 gap-4 mx-6">
+        <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell
               id={itemData.id}
