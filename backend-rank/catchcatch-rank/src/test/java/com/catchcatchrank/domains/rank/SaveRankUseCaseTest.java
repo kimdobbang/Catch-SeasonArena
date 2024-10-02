@@ -31,7 +31,7 @@ public class SaveRankUseCaseTest {
 	@BeforeEach
 	public void setUp() {
 		kafkaRankEntity = new KafkaRankEntity("가나다" , 10);
-		rank = KafkaRankEntity.rankEntityToRank(kafkaRankEntity);
+		rank = Rank.fromKafkaRankEntity(kafkaRankEntity);
 	}
 
 
