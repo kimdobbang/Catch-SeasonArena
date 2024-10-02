@@ -1,5 +1,6 @@
 package com.catchcatch.main.domains.inventory.adapter.out.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.catchcatch.main.domains.inventory.application.port.out.*;
@@ -49,7 +50,13 @@ public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryB
 	}
 
 	@Override
-	public List<InventoryEntity> findEquipInventoryByEmail(String email) {
-		return inventoryRepository.findAllByMember_EmailAndIsEquipped(email, true);
+	public List<Inventory> findEquipInventoryByEmail(String email) {
+		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_Email(email);
+		List<Inventory> inventories = new ArrayList<>();
+
+		for(int i=0; i<inventoryEntities.size(); i++){
+			inventories.add(Inventory.createInventory(inventoryEntities.get(i)));
+		}
+		return inventories;
 	}
 }
