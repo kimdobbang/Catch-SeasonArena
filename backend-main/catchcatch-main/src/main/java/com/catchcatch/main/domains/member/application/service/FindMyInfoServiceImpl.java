@@ -1,5 +1,6 @@
 package com.catchcatch.main.domains.member.application.service;
 
+import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
 import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryByEmailPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.FindMyInfoResponseDto;
@@ -26,13 +27,9 @@ public class FindMyInfoServiceImpl implements FindMyInfoUseCase {
     public FindMyInfoResponseDto findMyInfo(String email){
         Member member = findMemberPort.findMember(email);
         List<Inventory> inventories = findEquipInventoryByEmailPort.findEquipInventoryByEmail(email);
-        List<Long> equipItems = new ArrayList<>();
-        for(int i=0; i<inventories.size(); i++){
-            equipItems.add(inventories.get(i).getItem().getId());
-        }
 
         FindMyInfoResponseDto responseDto = FindMyInfoResponseDto.createFindMyInfoResponseDto(
-                findMemberPort.findMember(email), equipItems);
+                findMemberPort.findMember(email), inventories);
 
         return responseDto;
     }

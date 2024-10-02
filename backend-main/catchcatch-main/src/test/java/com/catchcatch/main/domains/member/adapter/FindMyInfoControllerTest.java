@@ -1,6 +1,6 @@
 package com.catchcatch.main.domains.member.adapter;
 
-import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
+import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.member.adapter.in.web.controller.FindMyInfoController;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.FindMyInfoResponseDto;
 import com.catchcatch.main.domains.member.application.port.in.FindMyInfoUseCase;
@@ -41,10 +41,7 @@ public class FindMyInfoControllerTest {
     private Member member;
 
     @Mock
-    private List<InventoryEntity> inventoryEntities;
-
-    @Mock
-    private List<Long> equipItems;
+    private List<Inventory> inventories;
 
     private String email;
     private FindMyInfoResponseDto responseDto;
@@ -54,7 +51,7 @@ public class FindMyInfoControllerTest {
         email = "email@email.com";
         responseDto = FindMyInfoResponseDto.createFindMyInfoResponseDto(
                 member,
-                equipItems
+                inventories
         );
     }
 

@@ -7,7 +7,6 @@ import com.catchcatch.main.domains.inventory.application.port.out.*;
 
 import org.springframework.stereotype.Component;
 
-import com.catchcatch.main.domains.inventory.application.port.in.SaveInventoryUseCase;
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryListPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoriesByEmailPort;
@@ -27,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "main")
 
 public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryByIdAndMemberEmailPort,
-	FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryByEmailPort, FindEquipInventoryListPort,
-	SaveInventoryPort {
+		FindInventoriesByEmailPort, UpdateInventoryPort, FindEquipInventoryByEmailPort, FindEquipInventoryListPort,
+		SaveInventoryPort {
 
 	private final InventoryRepository inventoryRepository;
 
@@ -41,10 +40,10 @@ public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryB
 	@Override
 	public Inventory findInventoryByIdAndMemberEmail(Long id, String email) {
 		InventoryEntity inventoryEntity = inventoryRepository.findByIdAndMember_Email(id, email)
-			.orElseThrow(() -> {
-				log.error("BE/MAIN - errorse", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
-				return new ExceptionResponse(CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
-			});
+				.orElseThrow(() -> {
+					log.error("BE/MAIN - errorse", CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
+					return new ExceptionResponse(CustomException.NOT_EXISTS_INVENTORY_EXCEPTION);
+				});
 
 		return Inventory.fromInventoryEntity(inventoryEntity);
 	}
@@ -85,11 +84,11 @@ public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryB
 
 	@Override
 	public List<Inventory> findEquipInventoryByEmail(String email) {
-		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_EmailAndIsEquipped(email, true);
+		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_Email(email);
 		List<Inventory> inventories = new ArrayList<>();
 
-		for(InventoryEntity inventoryEntity : inventoryEntities){
-			inventories.add(Inventory.fromInventoryEntity(inventoryEntity));
+		for(int i=0; i<inventoryEntities.size(); i++){
+			inventories.add(Inventory.fromInventoryEntity(inventoryEntities.get(i)));
 		}
 		return inventories;
 	}
