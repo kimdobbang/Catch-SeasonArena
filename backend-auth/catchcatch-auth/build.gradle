@@ -53,6 +53,13 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0'
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //KAFKA
+    implementation 'com.github.danielwegener:logback-kafka-appender:0.1.0'
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.2'
+    implementation 'org.springframework.kafka:spring-kafka'
+
+
 }
 
 tasks.named('test') {
