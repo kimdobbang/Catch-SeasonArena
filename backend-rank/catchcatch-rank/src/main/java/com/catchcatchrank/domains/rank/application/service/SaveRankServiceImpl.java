@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Slf4j
+@Slf4j(topic = "rank")
 public class SaveRankServiceImpl implements SaveRankService {
 
 	private final SaveRankPort saveRankPort;

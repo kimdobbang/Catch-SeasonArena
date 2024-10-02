@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.catchcatchrank.domains.member.adapter.out.persistence.MemberRepository;
 import com.catchcatchrank.domains.rank.adapter.out.kafka.KafkaUpdateRankEntity;
 
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/rank")
 @RequiredArgsConstructor
+@Slf4j(topic = "elk")
 public class TestController {
 
 	private final KafkaProducer kafkaProducer;
@@ -25,6 +29,7 @@ public class TestController {
 		Random random = new Random();
 
 		// nickname을 1에서 100000 사이의 무작위 값으로 설정
+
 		String nickname = String.valueOf(random.nextInt(100) + 1);
 
 		// kill을 0 또는 1로 설정
@@ -48,6 +53,7 @@ public class TestController {
 
 	@GetMapping("/db")
 	public ResponseEntity<?> testDb() {
+		log.info("test");
 		return ResponseEntity.ok().body(memberRepository.findTop5ByOrderByRatingDesc());
 	}
 

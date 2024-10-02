@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "rank")
 public class UpdateRankServiceImpl implements UpdateRankService {
 
 	private final UpdateTierPort updateTierPort;

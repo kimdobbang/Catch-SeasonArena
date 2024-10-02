@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "rank")
 public class KafkaConsumer {
 
 	private final SaveRankService saveRankService;
@@ -20,7 +20,7 @@ public class KafkaConsumer {
 
 	@KafkaListener(topics = "init_rank")
 	public void listen(KafkaRankEntity rank) {
-		log.info("BE-RANK : rank 커슘 {}" , rank.toString());
+		log.info("BE-RANK : rank 컨슘 {}" , rank.toString());
 		saveRankService.saveRank(rank);
 	}
 

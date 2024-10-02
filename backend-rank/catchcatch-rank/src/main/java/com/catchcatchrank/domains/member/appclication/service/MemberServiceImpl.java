@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "rank")
 public class MemberServiceImpl {
 
 	private final GetMemberByNickNamePort getMemberByNickNamePort;

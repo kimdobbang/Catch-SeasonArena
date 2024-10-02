@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Component
-@Slf4j
+@Slf4j(topic = "rank")
 public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetRatePort, GetTop3RankPort,
 	GetUserTierPort, GetMeRankPort {
 
@@ -53,7 +53,7 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		String preTier = getUserTier(rankEntity.getNickName());
 		String changedTier = getTier(rankEntity.getRate());
 
-		log.info("현재 랭크 : {}" ,rankEntity.getRate());
+		log.info("BE-RANK 현재 랭크 : {}" ,rankEntity.getRate());
 		log.info("BE-RANK : 이전 티어 {}", preTier);
 		log.info("BE-RANK : 변화 된 티어 {}", changedTier);
 
