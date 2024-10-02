@@ -10,6 +10,7 @@ import com.catchcatch.auth.global.security.oauth.OAuth2Service;
 import com.catchcatch.auth.global.security.oauth.OAuth2SuccessHandler;
 import com.catchcatch.auth.global.security.oauth.OAuth2FailHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
@@ -56,13 +61,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomExceptionHandler customExceptionHandler) throws Exception {
         http.csrf((csrf) -> csrf.disable());
+        http.cors(Customizer.withDefaults());
         http.formLogin((formLogin) -> formLogin.disable());
         http.httpBasic((httpBasic) -> httpBasic.disable());
-        http.cors(Customizer.withDefaults());
-
         http.authorizeHttpRequests((requests) -> requests
-                //.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**","/api/auth/**").permitAll()
-            .requestMatchers("/api/auth/**").hasRole("USER")
+                .requestMatchers("/api/auth/members/info/**",
+                        "/api/auth/members/avatar/**",
+                        "/api/auth/members/nickname/**").hasRole("USER")
+                .requestMatchers("/api/auth/inventories/**").hasRole("USER")
+                .requestMatchers("/api/auth/v3/api-docs/**", "/api/auth/swagger-ui/**", "/api/auth/swagger-resources/**").permitAll()
+                .requestMatchers("/api/auth/members/**").permitAll()
             .anyRequest().authenticated());
 
         http.oauth2Login((oauth) ->

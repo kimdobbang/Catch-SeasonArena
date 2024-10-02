@@ -2,7 +2,7 @@ package com.catchcatch.auth.domains.member.adapter;
 
 
 import com.catchcatch.auth.auth.WithMockAuthUser;
-import com.catchcatch.auth.domains.member.adapter.in.web.CheckEmailController;
+import com.catchcatch.auth.domains.member.adapter.in.web.controller.CheckEmailController;
 import com.catchcatch.auth.domains.member.application.port.in.CheckEmailUseCase;
 import com.catchcatch.auth.domains.member.domain.Role;
 import com.catchcatch.auth.global.config.SecurityConfig;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,7 +21,6 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -60,7 +58,7 @@ public class CheckEmailControllerTest {
     public void 이메일_중복_체크_성공_테스트() throws Exception{
         BDDMockito.doNothing().when(checkEmailUseCase).checkEmail(email);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/members/"+email)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/auth/members/email/"+email)
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());

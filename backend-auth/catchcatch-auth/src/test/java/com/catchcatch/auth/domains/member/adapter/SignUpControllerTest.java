@@ -1,7 +1,7 @@
 package com.catchcatch.auth.domains.member.adapter;
 
 import com.catchcatch.auth.auth.WithMockAuthUser;
-import com.catchcatch.auth.domains.member.adapter.in.web.SignUpController;
+import com.catchcatch.auth.domains.member.adapter.in.web.controller.SignUpController;
 import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpRequestDto;
 import com.catchcatch.auth.domains.member.application.port.in.SignUpUseCase;
 import com.catchcatch.auth.domains.member.domain.Role;
