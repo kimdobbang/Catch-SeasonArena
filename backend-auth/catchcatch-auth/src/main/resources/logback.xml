@@ -5,7 +5,7 @@
                 <pattern>%date - %-5p %t %-25logger{5} %F:%L %m%n</pattern>
             </layout>
         </encoder>
-        <topic>ai-log</topic>
+        <topic>auth-log</topic>
         <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
         <producerConfig>retries=1</producerConfig>
