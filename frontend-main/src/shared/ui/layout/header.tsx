@@ -28,7 +28,7 @@ export const Header = ({ className, onClick }: HeaderProps) => {
         return { title: "가을 도감", showBackIcon: true };
       case "/inventory":
         return { title: "배낭", showBackIcon: true };
-      case "/combine":
+      case "/combination":
         return { title: "합성", showBackIcon: true };
       case "/matching":
         return { title: "시즌아레나", showBackIcon: true };

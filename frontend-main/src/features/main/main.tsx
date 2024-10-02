@@ -62,8 +62,7 @@ export const Main = () => {
           avatarIcon={true}
           number={userAvatar}
           emotion="normal"
-          width={300}
-          height={300}
+          width={96}
           onClick={goToAvatarChange}
         />
         <div className="w-full px-4">

@@ -16,6 +16,10 @@ export { Inventory } from "@/features/inventory/inventory";
 
 // 메인 관련
 export { Avatar } from "@/features/main/avatar";
+export { Ranking } from "@/features/ranking/ranking";
+
+// 합성 관련
+export { Combination } from "@/features/combination/combination";
 
 // 인벤토리
 export { InventoryUserInfo } from "@/features/inventory/inventory-userinfo";
