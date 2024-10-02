@@ -1,5 +1,7 @@
 package com.catchcatch.main.domains.inventory.application.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +33,8 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 	@Transactional
 	@Override
 	public void equipInventory(Long inventoryId, String memberEmail) {
-		int equipInventorySize = findEquipInventoryListPort.inventoryList(memberEmail).size();
+		List<Inventory> inventories = findEquipInventoryListPort.inventoryList(memberEmail);
+		int equipInventorySize = inventories.size();
 
 		if (equipInventorySize >= 3) {
 			log.error("BE/MAIN - 장착 3개 초과 : {}", CustomException.INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION);
@@ -44,6 +47,13 @@ public class EquipInventoryServiceImpl implements EquipInventoryUseCase {
 		if (inventory.getIsEquipped()) {
 			log.error("BE/MAIN - 이미 장착중 : {}", CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
 			throw new ExceptionResponse(CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
+		}
+
+		for(Inventory inventoryItem : inventories) {
+			if(inventoryItem.getItem().getType().equals(inventory.getItem().getType())) {
+				log.error("BE/MAIN - 이미 해당 타입 아이템 장착중" , CustomException.INVENTORY_EQUIP_TYPE_LIMIT_EXCEEDED_EXCEPTION);
+				throw new ExceptionResponse(CustomException.INVENTORY_EQUIP_TYPE_LIMIT_EXCEEDED_EXCEPTION);
+			}
 		}
 
 		inventory.equipInventory();

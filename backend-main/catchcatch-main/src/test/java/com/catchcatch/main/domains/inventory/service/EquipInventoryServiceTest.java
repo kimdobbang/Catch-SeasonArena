@@ -50,12 +50,14 @@ public class EquipInventoryServiceTest {
 	private Inventory inventory;
 	private MemberEntity member;
 	private ItemEntity item;
+	private ItemEntity item2;
 
 	@BeforeEach
 	public void init() throws Exception {
 		member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
 		item = new ItemEntity(1L, "test", Season.AUTOM, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
+		item2 = new ItemEntity(2L, "test", Season.AUTOM, Type.PASSIVE, Effect.BEAR, Description.BEAR, "IMAGE", Grade.LEGEND);
 	}
 
 	@Test
@@ -63,8 +65,8 @@ public class EquipInventoryServiceTest {
 	public void 장착_성공_서비스() {
 		//given
 		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, false);
+
 		List<Inventory> inventories = new ArrayList<>();
-		inventories.add(inventory);
 
 		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventories);
 		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(1L, "test"))
@@ -111,5 +113,25 @@ public class EquipInventoryServiceTest {
 		Assertions.assertThatThrownBy(() -> equipInventoryService.equipInventory(1L, "test"))
 			.isInstanceOf(Exception.class)
 			.hasFieldOrPropertyWithValue("customException", CustomException.INVENTORY_ALREADY_EQUIPPED_EXCEPTION);
+	}
+
+	@Test
+	@DisplayName("장착 실패 해당 타입 이미 장착 중 서비스")
+	public void 장착_실패_해당_타입_이미_장착중__서비스() {
+		//given
+		inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
+		inventory = new Inventory(2L, Member.fromMemberEntity(member), Item.fromEntity(item2), 1, false);
+
+		List<Inventory> inventories = new ArrayList<>();
+		inventories.add(inventory);
+
+		BDDMockito.given(findEquipInventoryListPort.inventoryList("test")).willReturn(inventories);
+		BDDMockito.given(findInventoryByIdAndMemberEmailPort.findInventoryByIdAndMemberEmail(2L, "test"))
+			.willReturn(inventory);
+
+		//when then
+		Assertions.assertThatThrownBy(() -> equipInventoryService.equipInventory(2L, "test"))
+			.isInstanceOf(Exception.class)
+			.hasFieldOrPropertyWithValue("customException", CustomException.INVENTORY_EQUIP_TYPE_LIMIT_EXCEEDED_EXCEPTION);
 	}
 }
