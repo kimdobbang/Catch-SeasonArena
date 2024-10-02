@@ -1,4 +1,5 @@
-import { useState } from "react";
+// src/shared/ui/tab-bar.tsx
+import { useState, useEffect } from "react";
 import { seasonNames, itemTypeNames } from "@/app/types/common";
 
 type CategoryType = "Season" | "ItemType";
@@ -11,15 +12,19 @@ interface TabBarProps {
 export const TabBar = ({ categoryType, onCategoryChange }: TabBarProps) => {
   const categories = categoryType === "Season" ? seasonNames : itemTypeNames;
 
-  const [activeTab, setActiveTab] = useState<string>(
-    Object.keys(categories)[0],
-  );
+  const [activeTab, setActiveTab] = useState<string>("");
+
+  useEffect(() => {
+    if (categoryType === "ItemType") {
+      setActiveTab(Object.keys(categories)[0]);
+    } else if (categoryType === "Season") {
+      setActiveTab(Object.keys(categories)[2]);
+    }
+  }, [categoryType, categories]);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
-    if (onCategoryChange) {
-      onCategoryChange(tab);
-    }
+    onCategoryChange?.(tab);
   };
 
   return (

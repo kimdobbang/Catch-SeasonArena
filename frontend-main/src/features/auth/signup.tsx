@@ -19,7 +19,6 @@ export const Signup = () => {
   const [emailerrorMessage, setEmailErrorMessage] = useState<string>("");
   const [signupErrorMessage, setSignupErrorMessage] = useState<string>("");
 
-  // 이메일 중복 확인 (API 호출)
   const checkEmail = async () => {
     try {
       const exists = await checkEmailExists(email);
@@ -28,7 +27,7 @@ export const Signup = () => {
         setEmailErrorMessage("반갑습니다");
       } else {
         setEmailAvailable(false);
-        setEmailErrorMessage("이미 사용 중인 이메일입니다.");
+        setEmailErrorMessage("이미 가입하셨는데요");
       }
     } catch (error) {
       setEmailAvailable(false);
@@ -37,7 +36,6 @@ export const Signup = () => {
     }
   };
 
-  // 회원가입 처리
   const handleSignup = async () => {
     if (!email || !password || !checkPassword) {
       setSignupErrorMessage("가입정보를 입력해주세요.");
@@ -56,18 +54,15 @@ export const Signup = () => {
     try {
       const { data, accessToken } = await signUpUser({ email, password });
 
-      // 토큰이 있다면 로컬 스토리지와 Redux에 저장
       if (accessToken) {
-        localStorage.setItem("accessToken", accessToken);
         dispatch(setToken(accessToken));
-        dispatch(setUser(data)); // 유저 정보 저장
+        dispatch(setUser(data));
+        console.log("회원가입 성공:", data);
+        navigate("/main");
       }
-
-      console.log("회원가입 성공:", data);
-      navigate("/main");
     } catch (error) {
       setSignupErrorMessage("회원가입에 실패했습니다.");
-      console.error("회원가입 에러:", error);
+      console.error("가입 에러:", error);
     }
   };
 

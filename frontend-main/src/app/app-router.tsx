@@ -75,16 +75,16 @@ export const AppRouter = () => {
               path: "/main",
               element: <MainPage />,
             },
-            {
-              path: "/inventory",
-              element: <InventoryPage />,
-            },
           ],
         },
         {
           element: <HeaderLayout />,
           errorElement: <div>에러발생 3</div>,
           children: [
+            {
+              path: "/inventory",
+              element: <InventoryPage />,
+            },
             {
               path: "/avatar",
               element: <AvatarPage />,
