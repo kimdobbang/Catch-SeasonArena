@@ -33,8 +33,8 @@ export { Sub2Text } from "@atoms/texts/sub2-text";
 
 // inventory, item 관련
 export { ItemCell } from "@atoms/item-cell";
-export { ItemImage } from "@atoms/symbols/item-imagetemp";
-export { EquippmentItemCaption } from "@atoms/texts/equippment-caption";
+export { AutumnItemImage } from "@atoms/symbols/autumn-item-image";
+export { EquipmentItemCaption } from "@/shared/components/atoms/texts/equipmentItem-caption";
 
 export { AvatarFace } from "@atoms/symbols/avatars/avatar-face";
 export { AvatarBody } from "@atoms/symbols/avatars/avatar-body";

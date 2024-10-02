@@ -11,7 +11,6 @@ export { ItemFail } from "./item/item-fail";
 export { ItemSuccess } from "./item/item-success";
 
 // 인벤토리 관련
-export { ItemCell } from "@/shared/components/atoms/item-cell";
 export { ItemLibrary } from "./inventory/items-library";
-export { EquippedItems } from "@entities/inventory/equipped-Items";
-export { EquippedCell } from "@entities/inventory/equipped-cell";
+export { EquippedItems } from "@entities/inventory/equipped-Items"; // 장착한 3 개
+export { EquippedCell } from "@entities/inventory/equipped-cell"; // 장착한 1개
