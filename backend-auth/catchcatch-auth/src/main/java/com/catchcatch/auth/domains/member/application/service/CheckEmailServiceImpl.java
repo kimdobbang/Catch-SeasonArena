@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "auth")
 public class CheckEmailServiceImpl implements CheckEmailUseCase {
 
     private final ExistsMemberPort existsMemberPort;
@@ -20,6 +20,7 @@ public class CheckEmailServiceImpl implements CheckEmailUseCase {
     @Override
     public void checkEmail(String email) {
         if(existsMemberPort.existsByEmailAndIsDeleted(email, false)){
+            log.error("BE/AUTH - 이미 유저 존재 : {}", CustomException.DUPLICATED_EMAIL_EXCEPTION);
             throw new ExceptionResponse(CustomException.DUPLICATED_EMAIL_EXCEPTION);
         };
     }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "auth")
 public class ReissueController {
 
     private final ReissueUseCase reissueUseCase;
