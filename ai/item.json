@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "메이플 창",
+        "season": "FALL",
+        "type": "WEAPON",
+        "effect": "길이+30%",
+        "description": "길이 30%",
+        "image": "https://drive.google.com/file/d/1oLNhHelV7h5t9srvSL5yoNSfJmnJhwcs/view?usp=sharing",
+        "grade": "NORMAL"
+    },
+    {
+        "id": 2,
+        "name": "잭오랜턴",
+        "season": "FALL",
+        "type": "PASSIVE",
+        "effect": "피해 감소+20%",
+        "description": "캐릭터가 호박으로 변경",
+        "image": "https://drive.google.com/file/d/1J_klwaEZTMUvb0NFCar203-HZTRCMEii/view?usp=sharing",
+        "grade": "NORMAL"
+    },
+    {
+        "id": 3,
+        "name": "솔 폭탄",
+        "season": "FALL",
+        "type": "ACTIVE",
+        "effect": "폭탄, 설치 형",
+        "description": "제자리에 위치, 3초 후 터짐",
+        "image": "https://drive.google.com/file/d/1LN7MZaHrvFqxQK_JrBpRyhzpSqQC-m_7/view?usp=sharing",
+        "grade": "NORMAL"
+    }
+]
