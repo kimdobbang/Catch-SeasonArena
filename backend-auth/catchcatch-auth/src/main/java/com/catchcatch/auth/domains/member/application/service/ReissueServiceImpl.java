@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "auth")
 public class ReissueServiceImpl implements ReissueUseCase {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -31,6 +31,7 @@ public class ReissueServiceImpl implements ReissueUseCase {
         log.info("BACK-AUTH:REISSUE Refresh token: {}", refreshToken);
 
         if(!jwtTokenProvider.validateToken(refreshToken)) {
+            log.error("BE/AUTH - JWT VAILD 예외 : {}" , CustomException.NOT_VALID_JWT_EXCEPTION);
             throw new ExceptionResponse(CustomException.NOT_VALID_JWT_EXCEPTION);
         }
 
@@ -38,6 +39,7 @@ public class ReissueServiceImpl implements ReissueUseCase {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
 
         if (!refreshTokenRepository.getByEmail(member.getEmail()).equals(refreshToken)) {
+            log.error("BE/AUTH - JWT VAILD 예외 : {}" , CustomException.NOT_VALID_JWT_EXCEPTION);
             throw new ExceptionResponse(CustomException.NOT_VALID_JWT_EXCEPTION);
         }
 

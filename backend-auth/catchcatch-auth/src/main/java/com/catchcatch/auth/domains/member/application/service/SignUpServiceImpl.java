@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "auth")
 public class SignUpServiceImpl implements SignUpUseCase {
 
     private final PasswordEncoder passwordEncoder;

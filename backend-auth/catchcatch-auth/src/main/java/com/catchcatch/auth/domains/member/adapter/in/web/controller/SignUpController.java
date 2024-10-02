@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth/members")
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "auth")
 public class SignUpController {
 
     private final SignUpUseCase signUpUseCase;
