@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 public class Dictionaries {
 
+    private Long id;
     private Long userId;
     private Long itemId;
     private LocalDateTime createdAt;
@@ -17,7 +18,8 @@ public class Dictionaries {
     private int count;
 
     @Builder
-    public Dictionaries(Long userId, Long itemId, LocalDateTime createdAt, LocalDateTime modifiedAt, int count) {
+    public Dictionaries(Long id, Long userId, Long itemId, LocalDateTime createdAt, LocalDateTime modifiedAt, int count) {
+        this.id = id;
         this.userId = userId;
         this.itemId = itemId;
         this.createdAt = createdAt;
@@ -35,8 +37,9 @@ public class Dictionaries {
                 .build();
     }
 
-    public void update() {
+    public void update(Long id) {
         this.count++;
         this.modifiedAt = LocalDateTime.now();
+        this.id = id;
     }
 }
