@@ -26,7 +26,7 @@ const initialState: UserState = {
   },
   equipment: {
     weapon: 1,
-    active: 2,
+    active: null,
     passive: 3,
   },
 };
