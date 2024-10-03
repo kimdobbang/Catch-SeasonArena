@@ -37,9 +37,8 @@ public class Dictionaries {
                 .build();
     }
 
-    public void update(Long id) {
+    public void update() {
         this.count++;
         this.modifiedAt = LocalDateTime.now();
-        this.id = id;
     }
 }
