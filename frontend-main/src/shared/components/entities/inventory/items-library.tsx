@@ -23,15 +23,16 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
       try {
         const fetchedItems = await fetchUserItems(accessToken);
         setItems(fetchedItems);
+        console.log(fetchedItems);
       } catch (error) {
         console.error("아이템을 가져오는 데 실패했습니다.", error);
       }
     };
 
     if (accessToken) {
-      loadItems(); // accessToken이 있을 때만 아이템을 불러옴
+      loadItems();
     }
-  }, [accessToken]);
+  }, []);
 
   const { currentItems, totalPages } = useItemFilter(
     items,
@@ -68,6 +69,7 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell
+              key={itemData.id}
               id={itemData.id}
               name={itemData.name}
               image={itemData.image}
