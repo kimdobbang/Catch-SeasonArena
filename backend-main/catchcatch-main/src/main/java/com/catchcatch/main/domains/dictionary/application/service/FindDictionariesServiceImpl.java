@@ -36,8 +36,6 @@ public class FindDictionariesServiceImpl implements FindDictionariesUseCase {
 
                     return DictionariesResponseDto.builder()
                             .item(item)
-                            .createdAt(dictionaries != null ? dictionaries.getCreatedAt() : null)
-                            .modifiedAt(dictionaries != null ? dictionaries.getModifiedAt() : null)
                             .count(dictionaries != null ? dictionaries.getCount() : 0)
                             .isCollect(dictionaries != null)
                             .build();
