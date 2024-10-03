@@ -16,6 +16,7 @@ import {
   CollectResultPage,
   InventoryPage,
   CombinationPage,
+  CollectionbookPage,
 } from "@/pages/index";
 
 // PrivateRoute 컴포넌트
@@ -96,6 +97,10 @@ export const AppRouter = () => {
             {
               path: "/combination",
               element: <CombinationPage />,
+            },
+            {
+              path: "/collectionbook",
+              element: <CollectionbookPage />,
             },
           ],
         },
