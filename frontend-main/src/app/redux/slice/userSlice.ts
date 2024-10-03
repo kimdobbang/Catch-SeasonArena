@@ -39,21 +39,48 @@ const userSlice = createSlice({
       state.selectedAvatar = action.payload;
     },
 
-    // 게임 결과에 따라 반환 받은 값을 현재 raiting에 + 해주도록 수정 필요
     setRating: (state, action: PayloadAction<number>) => {
       state.rating = action.payload;
       state.tier = getTierByRating(action.payload);
     },
-    // 사용자가 착용 중인 장비(무기, 액티브, 패시브 아이템)를 설정 -> 각각 나눠야할듯?
+
+    updateRatingByGameResult: (state, action: PayloadAction<number>) => {
+      state.rating += action.payload; // 전달된 값만큼 레이팅을 업데이트
+      state.tier = getTierByRating(state.rating);
+    },
+
+    // 사용자가 착용 중인 장비(무기, 액티브, 패시브 아이템)를 설정 -> 인벤토리를 나갈 때 한꺼번에 설정하자
     setEquipment: (
       state,
       action: PayloadAction<UserEquipment<ItemType, number | null>>,
     ) => {
       state.equipment = action.payload;
     },
+
+    // 장비랑 stats 어케해야할지 모르겠엄 하나하나씩 (3가지 * 2개) 6개 액션 만드는건 아닌거같고.
+    // 4페이지 나갈때? 닫을때 저장되어야하나... 해보며 수정하자
+
+    // HP 수정
+    setHp: (state, action: PayloadAction<number>) => {
+      state.stats.hp = action.payload;
+    },
+
+    // Coverage 수정
+    setCoverage: (state, action: PayloadAction<number>) => {
+      state.stats.coverage = action.payload;
+    },
+
+    // Speed 수정
+    setSpeed: (state, action: PayloadAction<number>) => {
+      state.stats.speed = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(setUser, (state, action) => {
+      console.log(
+        "authSlice's setUser dispatched in userSlice",
+        action.payload,
+      );
       state.nickName = action.payload.nickName;
       state.email = action.payload.email;
     });
