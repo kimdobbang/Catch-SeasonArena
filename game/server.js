@@ -48,6 +48,7 @@ const rooms = new Map();
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
+const PLAYER_SIZE = 6;
 const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
 const KNOCKBACK_FORCE = 120;
@@ -113,7 +114,7 @@ function joinPlayer(
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
-    if (room.players.size == 6 && !room.isStarted) {
+    if (room.players.size == PLAYER_SIZE && !room.isStarted) {
       rooms.get(roomCode).startTime = Date.now();
       rooms.get(roomCode).magnetic = getMagneticPoint();
       io.in(roomCode).emit("gameStart", room.magnetic);
@@ -535,7 +536,7 @@ function applyKnockback(attacker, target, dx, dy) {
 
 // 체력 감소 및 사망 처리 함수
 function applyDamage(attacker, target, roomCode) {
-  const damage = 20 * attacker.attackPower;
+  const damage = 10 * attacker.attackPower;
   if (!target.invincibility) {
     target.hp -= damage * target.protect;
   }
@@ -693,7 +694,32 @@ function useDragonfly(room, attacker) {
   }, 1000);
 }
 
-function useJump(room, attacker) {}
+function useJump(room, attacker) {
+  const x = attacker.x;
+  const y = attacker.y;
+  const angle = attacker.direction;
+
+  const rectangle = getRectangleCorners(x, y, angle);
+
+  attacker.canMove = false;
+
+  setTimeout(() => {
+    attacker.canMove = true;
+    room.players.forEach((target, socketId) => {
+      if (target.socketId === attacker.socketId) {
+        return;
+      }
+      if (
+        isPointInRectangle(rectangle, target.x, target.y) &&
+        !target.invincibility
+      ) {
+        target.hp -= 20 * target.protect;
+      }
+    });
+    attacker.x += 250 * Math.cos(angle);
+    attacker.y += 250 * Math.sin(angle);
+  }, 500);
+}
 
 function useMushroom(room, attacker) {
   const mushroomX = attacker.x;
@@ -737,4 +763,50 @@ function useScarecrow(room, attacker) {
     attacker.invincibility = false;
     attacker.canMove = true;
   }, 3000);
+}
+
+// 직사각형 네 점 구하기 함수
+function getRectangleCorners(x, y, angle) {
+  const width = 75;
+  const length = 250;
+
+  const x1 = x + width * Math.cos(angle + Math.PI / 2);
+  const y1 = y + width * Math.sin(angle + Math.PI / 2);
+
+  const x2 = x + width * Math.cos(angle - Math.PI / 2);
+  const y2 = y + width * Math.sin(angle - Math.PI / 2);
+
+  const x3 =
+    x + width * Math.cos(angle - Math.PI / 2) + length * Math.cos(angle);
+  const y3 =
+    y + width * Math.sin(angle - Math.PI / 2) + length * Math.sin(angle);
+
+  const x4 =
+    x + width * Math.cos(angle + Math.PI / 2) + length * Math.cos(angle);
+  const y4 =
+    y + width * Math.sin(angle + Math.PI / 2) + length * Math.sin(angle);
+
+  return { x1, y1, x2, y2, x3, y3, x4, y4 };
+}
+
+// 점이 직사각형 내부에 있는지 판별하는 함수
+function isPointInRectangle(rectangle, checkX, checkY) {
+  const { x1, y1, x2, y2, x3, y3, x4, y4 } = rectangle;
+
+  // 네 변에 대해 외적 계산
+  const cross1 = crossProduct(x1, y1, x2, y2, checkX, checkY); // 첫 번째 변
+  const cross2 = crossProduct(x2, y2, x3, y3, checkX, checkY); // 두 번째 변
+  const cross3 = crossProduct(x3, y3, x4, y4, checkX, checkY); // 세 번째 변
+  const cross4 = crossProduct(x4, y4, x1, y1, checkX, checkY); // 네 번째 변
+
+  // 네 개의 외적이 모두 음수 또는 모두 양수여야 함
+  return (
+    (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0) ||
+    (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0)
+  );
+}
+
+// 벡터 외적 함수
+function crossProduct(x1, y1, x2, y2, x3, y3) {
+  return (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
 }
