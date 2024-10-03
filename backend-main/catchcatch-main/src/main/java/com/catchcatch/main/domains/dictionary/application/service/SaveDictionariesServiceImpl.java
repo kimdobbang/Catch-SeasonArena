@@ -48,8 +48,6 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
         Dictionaries newDictionary = Dictionaries.builder()
                     .userId(member.getMemberId())
                     .itemId(kafkaSaveInventoryEntity.getItemId())
-                    .createdAt(LocalDateTime.now())
-                    .modifiedAt(LocalDateTime.now())
                     .count(1)
                     .build();
         saveDictionariesPort.saveDictionaries(newDictionary);

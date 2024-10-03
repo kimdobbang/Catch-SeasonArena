@@ -13,17 +13,13 @@ public class Dictionaries {
     private Long id;
     private Long userId;
     private Long itemId;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
     private int count;
 
     @Builder
-    public Dictionaries(Long id, Long userId, Long itemId, LocalDateTime createdAt, LocalDateTime modifiedAt, int count) {
+    public Dictionaries(Long id, Long userId, Long itemId, int count) {
         this.id = id;
         this.userId = userId;
         this.itemId = itemId;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
         this.count = count;
     }
 
@@ -31,14 +27,11 @@ public class Dictionaries {
         return Dictionaries.builder()
                 .userId(entity.getMember().getMemberId())
                 .itemId(entity.getItemId())
-                .createdAt(entity.getCreatedAt())
-                .modifiedAt(entity.getModifiedAt())
                 .count(entity.getCount())
                 .build();
     }
 
     public void update() {
         this.count++;
-        this.modifiedAt = LocalDateTime.now();
     }
 }
