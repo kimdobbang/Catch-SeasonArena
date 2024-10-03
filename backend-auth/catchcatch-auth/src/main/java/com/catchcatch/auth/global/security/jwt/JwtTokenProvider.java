@@ -27,21 +27,9 @@ public class JwtTokenProvider {
 
     private final PrincipalDetailsService principalDetailsService;
 
-    public String generateAccessToken(Member member) {
+    public String generateToken(Member member) {
         Date date = new Date();
         Date expireDate = new Date(date.getTime() + config.getAccessExpirationTime());
-
-        return Jwts.builder()
-                .claim("email", member.getEmail())
-                .issuedAt(date)
-                .expiration(expireDate)
-                .signWith(config.getSecretKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public String generateRefreshToken(Member member) {
-        Date date = new Date();
-        Date expireDate = new Date(date.getTime() + config.getRefreshExpirationTime());
 
         return Jwts.builder()
                 .claim("email", member.getEmail())

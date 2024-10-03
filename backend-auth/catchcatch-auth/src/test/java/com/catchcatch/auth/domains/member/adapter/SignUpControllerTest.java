@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -46,11 +47,14 @@ public class SignUpControllerTest {
     @MockBean
     private HttpResponseUtil responseUtil;
 
+    private String accessToken;
+
     private SignUpRequestDto requestDto;
 
     @BeforeEach
     public void setUp() throws Exception {
         requestDto = new SignUpRequestDto("test@test.com", "1234");
+        accessToken = "access_token";
     }
 
     @Test
@@ -60,7 +64,7 @@ public class SignUpControllerTest {
         //given
         String requestBody = objectMapper.writeValueAsString(requestDto);
 
-        BDDMockito.doNothing().when(signUpUseCase).singUp(requestDto);
+        BDDMockito.given(signUpUseCase.singUp(requestDto)).willReturn(accessToken);
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/members/signup")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())

@@ -5,11 +5,9 @@ import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
 import com.catchcatch.auth.global.security.auth.PrincipalDetails;
-import com.catchcatch.auth.global.security.auth.repository.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -31,7 +29,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private ObjectMapper objectMapper;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -50,19 +47,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
-        String email = member.getEmail();
-
-        String accessToken = jwtTokenProvider.generateAccessToken(member);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(member);
-
+        String accessToken = jwtTokenProvider.generateToken(member);
         log.info("BACK-AUTH:ACCESS_TOKEN : {}", accessToken);
-        log.info("BACK-AUTH:REFRESH_TOKEN : {}", refreshToken);
-
-        if(refreshTokenRepository.existsByEmail(email)){
-            refreshTokenRepository.deleteByEmail(email);
-        }
-
-        refreshTokenRepository.saveByEmail(email, refreshToken);
 
         String jsonResponse = "{"
                 + "\"data\": {"
@@ -73,15 +59,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 + "}";
 
         response.addHeader("Authorization", "Bearer " + accessToken);
-        response.addCookie(createCookie("refreshToken", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(jsonResponse);
     }
 
-    private Cookie createCookie(String key, String value){
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        cookie.setHttpOnly(true);
-        return cookie;
-    }
 }

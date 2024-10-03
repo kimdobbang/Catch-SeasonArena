@@ -43,6 +43,6 @@ public class ReissueServiceImpl implements ReissueUseCase {
             throw new ExceptionResponse(CustomException.NOT_VALID_JWT_EXCEPTION);
         }
 
-        return jwtTokenProvider.generateAccessToken(member);
+        return jwtTokenProvider.generateToken(member);
     }
 }

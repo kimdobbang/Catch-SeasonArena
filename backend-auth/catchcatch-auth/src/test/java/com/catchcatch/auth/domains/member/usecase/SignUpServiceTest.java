@@ -7,6 +7,7 @@ import com.catchcatch.auth.domains.member.application.service.SignUpServiceImpl;
 import com.catchcatch.auth.domains.rank.application.port.out.SendRankKafkaPort;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
+import com.catchcatch.auth.global.security.jwt.JwtTokenProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +33,9 @@ public class SignUpServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtTokenProvider jwtTokenProvider;
 
     @Mock
     private SendRankKafkaPort sendRankKafkaPort;
