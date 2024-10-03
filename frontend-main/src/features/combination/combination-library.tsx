@@ -1,25 +1,29 @@
-import { PrimaryButton } from "@/shared/components/atoms";
-import { BottomNavBar } from "@/shared/ui";
-import Plus from "@/assets/icons/plus.svg?react";
-import { CombinationLibrary } from "./combination-library";
-import { useEffect, useState } from "react";
-import { generateItemImagePath, Item } from "@/app/types/common";
-import { CombinationCell } from "./combination-cell";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
+import { Item, generateItemImagePath } from "@/app/types/common";
+import { ItemCell } from "@atoms/index";
+import { TabBar, NumberPagination } from "@ui/index";
+import { useSeasonFilter } from "@/features/index";
 
-// import { useState } from "react";
+const MemoizedTabBar = React.memo(TabBar);
 
-export const Combination = () => {
+export const CombinationLibrary = ({
+  children,
+}: {
+  children?: React.ReactNode;
+}) => {
+  const itemsPerPage = 8;
   const [items, setItems] = useState<Item[]>([]);
-
-  const [combineItems] = useState<number[]>([1, 2]);
-
-  const [item1, setItem1] = useState<Item | null>(null);
-  const [item2, setItem2] = useState<Item | null>(null);
-  // const [modalOpen, setModalOpen] = useState(true);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("autumn"); // 계절 필터링 기본값
   useEffect(() => {
     const loadItems = async () => {
+      // API 요청 로직 추가 후 하드코딩 제거
+      // const response = await fetch("/api/auth/inventories/items");
+      // const data = await fetchItems();
+      // const data = await response.json();
+      // const data: Item[] = [
+      //   /* API 데이터 로드 */
+      // ];
       const data: Item[] = [
         {
           id: 1,
@@ -321,106 +325,57 @@ export const Combination = () => {
     loadItems();
   }, []);
 
-  useEffect(() => {
-    if (items.length > 0) {
-      setItem12();
+  const { currentItems, totalPages } = useSeasonFilter(
+    items,
+    selectedCategory, // 선택된 계절에 맞게 필터링
+    currentPage,
+    itemsPerPage,
+  );
+
+  const handleCategoryChange = useCallback((season: string) => {
+    setSelectedCategory(season); // 선택된 계절을 설정
+    setCurrentPage(1); // 페이지 초기화
+  }, []);
+
+  const handleNextPage = useCallback(() => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
     }
-  }, [combineItems, items]); // combineItems 또는 items가 변경될 때마다 실행
+  }, [currentPage, totalPages]);
 
-  // item1 또는 item2가 업데이트되면 이를 콘솔에 출력해 확인
-  useEffect(() => {
-    console.log("item1 updated: ", item1);
-  }, [item1]);
-
-  useEffect(() => {
-    console.log("item2 updated: ", item2);
-  }, [item2]);
-
-  const handleCombine = async () => {
-    console.log("합성하기 api 실행");
-
-    try {
-      const response = await axios.post(
-        "https://j11b106.p.ssafy.io/api/main/combinations",
-        {
-          email: "seung@dd",
-          item1: item1?.itemId,
-          item2: item2?.itemId,
-        },
-      );
-
-      console.log("합성 api 성공:", response.data);
-    } catch (error) {
-      console.error("합성 api 실패:", error);
+  const handlePrevPage = useCallback(() => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
     }
-  };
+  }, [currentPage]);
 
-  const setItem12 = () => {
-    // item1,2 설정
-    if (combineItems[0] !== null && combineItems[0] !== undefined) {
-      const itemTemp1 = getItemById(combineItems[0]);
-      setItem1(itemTemp1 || null); // 아이템이 없을 경우 null로 설정
-    }
-    if (combineItems[1] !== null && combineItems[1] !== undefined) {
-      const itemTemp2 = getItemById(combineItems[1]);
-      setItem2(itemTemp2 || null); // 아이템이 없을 경우 null로 설정
-    }
-  };
-
-  const getItemById = (id: number) => {
-    return items.find((item) => item.itemId === id);
-  };
-
-  // const handleItemClick = () => {};
-
-  // const handleOpenModal = (itemId: number) => {
-  //   setModalOpen(true);
-  // };
   return (
-    <div className="w-full h-full">
-      <div className="w-full h-[30%] flex flex-col">
-        <div className="flex items-center flex-row justify-center gap-5 w-full h-[70%]">
-          {item1 ? (
-            <CombinationCell
-              key={0}
-              id={item1.id}
-              name={item1.name}
-              type={item1.type}
-              image={item1.image}
+    <div className="flex flex-col">
+      <MemoizedTabBar
+        categoryType="Season"
+        onCategoryChange={handleCategoryChange} // 계절 변경 핸들러
+      />
+
+      <div className="pt-6 bg-catch-sub-100">
+        <div className="grid grid-cols-4 gap-4 mx-6 h-44">
+          {currentItems.map((itemData) => (
+            <ItemCell
+              key={itemData.itemId}
+              id={itemData.id}
+              name={itemData.name}
+              image={itemData.image}
+              type={itemData.type}
             />
-          ) : (
-            <CombinationCell key={0} name="Empty" type="unknown" />
-          )}
-          <Plus />
-          {item2 ? (
-            <CombinationCell
-              key={1}
-              id={item2.id}
-              name={item2.name}
-              type={item2.type}
-              image={item2.image}
-            />
-          ) : (
-            <CombinationCell key={1} name="Empty" type="unknown" />
-          )}
+          ))}
         </div>
-        <div className="flex flex-row w-full h-[30%] justify-center items-center">
-          <PrimaryButton
-            color="main"
-            size="small"
-            showIcon={false}
-            onClick={handleCombine}
-          >
-            합성하기
-          </PrimaryButton>
-        </div>
+        <NumberPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onNextPage={handleNextPage}
+          onPrevPage={handlePrevPage}
+        />
+        {children}
       </div>
-      <div className="w-full h-[70%]">
-        <CombinationLibrary>
-          <BottomNavBar />
-        </CombinationLibrary>
-      </div>
-      {/* {modalOpen && <div className="w-screen h-screen bg-black">모달</div>} */}
     </div>
   );
 };

@@ -7,14 +7,14 @@ import { AutumnItemImage, EquipmentItemCaption } from "@atoms/index";
 interface EquippedCellProps {
   itemType: ItemType;
   showCaption: boolean;
-  size?: "small" | "middle" | "big";
+  size?: "small" | "default";
   onClick?: () => void;
 }
 
 export const EquippedCell = ({
   itemType,
   showCaption,
-  size = "middle",
+  size = "default",
   onClick,
 }: EquippedCellProps) => {
   const equippedItem = useSelector(
@@ -23,12 +23,10 @@ export const EquippedCell = ({
 
   const sizeStyles = {
     small: "h-[30px] w-[30px] rounded-xs",
-    middle: "h-[44px] w-[44px] rounded-md",
-    big: "h-[100px] w-[100px] rounded-md",
     default: "h-[44px] w-[44px] rounded-md",
   };
 
-  const sizeStyle = sizeStyles[size] || sizeStyles.middle;
+  const sizeStyle = sizeStyles[size] || sizeStyles.default;
 
   return (
     <div className="h-auto" onClick={onClick}>

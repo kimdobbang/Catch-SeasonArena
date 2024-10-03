@@ -6,7 +6,7 @@ interface ItemCellProps {
   id?: number;
   index?: number;
   name: string;
-  type: ItemType;
+  type: ItemType | "unknown";
   grade?: ItemGrade;
   skill?: string;
   season?: Season;
@@ -16,16 +16,19 @@ interface ItemCellProps {
   className?: string;
 }
 
-export const ItemCell = ({
+export const CombinationCell = ({
   onClick,
   name,
   image,
   className,
 }: ItemCellProps) => {
   return (
-    <div onClick={onClick}>
+    <div
+      onClick={onClick}
+      className={`flex items-center justify-center p-[6px] rounded-lg bg-gradient-to-br w-[100px] h-[100px] from-gray-100 to-gray-400 ${className}`}
+    >
       <div
-        className={`flex items-center justify-center w-16 h-16 rounded-sm bg-catch-gray-000 ${className}`}
+        className={`rounded-md flex items-center w-full h-full justify-center bg-white `}
       >
         {image ? (
           <img src={image} alt={name} className="object-contain w-12 h-12" />
