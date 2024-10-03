@@ -50,7 +50,7 @@ export const Login = () => {
       }
     } catch (error) {
       setErrorMessage("입력 정보를 확인 바랍니다😅");
-      console.error("로그인 에러:", error);
+      console.error("get userInfo 실패:", error);
     }
   };
 
