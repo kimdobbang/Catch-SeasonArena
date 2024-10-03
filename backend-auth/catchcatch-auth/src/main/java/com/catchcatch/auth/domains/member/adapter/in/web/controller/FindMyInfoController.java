@@ -35,7 +35,7 @@ public class FindMyInfoController {
     public ResponseEntity<?> findMyInfo(Authentication authentication) {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
         try{
-            ResponseEntity<?> response = findMyInfoClient.findMyInfo(member.getEmail());
+            ResponseEntity<Map<String, Object>> response = findMyInfoClient.findMyInfo(member.getEmail());
             return response;
         }catch(FeignException e){
             try{
