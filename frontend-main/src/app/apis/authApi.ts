@@ -4,7 +4,7 @@
 // Api: API 호출과 서버 통신 책임
 import config from "@/config";
 import { UserInfo } from "@/app/types/userType";
-
+import { UserState } from "@/app//redux/slice/userSlice";
 export interface SignUpUserData {
   email: string;
   password: string;
@@ -86,7 +86,9 @@ export const loginUser = async (
   return { data, accessToken };
 };
 
-export const fetchUserInfo = async (accessToken: string): Promise<UserInfo> => {
+export const fetchUserInfo = async (
+  accessToken: string,
+): Promise<UserState> => {
   const response = await fetch(`${config.API_BASE_URL}/api/auth/members/info`, {
     headers: {
       method: "GET",
