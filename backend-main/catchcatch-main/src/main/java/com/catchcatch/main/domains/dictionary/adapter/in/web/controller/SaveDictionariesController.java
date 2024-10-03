@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/main/dictionaries")
 @RequiredArgsConstructor
-@Slf4j
+@Slf4j(topic = "main")
 public class SaveDictionariesController {
 
     private final HttpResponseUtil responseUtil;
