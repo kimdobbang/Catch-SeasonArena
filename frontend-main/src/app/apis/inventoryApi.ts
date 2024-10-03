@@ -11,20 +11,20 @@ export const fetchItems = async () => {
   return response.json();
 };
 
-export const fetchUserItems = async (accessToken: string): Promise<> => {
-  const response = await fetch(
-    `${config.API_BASE_URL}/api/auth/inventories/items`,
-    {
-      headers: {
-        method: "GET",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-  );
+// export const fetchUserItems = async (accessToken: string): Promise<boolean> => {
+//   const response = await fetch(
+//     `${config.API_BASE_URL}/api/auth/inventories/items`,
+//     {
+//       headers: {
+//         method: "GET",
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     },
+//   );
 
-  if (!response.ok) {
-    throw new Error("아이템을 가져오는 데 실패했습니다.");
-  }
+//   if (!response.ok) {
+//     throw new Error("아이템을 가져오는 데 실패했습니다.");
+//   }
 
-  return response.json();
-};
+//   return response.json();
+// };
