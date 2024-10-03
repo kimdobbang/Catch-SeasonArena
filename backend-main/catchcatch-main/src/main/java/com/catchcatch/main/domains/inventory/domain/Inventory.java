@@ -44,4 +44,8 @@ public class Inventory {
 	public void equipInventory() {
 		this.isEquipped = true;
 	}
+
+	public void decreaseDurability(){
+		this.durability -= 1;
+	}
 }

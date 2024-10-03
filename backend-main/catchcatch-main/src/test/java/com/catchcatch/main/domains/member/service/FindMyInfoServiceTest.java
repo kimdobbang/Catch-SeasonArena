@@ -1,6 +1,5 @@
 package com.catchcatch.main.domains.member.service;
 
-import com.catchcatch.main.domains.inventory.adapter.out.persistence.InventoryEntity;
 import com.catchcatch.main.domains.inventory.application.port.out.FindEquipInventoryByEmailPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
 import com.catchcatch.main.domains.member.adapter.in.web.responsedto.FindMyInfoResponseDto;
@@ -35,10 +34,7 @@ public class FindMyInfoServiceTest {
     private Member member;
 
     @Mock
-    private List<Inventory> inventoryEntities;
-
-    @Mock
-    private List<Long> equipItems;
+    private List<Inventory> inventories;
 
     private String email;
     private FindMyInfoResponseDto responseDto;
@@ -48,7 +44,7 @@ public class FindMyInfoServiceTest {
         email = "email@email.com";
         responseDto = FindMyInfoResponseDto.createFindMyInfoResponseDto(
                 member,
-                equipItems
+                inventories
         );
     }
 
@@ -58,7 +54,7 @@ public class FindMyInfoServiceTest {
         //given
         BDDMockito.given(findMemberPort.findMember(email)).willReturn(member);
         BDDMockito.given(findEquipInventoryByEmailPort.findEquipInventoryByEmail(email))
-                .willReturn(inventoryEntities);
+                .willReturn(inventories);
 
         Assertions.assertThatNoException().isThrownBy(
                 () -> findMyInfoService.findMyInfo(email)

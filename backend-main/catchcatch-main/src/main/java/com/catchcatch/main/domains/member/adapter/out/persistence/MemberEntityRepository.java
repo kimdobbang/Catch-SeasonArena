@@ -8,4 +8,5 @@ public interface MemberEntityRepository extends JpaRepository<MemberEntity, Long
 
     Boolean existsByNicknameAndIsDeleted(String nickname, Boolean isDeleted);
     Optional<MemberEntity> findByEmailAndIsDeleted(String email, Boolean isDeleted);
+    Optional<MemberEntity> findByNicknameAndIsDeleted(String nickname, Boolean isDeleted);
 }

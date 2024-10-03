@@ -1,5 +1,6 @@
 package com.catchcatch.main.domains.inventory.application.service;
 
+import com.catchcatch.main.domains.inventory.adapter.in.kafka.KafkaSaveInventoryEntity;
 import com.catchcatch.main.domains.inventory.application.port.in.SaveInventoryUseCase;
 import com.catchcatch.main.domains.inventory.application.port.out.SaveInventoryPort;
 import com.catchcatch.main.domains.inventory.domain.Inventory;
@@ -12,6 +13,9 @@ import com.catchcatch.main.domains.member.domain.Member;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,21 +28,21 @@ public class SaveInventoryServiceImpl implements SaveInventoryUseCase {
 
 	@Override
 	@Transactional
-	public Item saveInventory(String email, Long inventoryId) {
-		Item item = findItemPort.findItemById(inventoryId);
-		Member member = findMemberPort.findMember(email);
+	@EventListener
+	@Async
+	public void saveInventory(KafkaSaveInventoryEntity kafkaSaveInventoryEntity) {
+		Item item = findItemPort.findItemById(kafkaSaveInventoryEntity.getItemId());
+		Member member = findMemberPort.findMember(kafkaSaveInventoryEntity.getEmail());
 		Grade grade = item.getGrade();
 		int durability = (grade == Grade.NORMAL) ? 5 : (grade == Grade.RARE) ? 10 : 15;
 
 		Inventory inventory = Inventory.builder()
-								.id(inventoryId)
 								.member(member)
 								.isEquipped(false)
 								.item(item)
 								.durability(durability)
 								.build();
 		saveInventoryPort.saveInventory(inventory);
-		return item;
 	}
 
 }

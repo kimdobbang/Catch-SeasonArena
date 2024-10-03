@@ -32,4 +32,13 @@ public class MemberPersistenceAdapter implements ExistsMemberPort, UpdateMemberP
         return Member.fromMemberEntity(memberEntityRepository.findByEmailAndIsDeleted(email, false)
                 .orElseThrow(()-> new ExceptionResponse(CustomException.NOT_EXISTS_MEMBER_EXCEPTION)));
     }
+
+    @Override
+    public Member findMemberByNickname(String nickname) {
+        return Member.fromMemberEntity(memberEntityRepository.findByNicknameAndIsDeleted(nickname,false)
+            .orElseThrow(()-> new ExceptionResponse(CustomException.NOT_EXISTS_MEMBER_EXCEPTION)));
+
+    }
+
+
 }
