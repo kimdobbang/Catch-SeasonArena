@@ -2,6 +2,9 @@ package com.catchcatch.main.domains.combination.application.service;
 
 import com.catchcatch.main.domains.combination.application.port.in.CombinationUseCase;
 import com.catchcatch.main.domains.combination.application.port.out.CombiResponseDto;
+import com.catchcatch.main.domains.dictionary.application.port.out.FindDictionariesByEmailPort;
+import com.catchcatch.main.domains.dictionary.application.port.out.SaveDictionariesPort;
+import com.catchcatch.main.domains.dictionary.domain.Dictionaries;
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.SaveInventoryPort;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -27,6 +31,8 @@ public class CombinationServiceImpl implements CombinationUseCase {
     private final DeleteInventoryPort deleteInventoryPort;
     private final FindMemberPort findMemberPort;
     private final FindInventoryByIdAndMemberEmailPort findInventoryByIdAndMemberEmailPort;
+    private final FindDictionariesByEmailPort findDictionariesByEmailPort;
+    private final SaveDictionariesPort saveDictionariesPort;
 
     @Override
     public CombiResponseDto combiItem(String email, Long inven1, Long inven2) {
@@ -60,8 +66,28 @@ public class CombinationServiceImpl implements CombinationUseCase {
                 .member(member)
                 .isEquipped(false)
                 .build();
-
+        Dictionaries dictionaries = Dictionaries.builder()
+                .userId(member.getMemberId())
+                .itemId(resultItemId)
+                .count(1)
+                .build();
         saveInventoryPort.saveInventory(inventory);
+
+        List<Dictionaries> dictionariesList = findDictionariesByEmailPort.findDictionariesByEmail(email);
+        Dictionaries existingDictionary = dictionariesList.stream()
+                .filter(dictionary -> dictionary.getItemId().equals(resultItemId))
+                .findFirst()
+                .orElse(null);
+        if(existingDictionary != null){
+            saveDictionariesPort.updateDictionaries(existingDictionary);
+        }else {
+            Dictionaries newDictionary = Dictionaries.builder()
+                    .userId(member.getMemberId())
+                    .itemId(resultItemId)
+                    .count(1)
+                    .build();
+            saveDictionariesPort.saveDictionaries(newDictionary);
+        }
         return new CombiResponseDto("Success", resultItem);
     }
 
