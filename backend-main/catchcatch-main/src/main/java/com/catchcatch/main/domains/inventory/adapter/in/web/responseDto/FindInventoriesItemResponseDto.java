@@ -16,7 +16,7 @@ public record FindInventoriesItemResponseDto(
 	String name,
 	Season season,
 	Type type,
-	Effect effect,
+	Effect skill,
 	Description description,
 	Grade grade,
 	String image
@@ -28,7 +28,7 @@ public record FindInventoriesItemResponseDto(
 			.name(item.getName())
 			.season(item.getSeason())
 			.type(item.getType())
-			.effect(item.getEffect())
+			.skill(item.getEffect())
 			.description(item.getDescription())
 			.grade(item.getGrade())
 			.image(item.getImage())
