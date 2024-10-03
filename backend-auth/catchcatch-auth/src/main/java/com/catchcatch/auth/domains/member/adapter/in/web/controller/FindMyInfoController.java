@@ -23,20 +23,14 @@ import java.util.Map;
 public class FindMyInfoController {
 
     private final FindMyInfoClient findMyInfoClient;
-
     private final ObjectMapper objectMapper;
-
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
 
     @GetMapping
     public ResponseEntity<?> findMyInfo(Authentication authentication) {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
         try{
             ResponseEntity<Map<String, Object>> response = findMyInfoClient.findMyInfo(member.getEmail());
-            return response;
+            return ResponseEntity.ok().body(response.getBody());
         }catch(FeignException e){
             try{
                 String errorContent = e.contentUTF8();

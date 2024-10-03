@@ -32,7 +32,7 @@ public class CheckNicknameController {
 
         try{
             ResponseEntity<Map<String, Object>> response = checkNicknameClient.checkNickname(nickname);
-            return response;
+            return ResponseEntity.ok().body(response.getBody());
         }catch(FeignException e){
             try{
                 String errorContent = e.contentUTF8();
