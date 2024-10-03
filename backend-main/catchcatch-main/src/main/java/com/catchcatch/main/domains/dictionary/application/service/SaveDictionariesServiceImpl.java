@@ -12,12 +12,11 @@ import com.catchcatch.main.domains.member.domain.Member;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,8 +40,7 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
                 .findFirst()
                 .orElse(null);
         if(existingDictionary != null){
-            existingDictionary.update();
-            saveDictionariesPort.saveDictionaries(existingDictionary);
+            saveDictionariesPort.updateDictionaries(existingDictionary);
             return;
         }
         Dictionaries newDictionary = Dictionaries.builder()

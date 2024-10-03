@@ -25,13 +25,10 @@ public class Dictionaries {
 
     public static Dictionaries fromEntity(DictionariesEntity entity) {
         return Dictionaries.builder()
+                .id(entity.getId())
                 .userId(entity.getMember().getMemberId())
                 .itemId(entity.getItemId())
                 .count(entity.getCount())
                 .build();
-    }
-
-    public void update() {
-        this.count++;
     }
 }

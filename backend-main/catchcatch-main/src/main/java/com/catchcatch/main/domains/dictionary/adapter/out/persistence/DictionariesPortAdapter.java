@@ -43,6 +43,16 @@ public class DictionariesPortAdapter implements FindDictionariesByEmailPort, Sav
         dictionariesRepository.save(DictionariesEntity.fromDomain(member, dictionaries));
     }
 
+    @Override
+    public void updateDictionaries(Dictionaries dictionaries) {
+        DictionariesEntity dictionariesEntity = dictionariesRepository.findById(dictionaries.getId())
+                .orElseThrow(() -> {
+                    log.error("BE/MAIN - errorse", CustomException.NOT_EXISTS_DICTIONARIES_EXCEPTION);
+                    return new ExceptionResponse(CustomException.NOT_EXISTS_DICTIONARIES_EXCEPTION);
+                });
+        dictionariesEntity.update();
+    }
+
 
 
 
