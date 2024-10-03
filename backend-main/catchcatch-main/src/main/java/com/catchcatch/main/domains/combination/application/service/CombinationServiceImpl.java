@@ -58,6 +58,7 @@ public class CombinationServiceImpl implements CombinationUseCase {
                 .item(resultItem)
                 .durability(itemGrade == Grade.NORMAL ? 5 : itemGrade == Grade.RARE ? 10 : 15)
                 .member(member)
+                .isEquipped(false)
                 .build();
 
         saveInventoryPort.saveInventory(inventory);
