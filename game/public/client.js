@@ -28,7 +28,7 @@ function startGame() {
 
 // <<phaser config>>
 const socket = io("https://j11b106.p.ssafy.io");
-// const socket = io("http://192.168.31.171:3000");
+// const socket = io("http://172.30.1.70:3000");
 // const socket = io("http://localhost:3000");
 
 // 게임 시작
@@ -131,9 +131,9 @@ function preload() {
     // jump 애니메이션
     this.anims.create({
       key: "7",
-      frames: this.anims.generateFrameNumbers("effects2", {
+      frames: this.anims.generateFrameNumbers("effects1", {
         start: 175,
-        end: 179,
+        end: 178,
       }),
       frameRate: 10,
       repeat: 0,
@@ -680,6 +680,22 @@ function useDragonfly(scene, player) {
       portal.destroy();
     });
   }, 500);
+}
+
+function useJump(scene, player) {
+  clientPlayers[player.socketId].isAttacking = true;
+  setTimeout(() => {
+    clientPlayers[player.socketId].isAttacking = false;
+  }, 500);
+
+  const midX = player.x + 125 * Math.cos(player.direction);
+  const midY = player.y + 125 * Math.sin(player.direction);
+  // 애니메이션
+  const jump = scene.add.sprite(midX, midY, "effects1").setScale(2.5);
+  jump.play("7");
+  jump.on("animationcomplete", () => {
+    jump.destroy();
+  });
 }
 
 function useMushroom(scene, player) {
