@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/main/dictionaries")
+@RequestMapping("/api/main/combinations")
 @RequiredArgsConstructor
 @Slf4j(topic = "main")
 public class CombinationController {
@@ -23,7 +23,7 @@ public class CombinationController {
 
     @PostMapping("/{email}/{item1}/{item2}")
     public ResponseEntity<?> Combi(@PathVariable("email") String email, @PathVariable("item1") Long item1, @PathVariable("item2") Long item2) {
-        CombiResponseDto responseDto = combinationUseCase.combination(email, item1, item2);
+        CombiResponseDto responseDto = combinationUseCase.combiItem(email, item1, item2);
         return responseUtil.createResponse(responseDto);
     }
 }

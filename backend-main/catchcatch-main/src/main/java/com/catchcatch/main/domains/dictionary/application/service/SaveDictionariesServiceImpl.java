@@ -31,9 +31,8 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
     private final FindItemPort findItemPort;
 
     @Override
-    @Transactional
     @EventListener
-     @Async
+    @Async
     public void saveDictionaries(KafkaSaveInventoryEntity kafkaSaveInventoryEntity) {
         List<Dictionaries> dictionariesList = findDictionariesByEmailPort.findDictionariesByEmail(kafkaSaveInventoryEntity.getEmail());
         Member member = findMemberPort.findMember(kafkaSaveInventoryEntity.getEmail());
