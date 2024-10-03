@@ -84,7 +84,7 @@ public class InventoryPortAdapter implements DeleteInventoryPort, FindInventoryB
 
 	@Override
 	public List<Inventory> findEquipInventoryByEmail(String email) {
-		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_Email(email);
+		List<InventoryEntity> inventoryEntities = inventoryRepository.findAllByMember_EmailAndIsEquipped(email, true);
 		List<Inventory> inventories = new ArrayList<>();
 
 		for(int i=0; i<inventoryEntities.size(); i++){
