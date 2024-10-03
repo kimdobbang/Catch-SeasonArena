@@ -16,6 +16,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import com.catchcatch.main.domains.inventory.adapter.in.kafka.KafkaInventoryEntity;
+import com.catchcatch.main.domains.inventory.adapter.in.kafka.KafkaSaveInventoryEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,6 +50,29 @@ public class KafkaConfig {
 	public ConcurrentKafkaListenerContainerFactory<String, KafkaInventoryEntity> kafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, KafkaInventoryEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
+
+		return factory;
+	}
+
+	@Bean
+	public ConsumerFactory<String, KafkaSaveInventoryEntity> consumerUpdateRankFactory() {
+		Map<String, Object> config = new HashMap<>();
+		config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+		config.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
+		config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+		config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+
+		JsonDeserializer<KafkaSaveInventoryEntity> deserializer = new JsonDeserializer<>(KafkaSaveInventoryEntity.class, false);
+		config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+
+		return new DefaultKafkaConsumerFactory<>(config, new StringDeserializer(), deserializer);
+	}
+
+	@Bean
+	public ConcurrentKafkaListenerContainerFactory<String, KafkaSaveInventoryEntity> kafkaSaveInventoryListenerContainerFactory() {
+		ConcurrentKafkaListenerContainerFactory<String, KafkaSaveInventoryEntity> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(consumerUpdateRankFactory());
 
 		return factory;
 	}

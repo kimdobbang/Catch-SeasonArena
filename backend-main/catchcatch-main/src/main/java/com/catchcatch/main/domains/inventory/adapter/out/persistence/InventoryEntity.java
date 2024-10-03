@@ -40,7 +40,7 @@ public class InventoryEntity extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Integer durability;
 
-	@Column(nullable = false)
+	@Column(nullable = false, name = "is_equipped")
 	private Boolean isEquipped;
 
 	@Builder

@@ -44,7 +44,7 @@ public class FindInventoryServiceTest {
 	public void init() {
 		MemberEntity member = MemberEntity.builder()
 			.memberId(1L).email("test").build();
-		ItemEntity item = new ItemEntity(1L, "test", Season.AUTOM, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE",
+		ItemEntity item = new ItemEntity(1L, "test", Season.AUTUMN, Type.ACTIVE, Effect.BEAR, Description.BEAR, "IMAGE",
 			Grade.LEGEND);
 		Inventory inventory = new Inventory(1L, Member.fromMemberEntity(member), Item.fromEntity(item), 1, true);
 		inventories = new ArrayList<>();

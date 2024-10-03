@@ -10,6 +10,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class KafkaInventoryEntity {
-	private String nickname;
+public class KafkaSaveInventoryEntity {
+
+	private Long itemId;
+	private String email;
 }
