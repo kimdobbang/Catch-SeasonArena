@@ -4,7 +4,7 @@ import { ItemType, ItemGrade, Season } from "@/app/types/common";
 interface ItemCellProps {
   onClick?: () => void;
   id?: number;
-  index?: number;
+  itemId?: number;
   name: string;
   type: ItemType;
   grade?: ItemGrade;

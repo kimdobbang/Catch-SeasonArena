@@ -53,11 +53,12 @@ export const Signup = () => {
 
     try {
       const { data, accessToken } = await signUpUser({ email, password });
+      console.log("회원가입 성공");
 
       if (accessToken) {
         dispatch(setToken(accessToken));
         dispatch(setUser(data));
-        console.log("회원가입 성공:", data);
+        console.log("회원가입 및 로그인 성공:", data);
         navigate("/main");
       }
     } catch (error) {
