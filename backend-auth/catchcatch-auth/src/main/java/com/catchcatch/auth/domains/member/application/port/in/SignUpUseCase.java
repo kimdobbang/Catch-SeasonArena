@@ -4,5 +4,5 @@ import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpReques
 
 public interface SignUpUseCase {
 
-    void singUp(SignUpRequestDto requestDto);
+    String singUp(SignUpRequestDto requestDto);
 }
