@@ -14,7 +14,7 @@ interface EquippedCellProps {
 export const EquippedCell = ({
   itemType,
   showCaption,
-  size = "middle",
+  size = "default",
   onClick,
 }: EquippedCellProps) => {
   const equippedItem = useSelector(
