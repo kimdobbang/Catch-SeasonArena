@@ -23,22 +23,13 @@ import java.io.IOException;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
-        String email = member.getEmail();
 
-        String accessToken = jwtTokenProvider.generateAccessToken(member);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(member);
+        String accessToken = jwtTokenProvider.generateToken(member);
 
-        if(refreshTokenRepository.existsByEmail(email))
-            refreshTokenRepository.deleteByEmail(email);
-
-        refreshTokenRepository.saveByEmail(email, refreshToken);
-
-        log.info("refresh token : {}", refreshToken);
         log.info("access token : {}", accessToken);
 
         String redirectUrl = UriComponentsBuilder.
@@ -46,18 +37,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .build()
                 .toString();
 
-//        response.addHeader("Authorization", "Bearer " + accessToken);
-//        response.addCookie(createCookie("Authorization", accessToken));
-        response.addCookie(createCookie("refreshToken", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
         response.sendRedirect(redirectUrl);
-    }
-
-    private Cookie createCookie(String key, String value){
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 }
