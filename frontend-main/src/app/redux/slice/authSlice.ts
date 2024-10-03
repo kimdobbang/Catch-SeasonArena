@@ -1,17 +1,17 @@
 // src/app/redux/slice/authSlice.ts
 // 인증 관련 상태: 로그인, 로그아웃, 인증 토큰 및 인증상태,  & 이메일, 닉네임 -> userSlice에서 참조하러옴
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserInfo } from "@/app/types/userType";
+import { UserInfo, initialUserInfo } from "@/app/types/userType";
 
 export interface AuthState {
-  accessToken: string | null;
-  userInfo: UserInfo | null;
+  accessToken: string;
+  userInfo: UserInfo;
   isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
-  accessToken: null,
-  userInfo: null,
+  accessToken: "",
+  userInfo: initialUserInfo,
   isAuthenticated: false,
 };
 
@@ -32,15 +32,15 @@ export const authSlice = createSlice({
       }
     },
     deleteToken: (state) => {
-      state.accessToken = null;
+      state.accessToken = "";
       state.isAuthenticated = false;
     },
     deleteUser: (state) => {
-      state.userInfo = null;
+      state.userInfo = initialUserInfo;
     },
     logout: (state) => {
-      state.accessToken = null;
-      state.userInfo = null;
+      state.accessToken = "";
+      state.userInfo = initialUserInfo;
       state.isAuthenticated = false;
     },
   },
