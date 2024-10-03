@@ -1,8 +1,7 @@
-// src/shared/ui/tab-bar.tsx
 import { useState, useEffect } from "react";
 import { seasonNames, itemTypeNames } from "@/app/types/common";
 
-type CategoryType = "Season" | "ItemType";
+export type CategoryType = "Season" | "ItemType";
 
 interface TabBarProps {
   categoryType: CategoryType;
@@ -14,17 +13,21 @@ export const TabBar = ({ categoryType, onCategoryChange }: TabBarProps) => {
 
   const [activeTab, setActiveTab] = useState<string>("");
 
+  // `useEffect`에서 초기 탭을 동적으로 설정
   useEffect(() => {
     if (categoryType === "ItemType") {
+      // 첫 번째 아이템 타입으로 초기화
       setActiveTab(Object.keys(categories)[0]);
     } else if (categoryType === "Season") {
+      // 첫 번째 계절로 초기화 (autumn 등)
       setActiveTab(Object.keys(categories)[2]);
     }
   }, [categoryType, categories]);
 
+  // 탭을 클릭할 때 실행되는 함수
   const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    onCategoryChange?.(tab);
+    setActiveTab(tab); // 클릭한 탭을 활성화
+    onCategoryChange?.(tab); // 탭 변경을 부모에게 알림
   };
 
   return (
