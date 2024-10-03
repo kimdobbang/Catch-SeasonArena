@@ -5,6 +5,7 @@ import com.catchcatch.auth.domains.member.application.port.out.ExistsMemberPort;
 import com.catchcatch.auth.domains.member.application.port.out.LoadMemberPort;
 import com.catchcatch.auth.domains.member.application.port.out.SaveMemberPort;
 import com.catchcatch.auth.domains.member.domain.Member;
+import com.catchcatch.auth.domains.rank.application.port.out.SendRankKafkaPort;
 import com.catchcatch.auth.global.security.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
     private final ExistsMemberPort existsMemberPort;
     private final SaveMemberPort saveMemberPort;
     private final PasswordEncoder passwordEncoder;
+    private final SendRankKafkaPort sendRankKafkaPort;
 
     @Override
     @Transactional
@@ -60,5 +62,6 @@ public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth
                 )
         );
         saveMemberPort.save(member);
+        sendRankKafkaPort.initRank(member);
     }
 }
