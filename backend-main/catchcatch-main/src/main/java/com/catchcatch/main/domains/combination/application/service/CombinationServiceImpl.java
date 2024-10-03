@@ -35,7 +35,8 @@ public class CombinationServiceImpl implements CombinationUseCase {
 
         Item tem1 = findItemPort.findItemById(inventory1.getItem().getId());
         Item tem2 = findItemPort.findItemById(inventory2.getItem().getId());
-
+        deleteInventoryPort.deleteInventory(inventory1);
+        deleteInventoryPort.deleteInventory(inventory2);
         double successProbability = 0.5;
 
         if (Math.random() > successProbability) {
@@ -60,8 +61,6 @@ public class CombinationServiceImpl implements CombinationUseCase {
                 .build();
 
         saveInventoryPort.saveInventory(inventory);
-        deleteInventoryPort.deleteInventory(inventory1);
-        deleteInventoryPort.deleteInventory(inventory2);
         return new CombiResponseDto("Success", resultItem);
     }
 
