@@ -40,6 +40,9 @@ public class RecommendService {
     @Value("${player.size}")
     private Integer PLAYER_SIZE;
 
+    @Value("${waiting.time}")
+    private Long WAITING_TIME;
+
     public RecommendService(SimpMessagingTemplate messagingTemplate, RedisTemplate<String, Object> redisTemplate) {
         this.messagingTemplate = messagingTemplate;
         this.redisTemplate = redisTemplate;
@@ -82,7 +85,6 @@ public class RecommendService {
 
             while(matchedPlayers.size()>=PLAYER_SIZE){
                 NavigableSet<Player> limitMatchedPlayers = matchedPlayers.stream()
-                        .sorted(Comparator.comparingLong(Player::getEntryTime))
                         .limit(PLAYER_SIZE)
                         .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
@@ -95,9 +97,9 @@ public class RecommendService {
 
     private int checkWaitingTime(Player player) {
         long waitingTime = (System.currentTimeMillis() - player.getEntryTime())/1000;
-        if(waitingTime < 15) return 0;
-        if(waitingTime < 30) return 1;
-        if(waitingTime < 45) return 2;
+        if(waitingTime < WAITING_TIME) return 0;
+        if(waitingTime < WAITING_TIME*2) return 1;
+        if(waitingTime < WAITING_TIME*3) return 2;
         return 3;
     }
 
