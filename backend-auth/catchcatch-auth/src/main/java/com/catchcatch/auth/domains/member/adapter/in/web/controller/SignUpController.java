@@ -5,6 +5,7 @@ import com.catchcatch.auth.domains.member.adapter.in.web.requestdto.SignUpReques
 import com.catchcatch.auth.domains.member.application.port.in.SignUpUseCase;
 import com.catchcatch.auth.global.util.HttpResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,17 +26,20 @@ public class SignUpController {
 
     @Operation(summary = "회원가입", description = "이메일, 비밀번호로 회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto requestDto){
-        signUpUseCase.singUp(requestDto);
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDto requestDto, HttpServletResponse response){
+        String accessToken = signUpUseCase.singUp(requestDto);
 
-        ResponseEntity<?> response = responseUtil.createResponse(
+        response.addHeader("Authorization", "Bearer " + accessToken);
+        response.setContentType("application/json;charset=UTF-8");
+
+        ResponseEntity<?> responseEntity = responseUtil.createResponse(
                 SuccessSignUpMessage.SUCCESS_SIGN_UP.getMessage(),
                 SuccessSignUpMessage.SUCCESS_SIGN_UP,
                 200);
 
         log.info("BACK-AUTH:SIGN-UP request: {}", requestDto);
-        log.info("BACK-AUTH:SIGN-UP response: {}", response);
+        log.info("BACK-AUTH:SIGN-UP response: {}", responseEntity);
 
-        return response;
+        return responseEntity;
     }
 }
