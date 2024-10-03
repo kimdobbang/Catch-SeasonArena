@@ -38,10 +38,10 @@ public class FindDictionariesController {
 			try {
 				String errorContent = e.contentUTF8();
 				Map<String, Object> errorResponse = objectMapper.readValue(errorContent, Map.class);
-				log.error("BE/MAIN - delete inventory error: {}", errorResponse);
+				log.error("BE/AUTH - 도감 조회 에러: {}", errorResponse);
 				return ResponseEntity.status(e.status()).body(errorResponse);
 			} catch (Exception jsonException) {
-				log.error("BE/MAIN - delete inventory error: {}", jsonException.getMessage());
+				log.error("BE/AUTH - 도감 서버 에러: {}", jsonException.getMessage());
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("서버 에러.");
 			}
