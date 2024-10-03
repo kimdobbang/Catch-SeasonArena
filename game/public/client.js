@@ -27,9 +27,9 @@ function startGame() {
 // });
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://172.30.1.70:3000");
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -690,12 +690,23 @@ function useJump(scene, player) {
 
   const midX = player.x + 125 * Math.cos(player.direction);
   const midY = player.y + 125 * Math.sin(player.direction);
-  // 애니메이션
-  const jump = scene.add.sprite(midX, midY, "effects1").setScale(2.5);
-  jump.play("7");
-  jump.on("animationcomplete", () => {
-    jump.destroy();
+
+  // dragonfly 애니메이션 실행
+  const dragonfly = scene.add.sprite(player.x, player.y, "effects2").setScale(2);
+    dragonfly.play("4"); // dragonfly 애니메이션
+    dragonfly.on("animationcomplete", () => {
+    dragonfly.destroy();
   });
+
+  // 0.5초 후에 jump 애니메이션 실행
+  setTimeout(() => {
+    const jump = scene.add.sprite(midX, midY, "effects1").setScale(4);
+    jump.rotation = player.direction + 90;  // 방향에 맞춰 회전
+    jump.play("7");
+    jump.on("animationcomplete", () => {
+      jump.destroy();
+    });
+  }, 500); // 0.5초 지연 후 실행
 }
 
 function useMushroom(scene, player) {
