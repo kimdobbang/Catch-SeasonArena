@@ -10,7 +10,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("*")
                 .exposedHeaders("Authorization", "Set-Cookie")
-                .allowedOrigins("https://j11b106.p.ssafy.io", "http://localhost:3000", "http://127.0.0.1:5500/")
+                .allowedOrigins("https://j11b106.p.ssafy.io", "http://localhost:3000")
                 .allowCredentials(true);
     }
 }
