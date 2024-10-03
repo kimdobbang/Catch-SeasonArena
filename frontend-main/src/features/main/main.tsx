@@ -18,8 +18,9 @@ import { NavBarBackground } from "@/shared/ui";
 
 export const Main = () => {
   const navigate = useNavigate();
-  const goToGamePage = () => {
-    window.location.href = "/game";
+
+  const goToMatchingPage = () => {
+    navigate("/matching");
   };
 
   const goToRankingPage = () => {
@@ -80,7 +81,7 @@ export const Main = () => {
         />
         <TierProgressBar rating={userRating} />
         <PrimaryButton
-          onClick={goToGamePage}
+          onClick={goToMatchingPage}
           size="small"
           showIcon={true}
           color="main"
