@@ -31,7 +31,7 @@ public class CheckNicknameController {
         Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
 
         try{
-            ResponseEntity<?> response = checkNicknameClient.checkNickname(nickname);
+            ResponseEntity<Map<String, Object>> response = checkNicknameClient.checkNickname(nickname);
             return response;
         }catch(FeignException e){
             try{
