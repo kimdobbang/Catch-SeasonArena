@@ -32,7 +32,7 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
 
     @Override
     @Transactional
-    // @EventListener
+    @EventListener
      @Async
     public void saveDictionaries(KafkaSaveInventoryEntity kafkaSaveInventoryEntity) {
         List<Dictionaries> dictionariesList = findDictionariesByEmailPort.findDictionariesByEmail(kafkaSaveInventoryEntity.getEmail());
@@ -41,7 +41,11 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
                 .filter(dictionary -> dictionary.getItemId().equals(kafkaSaveInventoryEntity.getItemId()))
                 .findFirst()
                 .orElse(null);
-
+        if(existingDictionary != null){
+            existingDictionary.update();
+            saveDictionariesPort.saveDictionaries(existingDictionary);
+            return;
+        }
         Dictionaries newDictionary = Dictionaries.builder()
                     .userId(member.getMemberId())
                     .itemId(kafkaSaveInventoryEntity.getItemId())
@@ -49,9 +53,6 @@ public class SaveDictionariesServiceImpl implements SaveDictionariesUseCase {
                     .modifiedAt(LocalDateTime.now())
                     .count(1)
                     .build();
-        if(existingDictionary != null){
-            newDictionary.update(existingDictionary.getId());
-        }
         saveDictionariesPort.saveDictionaries(newDictionary);
     }
 }
