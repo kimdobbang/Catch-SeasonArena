@@ -24,3 +24,6 @@ export { Combination } from "@/features/combination/combination";
 // 인벤토리
 export { InventoryUserInfo } from "@/features/inventory/inventory-userinfo";
 export { InGameStats } from "@/features/inventory/ingame-stats";
+
+// 도감 관련
+export { Collectionbook } from "@/features/collectionbook/collectionbook";

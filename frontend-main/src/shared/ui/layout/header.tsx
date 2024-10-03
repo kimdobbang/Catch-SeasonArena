@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Arrow from "@/assets/icons/arrow-left.svg?react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 interface HeaderProps {
   className?: string;
@@ -9,6 +11,9 @@ interface HeaderProps {
 export const Header = ({ className, onClick }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Redux 상태에서 유저 정보 가져오기
+  const { nickName } = useSelector((state: RootState) => state.user);
 
   // 기본 뒤로 가기 동작 설정
   const handleBackClick = () => {
@@ -25,7 +30,7 @@ export const Header = ({ className, onClick }: HeaderProps) => {
       case "/avatar":
         return { title: "아바타", showBackIcon: true };
       case "/collectionbook":
-        return { title: "가을 도감", showBackIcon: true };
+        return { title: `${nickName}의 가을 도감`, showBackIcon: true };
       case "/inventory":
         return { title: "배낭", showBackIcon: true };
       case "/combination":
