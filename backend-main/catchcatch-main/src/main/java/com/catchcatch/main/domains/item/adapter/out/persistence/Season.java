@@ -11,6 +11,6 @@ import lombok.Getter;
 public enum Season {
 	SPRING,
 	SUMMER,
-	AUTOM,
+	AUTUMN,
 	WINTER
 }
