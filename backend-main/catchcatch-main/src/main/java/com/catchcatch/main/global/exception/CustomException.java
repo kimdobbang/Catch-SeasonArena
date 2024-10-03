@@ -16,7 +16,8 @@ public enum CustomException {
     INVENTORY_EQUIP_LIMIT_EXCEEDED_EXCEPTION(400, "InventoryEquipLimitExceededException", "장착 개수가 3을 초과했습니다."),
     INVENTORY_EQUIP_TYPE_LIMIT_EXCEEDED_EXCEPTION(400, "InventoryEquipTypeLimitExceededException", "이미 해당 타입의 아이템이 장착되어 있습니다."),
     DUPLICATED_EQUIPMENT_TYPE_EXCEPTION(400, "DuplicatedEquipmentTypeException", "해당 타입에 장착된 아이템이 있습니다."),
-    NOT_EXISTS_MEMBER_EXCEPTION(400, "NotExistsMemberException", "존재하지 않는 멤버입니다.");
+    NOT_EXISTS_MEMBER_EXCEPTION(400, "NotExistsMemberException", "존재하지 않는 멤버입니다."),
+    NOT_EXISTS_DICTIONARIES_EXCEPTION(400,"NotExistsDictionariesExcrption","존재하지 않는 도감입니다.");
 
     private Integer statusNum;
     private String errorCode;

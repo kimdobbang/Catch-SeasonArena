@@ -46,4 +46,7 @@ public class DictionariesEntity extends BaseTimeEntity {
                 .count(dictionaries.getCount())
                 .build();
     }
+    public void update() {
+        this.count++;
+    }
 }
