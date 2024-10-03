@@ -8,6 +8,7 @@ import com.catchcatch.auth.domains.member.domain.Member;
 import com.catchcatch.auth.domains.rank.application.port.out.SendRankKafkaPort;
 import com.catchcatch.auth.global.exception.CustomException;
 import com.catchcatch.auth.global.exception.ExceptionResponse;
+import com.catchcatch.auth.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SignUpServiceImpl implements SignUpUseCase {
 
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final SaveMemberPort saveMemberPort;
     private final ExistsMemberPort existsMemberPort;
@@ -28,7 +30,7 @@ public class SignUpServiceImpl implements SignUpUseCase {
 
     @Override
     @Transactional
-    public void singUp(SignUpRequestDto requestDto) {
+    public String singUp(SignUpRequestDto requestDto) {
         if(existsMemberPort.existsByEmailAndIsDeleted(requestDto.email(), false)){
             log.error("BACK-AUTH:ERROR {}", CustomException.DUPLICATED_EMAIL_EXCEPTION);
             throw new ExceptionResponse(CustomException.DUPLICATED_EMAIL_EXCEPTION);
@@ -37,7 +39,11 @@ public class SignUpServiceImpl implements SignUpUseCase {
         Member member = Member.createSignUpMember(requestDto);
         member.changeEncodePassword(passwordEncoder.encode(requestDto.password()));
         saveMemberPort.save(member);
-
         sendRankKafkaPort.initRank(member);
+
+        String accessToken = jwtTokenProvider.generateToken(member);
+        log.info("BACK-AUTH:ACCESS_TOKEN : {}", accessToken);
+
+        return accessToken;
     }
 }
