@@ -1,6 +1,7 @@
 package com.catchcatchrank.domains.member.appclication.service;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class MemberServiceImpl {
 
 	@Transactional
 	@EventListener
+	@Async
 	public void updateRank(Rank rank) {
 
 		MemberEntity memberEntity = getMemberByNickNamePort.getMemberByNickName(rank.getNickName());

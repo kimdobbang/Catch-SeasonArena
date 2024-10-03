@@ -2,6 +2,7 @@ package com.catchcatchrank.domains.rank.application.service;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaUpdateRankEntity;
 import com.catchcatchrank.domains.rank.application.port.in.UpdateRankUseCase;
@@ -9,12 +10,11 @@ import com.catchcatchrank.domains.rank.application.port.out.GetRatePort;
 import com.catchcatchrank.domains.rank.application.port.out.UpdateTierPort;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j(topic = "rank")
 public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
@@ -24,6 +24,7 @@ public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
+	@Transactional
 	public void updateRank(KafkaUpdateRankEntity kafkaUpdateRankEntity) {
 		log.info("BE-RANK :  userNickname {}", kafkaUpdateRankEntity.getNickname());
 		log.info("BE-RANK :  kill {}", kafkaUpdateRankEntity.getKill());
