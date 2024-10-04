@@ -50,10 +50,10 @@ public class RecommendService {
     }
 
     private void initializeAvatars() {
-        avatars.put("player1", 13);
-        avatars.put("player2", 14);
-        avatars.put("player3", 15);
-        avatars.put("player4", 16);
+        avatars.put("1", 13);
+        avatars.put("2", 14);
+        avatars.put("3", 15);
+        avatars.put("4", 16);
     }
 
     public void entryPlayer(EntryRequestDto requestDto) {
