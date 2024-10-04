@@ -53,7 +53,13 @@ const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
 const KNOCKBACK_FORCE = 120;
 const KNOCKBACK_DURATION = 100; // 100ms
+const LOCATION = [];
 
+for (let i = 0; i < 20; i++) {
+  const x = 1000 + Math.floor(i / 5) * 1000; // x 값은 1000씩 증가
+  const y = 800 + (i % 5) * 800; // y 값은 800씩 증가
+  LOCATION.push({ x: x, y: y });
+}
 // <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
 function joinPlayer(
@@ -88,11 +94,12 @@ function joinPlayer(
     skill: skill,
     invincibility: false, // 무적
     visible: false,
+    bear: false,
   };
 
   setWeapon(player, weapon);
   setPassive(player, passive);
-
+  
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
       if (rooms.get(roomCode) && !rooms.get(roomCode).isStarted) {
@@ -103,6 +110,7 @@ function joinPlayer(
         rooms.get(roomCode).isStarted = true;
       }
     }, 10000);
+    setLocation(player,1);
     const tempRoom = { players: new Map(), isStarted: false, isEnd: false };
     tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
@@ -111,9 +119,10 @@ function joinPlayer(
     console.log(`( 방 생성 ) 방 번호 : ${roomCode}`);
   } else {
     const room = rooms.get(roomCode);
+    setLocation(player,room.players.size+1);
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
-
+    
     if (room.players.size == PLAYER_SIZE && !room.isStarted) {
       rooms.get(roomCode).startTime = Date.now();
       rooms.get(roomCode).magnetic = getMagneticPoint();
@@ -469,11 +478,22 @@ function setPassive(player, passive) {
       break;
     case "6": // 곰
       player.protect = 0.5;
+      player.bear = true;
       break;
     case "10": // 다라미
       player.speed = 1.15;
       break;
   }
+}
+
+function  setLocation(player, index) {
+  if (index < 1 || index > 20) {
+    console.error("Invalid index. It should be between 1 and 20.");
+    return;
+  }
+  const location = LOCATION[index - 1];
+  player.x = location.x;
+  player.y = location.y;
 }
 
 // <<공격 범위 내의 플레이어들을 감지하는 함수>>
@@ -482,9 +502,9 @@ function checkAttackRange(attacker, players, roomCode) {
 
   players.forEach((target, socketId) => {
     if (target.socketId !== attacker.socketId) {
-      const reachX = attacker.x;
-      const reachY = attacker.y;
-      const reachLength = WEAPON_LENGTH;
+      let reachX = attacker.x;
+      let reachY = attacker.y;
+      let reachLength = WEAPON_LENGTH;
       if(target.protect === 0.5){
         reachLength = 130;
       }

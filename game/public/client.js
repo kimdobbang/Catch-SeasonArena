@@ -74,7 +74,7 @@ const config = {
 let ROOMCODE;
 let gameStarted = false;
 let playerGroup;
-let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체, visible, galaxymoon}
+let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체, visible, galaxymoon, hp:100}
 let MAGNETIC = {};
 let MAGNETIC_FIELD;
 let MAP_LENGTH = 5000;
@@ -395,6 +395,16 @@ function create() {
           players[key].y - 60
         );
 
+        //체력 감소 텍스트 애니메이션효과
+        if(clientPlayers[key].hp !== players[key].hp) {
+          let damage = clientPlayers[key].hp - players[key].hp;
+          if(players[key].bear){
+            damage *= 2;
+          }
+          showDamageText(scene, damage, players[key]);
+          clientPlayers[key].hp = players[key].hp;
+        }
+
         // 체력바 위치 업데이트
         clientPlayers[key].hpBar.clear();
         clientPlayers[key].hpBar.fillStyle(0x00ff00, 1);
@@ -473,9 +483,13 @@ function createPlayer(scene, players) {
     clientPlayers[player.socketId].weapon = weapon;
 
     // 플레이어 생성
+    let playerSize = 0.3;
+    if(player.bear){
+      playerSize =0.39;
+    }
     clientPlayers[player.socketId].player = scene.physics.add
       .image(player.x, player.y, player.profileImage)
-      .setScale(0.3);
+      .setScale(playerSize);
     clientPlayers[player.socketId].player.setCollideWorldBounds(true);
     const radius = 120; // 원의 반지름
     clientPlayers[player.socketId].player.setCircle(radius);
@@ -543,6 +557,9 @@ function createPlayer(scene, players) {
 
     // 갤럭시문 변수 설정 (초기세팅 false)
     clientPlayers[player.socketId].galaxymoon = false;
+
+    //체력 저장용 (초기세팅 100)
+    clientPlayers[player.socketId].hp = 100;
 
     // 스킬 설정 & 카메라 따라가기 구현
     if (socket.id === player.socketId) {
@@ -798,3 +815,25 @@ function useScarecrow(scene, player) {
     scarecrow.destroy();
   }, 3000);
 }
+
+function showDamageText(scene, damage, player) {
+  const damageX = player.x - 20; 
+  const damageY = player.y - 90; 
+
+  const damageText = scene.add.text(damageX, damageY, `-${damage}`, {
+    font: "32px Arial",
+    fill: "#ff0000", 
+  });
+
+  scene.tweens.add({
+    targets: damageText,
+    y: damageY - 50, 
+    alpha: 0, 
+    ease: "Power1",
+    duration: 1000, 
+    onComplete: () => {
+      damageText.destroy(); 
+    },
+  });
+}
+
