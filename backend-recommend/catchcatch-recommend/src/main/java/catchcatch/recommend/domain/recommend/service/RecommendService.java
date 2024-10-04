@@ -63,6 +63,7 @@ public class RecommendService {
     }
 
     public void matchingGame(){
+        log.info("BE-MATCHING/game player size: " + waitingPlayers.size());
         if(waitingPlayers.size() < PLAYER_SIZE){
             return;
         }
