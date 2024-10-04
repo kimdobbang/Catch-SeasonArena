@@ -38,11 +38,9 @@ export const Main = () => {
   const goToAvatarChange = () => {
     navigate("/avatar");
   };
-  const userRating = useSelector((state: RootState) => state.user.rating);
   const userAvatar = useSelector(
     (state: RootState) => state.user.selectedAvatar,
   );
-  const userNickname = useSelector((state: RootState) => state.user.nickname);
   // main 페이지에서 토큰 확인 및 로그인 상태 체크 예시
   // useEffect(() => {
   //   const token = localStorage.getItem("accessToken");
@@ -74,12 +72,8 @@ export const Main = () => {
         </div>
       </div>
       <div className="w-full h-[70%] flex flex-col items-center gap-6">
-        <UserNameContainer
-          className="mt-4"
-          nickname={userNickname}
-          rating={userRating}
-        />
-        <TierProgressBar rating={userRating} />
+        <UserNameContainer className="mt-4" />
+        <TierProgressBar />
         <PrimaryButton
           onClick={goToMatchingPage}
           size="small"

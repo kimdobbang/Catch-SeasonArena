@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { RootState } from "@/app/redux/store";
-import { useSelector } from "react-redux";
+// import { RootState } from "@/app/redux/store";
+// import { useSelector } from "react-redux";
 import { Body1Text, PrimaryButton } from "@/shared/components/atoms";
 import {
   TierProgressBar,
@@ -19,9 +19,16 @@ export const Matching = () => {
   const [rating, setRating] = useState<number>(500); // 레이팅 상태
   const [roomcode, setRoomcode] = useState("");
 
-  const userAvatar = useSelector(
-    (state: RootState) => state.user.selectedAvatar,
-  );
+  // const nickname = useSelector((state: RootState) => state.user.nickname);
+  // const rating = useSelector((state: RootState) => state.user.rating);
+
+  // const userAvatar = useSelector(
+  //   (state: RootState) => state.user.selectedAvatar,
+  // );
+
+  // const userAvatar = useSelector(
+  //   (state: RootState) => state.user.selectedAvatar,
+  // );
 
   const goToGame = () => {
     window.location.href = `/game?nickname=${nickname}&rating=${rating}&roomcode=${roomcode}`;
@@ -135,7 +142,7 @@ export const Matching = () => {
       >
         <CircleAvatar
           avatarIcon={true}
-          number={userAvatar}
+          number={1}
           emotion="normal"
           width={96}
         />
@@ -158,12 +165,9 @@ export const Matching = () => {
         />
       </div>
       <div className="w-full h-[70%] flex flex-col items-center gap-6">
-        <UserNameContainer
-          className="mt-4"
-          nickname={nickname}
-          rating={rating}
-        />
-        <TierProgressBar rating={rating} />
+        <UserNameContainer className="mt-4" />
+        <TierProgressBar />
+
         <div className="w-full px-4">
           <Body1Text className="!text-left text-catch-main-400 ">
             2024 Autumn
