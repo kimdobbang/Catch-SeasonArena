@@ -49,8 +49,7 @@ public class Member {
                 .role(Role.ROLE_USER)
                 .nickname(signUpRequestDto.email().split("@")[0])
                 .rating(0)
-                //TODO: 아바타 이름이 지어지면 수정
-                .avatar("기본 아바타")
+                .avatar("1")
                 .isDeleted(false)
                 .build();
     }
