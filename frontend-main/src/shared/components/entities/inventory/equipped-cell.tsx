@@ -18,7 +18,7 @@ export const EquippedCell = ({
   onClick,
 }: EquippedCellProps) => {
   const equippedItem = useSelector(
-    (state: RootState) => state.user.equipment[itemType],
+    (state: RootState) => state.user.equipment?.[itemType] as number | null,
   );
 
   const sizeStyles = {
@@ -34,7 +34,7 @@ export const EquippedCell = ({
         className={`flex items-center justify-center p-[3px] rounded-md bg-gradient-to-br from-gray-100 to-gray-400 ${sizeStyle}`}
       >
         <div className="flex items-center justify-center w-full h-full rounded-sm bg-catch-gray-100">
-          {typeof equippedItem === "number" ? (
+          {equippedItem !== null ? (
             <AutumnItemImage itemId={equippedItem} />
           ) : null}
         </div>
