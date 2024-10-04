@@ -19,7 +19,7 @@ export const Matching = () => {
   const userAvatar = useSelector(
     (state: RootState) => state.user.selectedAvatar,
   );
-  const userNickname = useSelector((state: RootState) => state.user.nickName);
+  const userNickname = useSelector((state: RootState) => state.user.nickname);
 
   return (
     <div className="w-full h-full ">

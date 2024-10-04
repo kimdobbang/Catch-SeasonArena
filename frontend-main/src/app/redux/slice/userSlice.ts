@@ -15,7 +15,7 @@ export interface UserState extends UserInfo {
 }
 const initialState: UserState = {
   email: "user@example.com",
-  nickName: "닉네임을 수정하세요",
+  nickname: "닉네임을 수정하세요",
   rating: 500,
   tier: getTierByRating(500),
   selectedAvatar: 2,
@@ -81,7 +81,7 @@ const userSlice = createSlice({
         "authSlice's setUser dispatched in userSlice",
         action.payload,
       );
-      state.nickName = action.payload.nickName;
+      state.nickname = action.payload.nickname;
       state.email = action.payload.email;
     });
   },

@@ -2,12 +2,12 @@
 
 export interface UserInfo {
   email: string;
-  nickName: string;
+  nickname: string;
 }
 
 export const initialUserInfo: UserInfo = {
   email: "",
-  nickName: "",
+  nickname: "",
 };
 
 export interface UserStat {

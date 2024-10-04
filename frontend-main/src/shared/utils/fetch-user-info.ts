@@ -13,11 +13,12 @@ export const handleLoginSuccess = async (
   try {
     dispatch(setToken(accessToken));
 
-    const userInfo: UserState = await fetchUserInfo(accessToken);
+    const data: UserState = await fetchUserInfo(accessToken);
+    console.log("유저정보 조회성공", data);
 
-    dispatch(setUser({ email: userInfo.email, nickName: userInfo.nickName }));
-    dispatch(setEquipment(userInfo.equipment));
-    dispatch(setRating(userInfo.rating));
+    dispatch(setUser({ email: data.email, nickname: data.nickname }));
+    dispatch(setEquipment(data.equipment));
+    dispatch(setRating(data.rating));
 
     navigate("/main");
   } catch (error) {

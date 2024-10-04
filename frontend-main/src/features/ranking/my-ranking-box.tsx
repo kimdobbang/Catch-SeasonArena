@@ -17,8 +17,8 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
   const tierRank = 20; //일단 하드코딩함
 
   const getNickname = () => {
-    if (user.nickName) {
-      return user.nickName;
+    if (user.nickname) {
+      return user.nickname;
     } else return "닉네임";
   };
   return (

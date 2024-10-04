@@ -13,7 +13,7 @@ export const Header = ({ className, onClick }: HeaderProps) => {
   const navigate = useNavigate();
 
   // Redux 상태에서 유저 정보 가져오기
-  const { nickName } = useSelector((state: RootState) => state.user);
+  const { nickname } = useSelector((state: RootState) => state.user);
 
   // 기본 뒤로 가기 동작 설정
   const handleBackClick = () => {
@@ -30,7 +30,7 @@ export const Header = ({ className, onClick }: HeaderProps) => {
       case "/avatar":
         return { title: "아바타", showBackIcon: true };
       case "/collectionbook":
-        return { title: `${nickName}의 가을 도감`, showBackIcon: true };
+        return { title: `${nickname}의 시즌도감`, showBackIcon: true };
       case "/inventory":
         return { title: "배낭", showBackIcon: true };
       case "/combination":

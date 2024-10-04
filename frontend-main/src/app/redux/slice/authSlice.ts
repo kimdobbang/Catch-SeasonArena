@@ -26,9 +26,9 @@ export const authSlice = createSlice({
     setUser: (state, action: PayloadAction<UserInfo>) => {
       state.userInfo = action.payload;
     },
-    setNickName: (state, action: PayloadAction<string>) => {
+    setNickname: (state, action: PayloadAction<string>) => {
       if (state.userInfo) {
-        state.userInfo.nickName = action.payload;
+        state.userInfo.nickname = action.payload;
       }
     },
     deleteToken: (state) => {
@@ -49,7 +49,7 @@ export const authSlice = createSlice({
 export const {
   setToken,
   setUser,
-  setNickName,
+  setNickname,
   deleteToken,
   deleteUser,
   logout,

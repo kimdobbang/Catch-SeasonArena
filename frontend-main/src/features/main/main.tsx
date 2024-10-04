@@ -42,7 +42,7 @@ export const Main = () => {
   const userAvatar = useSelector(
     (state: RootState) => state.user.selectedAvatar,
   );
-  const userNickname = useSelector((state: RootState) => state.user.nickName);
+  const userNickname = useSelector((state: RootState) => state.user.nickname);
   // main 페이지에서 토큰 확인 및 로그인 상태 체크 예시
   // useEffect(() => {
   //   const token = localStorage.getItem("accessToken");
