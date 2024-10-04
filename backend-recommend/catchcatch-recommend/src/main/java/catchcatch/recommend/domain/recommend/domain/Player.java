@@ -50,21 +50,20 @@ public class Player implements Comparable<Player>{
         if (ratingComparison != 0) {
             return ratingComparison;
         }
-        return this.nickname.compareTo(other.nickname); // 레이팅이 같을 경우 닉네임으로 비교
+        return this.nickname.compareTo(other.nickname);
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Player)) return false;
         Player player = (Player) o;
-        return Objects.equals(nickname, player.nickname); // 예시: 닉네임으로 비교
+        return Objects.equals(nickname, player.nickname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nickname); // 예시: 닉네임으로 해시 코드 생성
+        return Objects.hash(nickname);
     }
 
 }

@@ -3,6 +3,7 @@ package catchcatch.recommend.domain.recommend.service;
 import catchcatch.recommend.domain.recommend.domain.Player;
 import catchcatch.recommend.domain.recommend.requestdto.EntryRequestDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -23,10 +24,10 @@ public class RecommendService {
 
     private final SimpMessagingTemplate messagingTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final HashMap<String, Integer> avatars = new HashMap<>();
+    private final HashMap<String, Integer> avatars;
 
-    private final ConcurrentSkipListSet<Player> waitingPlayers
-            = new ConcurrentSkipListSet<>(Comparator.comparingInt(Player::getRating));
+    @Autowired
+    private PlayerStore playerStore;
 
     @Value("${rating.range}")
     private Integer RATING_RANGE;
@@ -43,6 +44,7 @@ public class RecommendService {
     public RecommendService(SimpMessagingTemplate messagingTemplate, RedisTemplate<String, Object> redisTemplate) {
         this.messagingTemplate = messagingTemplate;
         this.redisTemplate = redisTemplate;
+        this.avatars = new HashMap<>();
 
         initializeAvatars();
     }
@@ -56,12 +58,11 @@ public class RecommendService {
 
     public void entryPlayer(EntryRequestDto requestDto) {
         Player player = Player.createPlayer(requestDto);
-        waitingPlayers.add(player);
+        playerStore.getWaitingPlayers().add(player);
     }
 
     public void matchingGame(){
-        log.info("BE-MATCHING/game player size: " + waitingPlayers.size());
-        if(waitingPlayers.size() < PLAYER_SIZE){
+        if(playerStore.getWaitingPlayers().size() < PLAYER_SIZE){
             return;
         }
 
@@ -69,9 +70,7 @@ public class RecommendService {
             Player lowerPlayer = Player.createRangePlayer(i);
             Player upperPlayer = Player.createRangePlayer(Math.min(i + RATING_RANGE - 1, RATING_MAX));
 
-            log.info(lowerPlayer.getRating() + " ~ " + upperPlayer.getRating());
-
-            NavigableSet<Player> matchedPlayers = waitingPlayers.subSet(lowerPlayer, true, upperPlayer, true)
+            NavigableSet<Player> matchedPlayers = playerStore.getWaitingPlayers().subSet(lowerPlayer, true, upperPlayer, true)
                     .stream().sorted(Comparator.comparingLong(Player::getEntryTime))
                     .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
@@ -82,7 +81,7 @@ public class RecommendService {
             if(matchedPlayers.size() < PLAYER_SIZE && rating != 0){
                 lowerPlayer.extendRating(i==0 ? 0 : -(RATING_RANGE/2)*rating);
                 upperPlayer.extendRating((RATING_RANGE/2)*rating);
-                matchedPlayers = waitingPlayers.subSet(lowerPlayer, true, upperPlayer, true);
+                matchedPlayers = playerStore.getWaitingPlayers().subSet(lowerPlayer, true, upperPlayer, true);
             }
 
             while(matchedPlayers.size()>=PLAYER_SIZE){
@@ -91,7 +90,7 @@ public class RecommendService {
                         .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
                 notifyPlayers(limitMatchedPlayers);
-                waitingPlayers.removeAll(limitMatchedPlayers);
+                playerStore.getWaitingPlayers().removeAll(limitMatchedPlayers);
                 matchedPlayers.removeAll(limitMatchedPlayers);
             }
         }
@@ -107,7 +106,7 @@ public class RecommendService {
 
     @Transactional
     protected void notifyPlayers(NavigableSet<Player> matchedPlayers) {
-        log.info("BACK/MATCHING - success game matching players: {}", waitingPlayers.size());
+        log.info("BACK/MATCHING - success game matching players: {}", playerStore.getWaitingPlayers().size());
         String roomId = UUID.randomUUID().toString();
         for (Player player : matchedPlayers) {
             log.info("BACK/MATCHING - success game matching waiting time: {}", (System.currentTimeMillis() - player.getEntryTime()) / 1000);
