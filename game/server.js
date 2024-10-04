@@ -48,7 +48,7 @@ const rooms = new Map();
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
-const PLAYER_SIZE = 2;
+const PLAYER_SIZE = 6;
 const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
 const KNOCKBACK_FORCE = 120;
