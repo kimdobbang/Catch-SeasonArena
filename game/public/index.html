@@ -53,6 +53,10 @@
         <option value="12">허수아비</option>
       </select>
 
+      <!-- 체크박스 추가 -->
+      <label for="noData">데이터 불러오기:</label>
+      <input type="checkbox" id="noData" />
+
       <button id="joinRoomButton">Join Room</button>
     </div>
 
@@ -67,12 +71,17 @@
           const weapon = document.getElementById("weapon").value;
           const passive = document.getElementById("passive").value;
           const skill = document.getElementById("skill").value;
+          const noDataChecked = document.getElementById("noData").checked;
 
           let playerData = 0;
-          playerData += 1 << Number(profileImage);
-          playerData += 1 << Number(weapon);
-          playerData += 1 << Number(passive);
-          playerData += 1 << Number(skill);
+
+          if (!noDataChecked) {
+            // 체크박스가 체크되지 않은 경우에만 playerData를 계산
+            playerData += 1 << Number(profileImage);
+            playerData += 1 << Number(weapon);
+            playerData += 1 << Number(passive);
+            playerData += 1 << Number(skill);
+          }
 
           console.log(`Room code entered: ${roomCode}`);
           console.log(`Player name entered: ${nickname}`);

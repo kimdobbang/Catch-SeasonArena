@@ -15,7 +15,7 @@ function startGame() {
 
 // // 클라이언트: 쿼리 스트링에서 roomCode와 nickname 추출
 // const queryParams = new URLSearchParams(window.location.search);
-// const roomCode = queryParams.get('roomCode');
+// const roomCode = queryParams.get('roomcode');
 // const nickname = queryParams.get('nickname');
 
 // // Socket.io 클라이언트 초기화 시 roomCode와 nickname을 서버에 전달
@@ -27,9 +27,9 @@ function startGame() {
 // });
 
 // <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
+const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://172.30.1.70:3000");
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -396,9 +396,9 @@ function create() {
         );
 
         //체력 감소 텍스트 애니메이션효과
-        if(clientPlayers[key].hp !== players[key].hp) {
+        if (clientPlayers[key].hp !== players[key].hp) {
           let damage = clientPlayers[key].hp - players[key].hp;
-          if(players[key].bear){
+          if (players[key].bear) {
             damage *= 2;
           }
           showDamageText(scene, damage, players[key]);
@@ -484,8 +484,8 @@ function createPlayer(scene, players) {
 
     // 플레이어 생성
     let playerSize = 0.3;
-    if(player.bear){
-      playerSize =0.39;
+    if (player.bear) {
+      playerSize = 0.39;
     }
     clientPlayers[player.socketId].player = scene.physics.add
       .image(player.x, player.y, player.profileImage)
@@ -715,16 +715,18 @@ function useJump(scene, player) {
   const midY = player.y + 125 * Math.sin(player.direction);
 
   // dragonfly 애니메이션 실행
-  const dragonfly = scene.add.sprite(player.x, player.y, "effects2").setScale(2);
-    dragonfly.play("4"); // dragonfly 애니메이션
-    dragonfly.on("animationcomplete", () => {
+  const dragonfly = scene.add
+    .sprite(player.x, player.y, "effects2")
+    .setScale(2);
+  dragonfly.play("4"); // dragonfly 애니메이션
+  dragonfly.on("animationcomplete", () => {
     dragonfly.destroy();
   });
 
   // 0.5초 후에 jump 애니메이션 실행
   setTimeout(() => {
     const jump = scene.add.sprite(midX, midY, "effects1").setScale(4);
-    jump.rotation = player.direction + 90;  // 방향에 맞춰 회전
+    jump.rotation = player.direction + 90; // 방향에 맞춰 회전
     jump.play("7");
     jump.on("animationcomplete", () => {
       jump.destroy();
@@ -817,23 +819,22 @@ function useScarecrow(scene, player) {
 }
 
 function showDamageText(scene, damage, player) {
-  const damageX = player.x - 20; 
-  const damageY = player.y - 90; 
+  const damageX = player.x - 20;
+  const damageY = player.y - 90;
 
   const damageText = scene.add.text(damageX, damageY, `-${damage}`, {
     font: "32px Arial",
-    fill: "#ff0000", 
+    fill: "#ff0000",
   });
 
   scene.tweens.add({
     targets: damageText,
-    y: damageY - 50, 
-    alpha: 0, 
+    y: damageY - 50,
+    alpha: 0,
     ease: "Power1",
-    duration: 1000, 
+    duration: 1000,
     onComplete: () => {
-      damageText.destroy(); 
+      damageText.destroy();
     },
   });
 }
-

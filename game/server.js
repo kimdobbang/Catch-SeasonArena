@@ -33,7 +33,7 @@ app.use("/game", express.static(path.join(__dirname, "public")));
 
 // redis 설정
 const redisClient = createClient({
-  url: "redis://localhost:6379",
+  url: "redis://3.36.122.163:6379",
 });
 redisClient.connect().catch(console.error);
 
@@ -48,7 +48,7 @@ const rooms = new Map();
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
-const PLAYER_SIZE = 6;
+const PLAYER_SIZE = 2;
 const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
 const KNOCKBACK_FORCE = 120;
@@ -99,7 +99,7 @@ function joinPlayer(
 
   setWeapon(player, weapon);
   setPassive(player, passive);
-  
+
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
       if (rooms.get(roomCode) && !rooms.get(roomCode).isStarted) {
@@ -110,7 +110,7 @@ function joinPlayer(
         rooms.get(roomCode).isStarted = true;
       }
     }, 10000);
-    setLocation(player,1);
+    setLocation(player, 1);
     const tempRoom = { players: new Map(), isStarted: false, isEnd: false };
     tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
@@ -119,10 +119,10 @@ function joinPlayer(
     console.log(`( 방 생성 ) 방 번호 : ${roomCode}`);
   } else {
     const room = rooms.get(roomCode);
-    setLocation(player,room.players.size+1);
+    setLocation(player, room.players.size + 1);
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
-    
+
     if (room.players.size == PLAYER_SIZE && !room.isStarted) {
       rooms.get(roomCode).startTime = Date.now();
       rooms.get(roomCode).magnetic = getMagneticPoint();
@@ -135,28 +135,28 @@ function joinPlayer(
   }
 }
 
-// <<게임>>
-io.on("connection", (socket) => {
-  console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
+async function handlePlayerJoin(nickname, roomCode, socket, playerData) {
+  try {
+    // getPlayerData 비동기 함수 호출
+    if (playerData === 0) {
+      const redisData = await getPlayerData(nickname, roomCode);
 
-  // 게임방 참여 (나중에 socket.on 지우기, 클라에서도 지우기)
-  socket.on("joinRoom", ({ roomCode, nickname, playerData }) => {
-    // // 클라이언트에서 보낸 roomCode와 nickname 조회
-    // const { roomCode, nickname } = socket.handshake.query;
+      if (!redisData) {
+        return;
+      }
 
-    // const playerData = getPlayerData(nickname, roomCode);
-    if (!playerData) {
-      return;
+      console.log(redisData);
+      playerData = Number(redisData);
+
+      console.log("playerData는 " + playerData);
     }
 
-    playerData = Number(playerData);
-
-    console.log("playerData는 " + playerData);
     let profileImage;
     let weapon;
     let passive;
     let skill;
 
+    // weapon 결정
     if ((playerData & (1 << 1)) !== 0) {
       weapon = "1";
     } else if ((playerData & (1 << 5)) !== 0) {
@@ -165,6 +165,7 @@ io.on("connection", (socket) => {
       weapon = "9";
     }
 
+    // passive 결정
     if ((playerData & (1 << 2)) !== 0) {
       passive = "2";
     } else if ((playerData & (1 << 6)) !== 0) {
@@ -173,6 +174,7 @@ io.on("connection", (socket) => {
       passive = "10";
     }
 
+    // skill 결정
     if ((playerData & (1 << 3)) !== 0) {
       skill = "3";
     } else if ((playerData & (1 << 4)) !== 0) {
@@ -187,6 +189,7 @@ io.on("connection", (socket) => {
       skill = "12";
     }
 
+    // profileImage 결정
     if ((playerData & (1 << 13)) !== 0) {
       profileImage = "player1";
     } else if ((playerData & (1 << 14)) !== 0) {
@@ -212,6 +215,21 @@ io.on("connection", (socket) => {
     );
 
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
+  } catch (err) {
+    console.error(`Error: ${err}`);
+  }
+}
+
+// <<게임>>
+io.on("connection", (socket) => {
+  console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
+
+  // 게임방 참여 (나중에 socket.on 지우기, 클라에서도 지우기)
+  socket.on("joinRoom", ({ roomCode, nickname, playerData }) => {
+    // // 클라이언트에서 보낸 roomCode와 nickname 조회
+    // const { roomCode, nickname } = socket.handshake.query;
+
+    handlePlayerJoin(nickname, roomCode, socket, playerData);
   });
 
   // 게임 연결 종료
@@ -430,7 +448,7 @@ async function getPlayerData(nickname, roomCode) {
 
     if (playerData) {
       // 문자열을 Buffer로 변환
-      const buffer = Buffer.from(redisData, "binary");
+      const buffer = Buffer.from(playerData, "binary");
 
       // Big Endian 방식으로 변환 (큰 숫자를 다룰 수 있음)
       const number = buffer.readUIntBE(0, buffer.length);
@@ -449,7 +467,12 @@ async function getPlayerData(nickname, roomCode) {
 async function saveResultToRedis(nickname, result) {
   try {
     // HSET 명령을 통해 nickname을 키로 나머지 데이터를 저장
-    await redisClient.set(nickname, JSON.stringify(result));
+    await redisClient.hSet(nickname, {
+      kill: result.kill,
+      time: result.time,
+      rank: result.rank,
+      rating: result.rating,
+    });
     console.log(`데이터 저장 성공: ${nickname}`);
   } catch (err) {
     console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
@@ -486,7 +509,7 @@ function setPassive(player, passive) {
   }
 }
 
-function  setLocation(player, index) {
+function setLocation(player, index) {
   if (index < 1 || index > 20) {
     console.error("Invalid index. It should be between 1 and 20.");
     return;
@@ -505,7 +528,7 @@ function checkAttackRange(attacker, players, roomCode) {
       let reachX = attacker.x;
       let reachY = attacker.y;
       let reachLength = WEAPON_LENGTH;
-      if(target.protect === 0.5){
+      if (target.protect === 0.5) {
         reachLength = 130;
       }
       const dx = target.x - reachX;
