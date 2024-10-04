@@ -36,17 +36,17 @@ public record FindMyInfoResponseDto(
             Inventory inventory = equipItems.get(i);
             if(inventory.getItem().getType().equals(Type.WEAPON)
                 && itemType[0] == null){
-                itemType[0] = inventory.getId();
+                itemType[0] = inventory.getItem().getId();
                 continue;
             }
             if(inventory.getItem().getType().equals(Type.ACTIVE)
                 && itemType[1] == null){
-                itemType[1] = inventory.getId();
+                itemType[1] = inventory.getItem().getId();
                 continue;
             }
             if(inventory.getItem().getType().equals(Type.PASSIVE)
                 && itemType[2] == null){
-                itemType[2] = inventory.getId();
+                itemType[2] = inventory.getItem().getId();
                 continue;
             }
 
