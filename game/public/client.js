@@ -27,9 +27,9 @@ function startGame() {
 // });
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://172.30.1.70:3000");
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -84,13 +84,18 @@ let skillCooldown = 10000;
 let cooldownText;
 
 function preload() {
+  //플레이어
   this.load.image("player1", "./assets/player/player1.png");
   this.load.image("player2", "./assets/player/player2.png");
   this.load.image("player3", "./assets/player/player3.png");
   this.load.image("player4", "./assets/player/player4.png");
-
-  this.load.image("weapon", "./assets/weapon/sword.png");
-
+  this.load.image("pumpkin", "./assets/player/pumpkin.png");
+  //무기
+  this.load.image("weapon0", "./assets/weapon/0.png");
+  this.load.image("weapon1", "./assets/weapon/1.png");
+  this.load.image("weapon5", "./assets/weapon/5.png");
+  this.load.image("weapon9", "./assets/weapon/9.png");
+  //스킬
   this.load.image("bomb", "./assets/skill/bomb.png");
   this.load.image("scarecrow", "./assets/skill/scarecrow.png");
 
@@ -461,9 +466,10 @@ function createPlayer(scene, players) {
     clientPlayers[player.socketId] = {};
 
     // 무기 생성
+    const weaponKey = `weapon${player.weaponImage}`;
     const weapon = scene.add
-      .image(player.x + 50, player.y, "weapon")
-      .setScale(0.1);
+      .image(player.x + 50, player.y, weaponKey)
+      .setScale(0.2);
     clientPlayers[player.socketId].weapon = weapon;
 
     // 플레이어 생성

@@ -70,7 +70,7 @@ function joinPlayer(
     socketId: socket.id,
     nickname: nickname,
     profileImage: profileImage,
-    weaponImage: "weapon", // 나중에 바꿔야 됨
+    weaponImage: weapon, // 나중에 바꿔야 됨
     x: 100,
     y: 200,
     velocityX: 0,
@@ -464,7 +464,7 @@ function setWeapon(player, weapon) {
 function setPassive(player, passive) {
   switch (passive) {
     case "2": // 잭 오 랜턴
-      // player.profileImage = 나중에
+      player.profileImage = "pumpkin";
       player.protect = 0.8;
       break;
     case "6": // 곰
@@ -482,11 +482,17 @@ function checkAttackRange(attacker, players, roomCode) {
 
   players.forEach((target, socketId) => {
     if (target.socketId !== attacker.socketId) {
-      const dx = target.x - attacker.x;
-      const dy = target.y - attacker.y;
+      const reachX = attacker.x;
+      const reachY = attacker.y;
+      const reachLength = WEAPON_LENGTH;
+      if(target.protect === 0.5){
+        reachLength = 130;
+      }
+      const dx = target.x - reachX;
+      const dy = target.y - reachY;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
-      if (distance <= WEAPON_LENGTH * attacker.reach) {
+      if (distance <= reachLength * attacker.reach) {
         const angleToTarget = Math.atan2(dy, dx);
         const normalizedAngleToTarget = normalizeAngle(angleToTarget);
         const angleDiff = Math.abs(
@@ -512,7 +518,7 @@ function normalizeAngle(angle) {
 
 // 넉백 적용 함수
 function applyKnockback(attacker, target, dx, dy) {
-  if (!target.canMove) {
+  if (!target.canMove && attacker.weaponImage !== 9) {
     return;
   }
   const angle = Math.atan2(dy, dx);
@@ -526,7 +532,7 @@ function applyKnockback(attacker, target, dx, dy) {
   target.y += target.velocityY;
 
   target.canMove = false;
-  const duration = attacker.weaponImage === "corn" ? 500 : KNOCKBACK_DURATION;
+  const duration = attacker.weaponImage === 9 ? 500 : KNOCKBACK_DURATION;
   setTimeout(() => {
     target.velocityX = 0;
     target.velocityY = 0;
@@ -716,8 +722,8 @@ function useJump(room, attacker) {
         target.hp -= 20 * target.protect;
       }
     });
-    attacker.x += 250 * Math.cos(angle);
-    attacker.y += 250 * Math.sin(angle);
+    attacker.x += 300 * Math.cos(angle); //250
+    attacker.y += 300 * Math.sin(angle);
   }, 500);
 }
 
@@ -768,7 +774,7 @@ function useScarecrow(room, attacker) {
 // 직사각형 네 점 구하기 함수
 function getRectangleCorners(x, y, angle) {
   const width = 75;
-  const length = 250;
+  const length = 300;
 
   const x1 = x + width * Math.cos(angle + Math.PI / 2);
   const y1 = y + width * Math.sin(angle + Math.PI / 2);
