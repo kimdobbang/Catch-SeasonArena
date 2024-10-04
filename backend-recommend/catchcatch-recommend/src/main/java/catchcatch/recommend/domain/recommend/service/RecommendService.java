@@ -74,6 +74,8 @@ public class RecommendService {
             Player lowerPlayer = Player.createRangePlayer(i);
             Player upperPlayer = Player.createRangePlayer(Math.min(i + RATING_RANGE - 1, RATING_MAX));
 
+            log.info("BE/MATCHING - {} ~ {}", lowerPlayer.getRating(), upperPlayer.getRating());
+
             NavigableSet<Player> matchedPlayers = playerStore.getWaitingPlayers().subSet(lowerPlayer, true, upperPlayer, true)
                     .stream().sorted(Comparator.comparingLong(Player::getEntryTime))
                     .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
@@ -93,6 +95,7 @@ public class RecommendService {
                         .limit(PLAYER_SIZE)
                         .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
+                log.info("BACK/MATCHING - limit player size {}", limitMatchedPlayers.size());
                 notifyPlayers(limitMatchedPlayers);
                 playerStore.getWaitingPlayers().removeAll(limitMatchedPlayers);
                 matchedPlayers.removeAll(limitMatchedPlayers);
