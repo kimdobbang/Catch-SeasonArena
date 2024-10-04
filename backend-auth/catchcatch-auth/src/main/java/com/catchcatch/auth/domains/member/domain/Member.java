@@ -47,8 +47,8 @@ public class Member {
                 .email(signUpRequestDto.email())
                 .password(signUpRequestDto.password())
                 .role(Role.ROLE_USER)
-                .nickname(signUpRequestDto.email().split("@")[0])
-                .rating(0)
+                .nickname(signUpRequestDto.email())
+                .rating(500)
                 .avatar("1")
                 .isDeleted(false)
                 .build();
