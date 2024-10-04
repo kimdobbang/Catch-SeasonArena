@@ -219,9 +219,9 @@ function create() {
     x: 80,
     y: 700,
     radius: 50,
-    base: this.add.circle(0, 0, 50, 0x888888).setOrigin(0.5).setScrollFactor(0),
+    base: this.add.circle(0, 0, 50, 0xF29627).setOrigin(0.5).setScrollFactor(0),
     thumb: this.add
-      .circle(0, 0, 25, 0xcccccc)
+      .circle(0, 0, 25, 0xF8D18F)
       .setOrigin(0.5)
       .setScrollFactor(0),
     dir: "360",
