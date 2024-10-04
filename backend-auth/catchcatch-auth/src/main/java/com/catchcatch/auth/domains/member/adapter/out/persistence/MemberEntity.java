@@ -43,13 +43,13 @@ public class MemberEntity extends BaseTimeEntity {
     private Boolean isDeleted;
 
     @Builder
-    private MemberEntity(String email, String password, Role role, String nickname, Integer rating, String avatar, Boolean isDeleted) {
+    private MemberEntity(String email, String password, Role role, String nickname, Integer rating, String avatar) {
         this.email = email;
         this.password = password;
         this.role = role;
         this.nickname = nickname;
-        this.rating = 0;
-        this.avatar = "기본 아바타";
+        this.rating = rating;
+        this.avatar = avatar;
         this.isDeleted = false;
     }
 
@@ -59,6 +59,8 @@ public class MemberEntity extends BaseTimeEntity {
                 .password(member.getPassword())
                 .role(member.getRole())
                 .nickname(member.getNickname())
+                .rating(member.getRating())
+                .avatar(member.getAvatar())
                 .build();
     }
 }
