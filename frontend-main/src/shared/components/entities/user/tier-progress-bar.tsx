@@ -1,18 +1,16 @@
-import { tierRanges, getTierByRating } from "@/app/types/tier";
+import { tierRanges } from "@/app/types/tier";
 import { Caption1Text, ProgressBar } from "../../atoms";
 import { TierInitial } from "../../atoms/symbols/tiers/tier-initial";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 interface TierProgressProps {
-  rating: number;
   className?: string;
 }
 
-export const TierProgressBar = ({ rating, className }: TierProgressProps) => {
-  const tier = getTierByRating(rating);
-  if (!tier || !tierRanges[tier]) {
-    console.log("Invalid tier:", tier);
-    return null; // 잘못된 tier 값 처리
-  }
+export const TierProgressBar = ({ className }: TierProgressProps) => {
+  const { tier } = useSelector((state: RootState) => state.user);
+
   const min = tierRanges[tier].min;
   const max = tierRanges[tier].max;
 
@@ -25,7 +23,7 @@ export const TierProgressBar = ({ rating, className }: TierProgressProps) => {
         <Caption1Text>{min}</Caption1Text>
       </div>
 
-      <ProgressBar rating={rating} />
+      <ProgressBar />
       <div>
         <TierInitial rating={tier ? max + 1 : 500} size="big" />
         <Caption1Text>{max}</Caption1Text>

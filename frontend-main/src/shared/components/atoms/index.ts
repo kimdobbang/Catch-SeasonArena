@@ -14,6 +14,7 @@ export { SquareIconButton } from "@atoms/buttons/square-icon-button";
 // input
 
 export { InputField } from "./input/input-field";
+export { NicknameInput } from "@atoms/input/nickname-input";
 
 // UI 꾸미기 요소들
 export { Leave } from "./symbols/leave"; // 작은 나뭇잎
