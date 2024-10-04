@@ -71,9 +71,13 @@ public class RecommendService {
             Player lowerPlayer = Player.createRangePlayer(i);
             Player upperPlayer = Player.createRangePlayer(Math.min(i + RATING_RANGE - 1, RATING_MAX));
 
+            log.info(lowerPlayer.getRating() + " ~ " + upperPlayer.getRating());
+
             NavigableSet<Player> matchedPlayers = waitingPlayers.subSet(lowerPlayer, true, upperPlayer, true)
                     .stream().sorted(Comparator.comparingLong(Player::getEntryTime))
                     .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
+
+            if(matchedPlayers.size() == 0) return;
 
             int rating = checkWaitingTime(matchedPlayers.first());
 
