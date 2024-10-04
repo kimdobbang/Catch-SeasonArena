@@ -517,8 +517,8 @@ function createPlayer(scene, players) {
     // 닉네임 텍스트 생성
     const nickname = scene.add
       .text(player.x, player.y - 60, player.nickname, {
-        fontSize: "12px",
-        fill: "#ffffff",
+        fontSize: "14px",
+        fill: "#000000",
         align: "center",
       })
       .setOrigin(0.5);
@@ -850,23 +850,23 @@ function showText(scene, delayTime, text) {
     fill: "#ff0000", // 빨간색 텍스트
   }).setOrigin(0.5, 0.5).setScrollFactor(0);
 
-  // 2초 동안 유지 후 투명해지면서 사라지는 애니메이션
+
   scene.tweens.add({
     targets: warningText,
-    alpha: 0, // 점점 투명해짐
-    ease: 'Power1', // 부드러운 트윈 효과
-    delay: delayTime, // 2초 후 실행
-    duration: 500, // 사라지는 데 걸리는 시간
+    alpha: 0, 
+    ease: 'Power1', 
+    delay: 100, 
+    duration: 500 * delayTime, 
     onComplete: () => {
-      warningText.destroy(); // 애니메이션이 끝나면 텍스트 제거
+      warningText.destroy(); 
     }
   });
 }
 
 function setStaticMessage(scene) {
   setTimeout(() => {
-    showText(scene, 2, "자기장이 줄어듭니다!");
-  }, 5000);
+    showText(scene, 10, "자기장이 줄어듭니다!");
+  }, 7000);
   
   setTimeout(() => {
     showText(scene, 1, "START");
@@ -885,11 +885,11 @@ function setStaticMessage(scene) {
   }, 1000);
 
   setTimeout(() => {
-    showText(scene, 2, "자기장이 강해집니다!");
+    showText(scene, 10, "자기장이 강해집니다!");
   }, 60000);
   
   setTimeout(() => {
-    showText(scene, 2, "자기장이 강해집니다!");
+    showText(scene, 10, "자기장이 강해집니다!");
   }, 120000); 
 
 }
