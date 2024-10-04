@@ -59,6 +59,7 @@ public class RecommendService {
     public void entryPlayer(EntryRequestDto requestDto) {
         Player player = Player.createPlayer(requestDto);
         playerStore.getWaitingPlayers().add(player);
+        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), playerStore.getWaitingPlayers().size());
     }
 
     public void matchingGame(){
@@ -121,7 +122,7 @@ public class RecommendService {
             redisTemplate.opsForValue().setBit(key, item, true);
         }
         redisTemplate.opsForValue().setBit(key, avatars.get(player.getAvatar()), true);
-        redisTemplate.expire(key, 60, TimeUnit.SECONDS);
+        redisTemplate.expire(key, 6000, TimeUnit.SECONDS);
     }
 
     private void sendRoomIdToPlayer(Player player, String roomId) {
