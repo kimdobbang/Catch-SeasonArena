@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "@/app/redux/slice/authSlice";
-import { fetchUserInfo } from "@/app/apis/authApi";
+import { handleLoginSuccess } from "@/shared/utils/fetch-user-info";
 
 export const OAuthCallbackPage = () => {
   const navigate = useNavigate();
@@ -17,11 +16,7 @@ export const OAuthCallbackPage = () => {
 
     if (accessToken) {
       console.log("OAuth 로그인 성공, 토큰 저장 완료:", accessToken);
-      dispatch(setToken(accessToken));
-
-      const userInfo = await fetchUserInfo(accessToken);
-      dispatch(setUser({ email: userInfo.email, nickName: userInfo.nickName }));
-      navigate("/main");
+      await handleLoginSuccess(accessToken, dispatch, navigate);
     } else {
       setErrorMessage("OAuth 로그인 실패: URL에 유효한 토큰이 없습니다.");
       setLoading(false);

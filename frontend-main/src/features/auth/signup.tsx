@@ -5,7 +5,7 @@ import { InputField, SignupButton, IconTextButton, Leave } from "@atoms/index";
 import { ServiceTitle, Copyright } from "@ui/index";
 import { signUpUser, checkEmailExists } from "@/app/apis/authApi";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "@/app/redux/slice/authSlice";
+import { handleLoginSuccess } from "@/shared/utils/fetch-user-info";
 
 export const Signup = () => {
   const navigate = useNavigate();
@@ -53,13 +53,10 @@ export const Signup = () => {
 
     try {
       const { data, accessToken } = await signUpUser({ email, password });
-      console.log("회원가입 성공");
+      console.log("회원가입 성공", data);
 
       if (accessToken) {
-        dispatch(setToken(accessToken));
-        dispatch(setUser(data));
-        console.log("회원가입 및 로그인 성공:", data);
-        navigate("/main");
+        await handleLoginSuccess(accessToken, dispatch, navigate);
       }
     } catch (error) {
       setSignupErrorMessage("회원가입에 실패했습니다.");
