@@ -99,6 +99,9 @@ export const fetchUserInfo = async (
   if (!response.ok) {
     throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
   }
+  const data = await response.json();
+  console.log("Fetched user info", data);
 
-  return response.json();
+  // return response.json();
+  return data;
 };
