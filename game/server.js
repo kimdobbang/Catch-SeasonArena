@@ -152,9 +152,9 @@ async function handlePlayerJoin(nickname, roomCode, socket, playerData) {
     }
 
     let profileImage;
-    let weapon;
-    let passive;
-    let skill;
+    let weapon = 0;
+    let passive = 0;
+    let skill = 0;
 
     // weapon 결정
     if ((playerData & (1 << 1)) !== 0) {
@@ -443,16 +443,23 @@ async function getPlayerData(nickname, roomCode) {
   try {
     const key = nickname + " " + roomCode;
 
-    // redis에서 데이터 조회
-    const playerData = await redisClient.get(key);
+    const bitmap = await redisClient.get(key);
 
-    if (playerData) {
-      // 문자열을 Buffer로 변환
-      const buffer = Buffer.from(playerData, "binary");
+    if (bitmap) {
+      const buffer = Buffer.from(bitmap);
 
-      // Big Endian 방식으로 변환 (큰 숫자를 다룰 수 있음)
-      const number = buffer.readUIntBE(0, buffer.length);
-      return number;
+      let binaryString = "";
+      for (let byte of buffer) {
+        binaryString += byte.toString(2).padStart(8, "0");
+      }
+
+      let reversedBinaryString = binaryString.split("").reverse().join("");
+
+      // 역순으로 변환한 2진수 문자열을 10진수로 변환
+      const reversedDecimalNumber = parseInt(reversedBinaryString, 2);
+      console.log(`역순 10진수 값: ${reversedDecimalNumber}`);
+
+      return reversedDecimalNumber;
     } else {
       console.log(`해당 키로 조회된 데이터가 없습니다: ${key}`);
       return null;
@@ -473,6 +480,7 @@ async function saveResultToRedis(nickname, result) {
       rank: result.rank,
       rating: result.rating,
     });
+    // await redisClient.expire(nickname, 60);
     console.log(`데이터 저장 성공: ${nickname}`);
   } catch (err) {
     console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
@@ -504,7 +512,7 @@ function setPassive(player, passive) {
       player.bear = true;
       break;
     case "10": // 다라미
-      player.speed = 1.15;
+      player.speed = 1.3;
       break;
   }
 }

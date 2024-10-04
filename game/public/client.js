@@ -27,9 +27,9 @@ function startGame() {
 // });
 
 // <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
+const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://172.30.1.70:3000");
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -83,7 +83,6 @@ let lastSkillUsedTime = 0;
 let skillCooldown = 10000;
 let cooldownText;
 let startTime = Date.now();
-
 
 function preload() {
   //플레이어
@@ -482,7 +481,7 @@ function createPlayer(scene, players) {
     // 무기 생성
     const weaponKey = `weapon${player.weaponImage}`;
     let weaponScale = 0.2;
-    if(player.weaponImage === "1"){
+    if (player.weaponImage === "1") {
       weaponScale = 0.3;
     }
     const weapon = scene.add
@@ -849,21 +848,23 @@ function showDamageText(scene, damage, player) {
 
 function showText(scene, delayTime, text) {
   // 화면 상단에 텍스트 표시 (x: 중앙, y: 50 위치에 빨간색 텍스트)
-  const warningText = scene.add.text(scene.scale.width / 2, 200, text, {
-    font: "32px Arial",
-    fill: "#ff0000", // 빨간색 텍스트
-  }).setOrigin(0.5, 0.5).setScrollFactor(0);
-
+  const warningText = scene.add
+    .text(scene.scale.width / 2, 200, text, {
+      font: "32px Arial",
+      fill: "#ff0000", // 빨간색 텍스트
+    })
+    .setOrigin(0.5, 0.5)
+    .setScrollFactor(0);
 
   scene.tweens.add({
     targets: warningText,
-    alpha: 0, 
-    ease: 'Power1', 
-    delay: 100, 
-    duration: 500 * delayTime, 
+    alpha: 0,
+    ease: "Power1",
+    delay: 100,
+    duration: 500 * delayTime,
     onComplete: () => {
-      warningText.destroy(); 
-    }
+      warningText.destroy();
+    },
   });
 }
 
@@ -871,7 +872,7 @@ function setStaticMessage(scene) {
   setTimeout(() => {
     showText(scene, 10, "자기장이 줄어듭니다!");
   }, 7000);
-  
+
   setTimeout(() => {
     showText(scene, 1, "START");
   }, 4000);
@@ -879,7 +880,7 @@ function setStaticMessage(scene) {
   setTimeout(() => {
     showText(scene, 1, "1");
   }, 3000);
-  
+
   setTimeout(() => {
     showText(scene, 1, "2");
   }, 2000);
@@ -891,9 +892,8 @@ function setStaticMessage(scene) {
   setTimeout(() => {
     showText(scene, 10, "자기장이 강해집니다!");
   }, 60000);
-  
+
   setTimeout(() => {
     showText(scene, 10, "자기장이 강해집니다!");
-  }, 120000); 
-
+  }, 120000);
 }
