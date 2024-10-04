@@ -2,7 +2,7 @@
 import { generateItemImagePath } from "@/app/types/common";
 
 export const AutumnItemImage = ({ itemId }: { itemId: number | null }) => {
-  if (itemId === null || itemId === undefined) return null;
+  if (itemId === null) return null;
 
   const imagePath = generateItemImagePath(itemId);
 

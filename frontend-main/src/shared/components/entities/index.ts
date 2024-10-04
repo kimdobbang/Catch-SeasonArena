@@ -5,7 +5,6 @@ export { DescriptionBox } from "./item/description-box";
 export { UserNameContainer } from "./user/user-name-container";
 export { TierProgressBar } from "./user/tier-progress-bar";
 export { CircleAvatar } from "./user/circle-avatar";
-export { NicknameChangeModal } from "@entities/user/check-nickname-modal";
 
 // 수집, 합성 결과
 export { ItemFail } from "./item/item-fail";
