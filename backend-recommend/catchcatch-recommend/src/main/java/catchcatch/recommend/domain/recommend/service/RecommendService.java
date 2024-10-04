@@ -10,10 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.NavigableSet;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -120,7 +117,7 @@ public class RecommendService {
     }
 
     private void savePlayer(Player player, String roomId) {
-        String key = "player " + roomId;
+        String key = player.getNickname() + " " + roomId;
         for (int item : player.getItems()) {
             redisTemplate.opsForValue().setBit(key, item, true);
         }
