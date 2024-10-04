@@ -16,8 +16,6 @@ export const TierProgressBar = ({ rating, className }: TierProgressProps) => {
   const min = tierRanges[tier].min;
   const max = tierRanges[tier].max;
 
-  console.log("min: ", min, ", max: ", max);
-
   return (
     <div
       className={`${className} gap-2 flex flex-row w-full h-auto justify-center`}
