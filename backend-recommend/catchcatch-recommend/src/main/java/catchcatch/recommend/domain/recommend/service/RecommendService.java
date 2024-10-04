@@ -129,7 +129,7 @@ public class RecommendService {
     }
 
     private void sendRoomIdToPlayer(Player player, String roomId) {
-        messagingTemplate.convertAndSend("/api/recommend/sub/game/" + player.getNickname(), roomId);
+        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), roomId);
     }
 
 }
