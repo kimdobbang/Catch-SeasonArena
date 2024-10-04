@@ -1,12 +1,13 @@
-import { tierRanges, getTierByRating } from "@/app/types/tier";
+import { tierRanges } from "@/app/types/tier";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 interface ProgressProps {
-  rating: number;
   className?: string;
 }
 
-export const ProgressBar = ({ rating, className }: ProgressProps) => {
-  const tier = getTierByRating(rating);
+export const ProgressBar = ({ className }: ProgressProps) => {
+  const { rating, tier } = useSelector((state: RootState) => state.user);
   const min = tierRanges[tier].min;
   const max = tierRanges[tier].max;
 
@@ -26,7 +27,7 @@ export const ProgressBar = ({ rating, className }: ProgressProps) => {
       case "Ruby":
         return "linear-gradient(to right, #F5005A, #F5005A)";
       default:
-        return "linear-gradient(to right, #f6f6f6, #C0C0C0)"; // 기본 색상
+        return "linear-gradient(to right, #f6f6f6, #C0C0C0)";
     }
   };
 
@@ -37,21 +38,15 @@ export const ProgressBar = ({ rating, className }: ProgressProps) => {
 
   return (
     <div className="relative w-full">
-      {/* Progress bar wrapper */}
       <div className="relative w-full h-8 overflow-hidden bg-gray-300 rounded-lg">
-        {/* Progress bar itself */}
         <div
           className={`${className} h-8 flex items-center justify-center text-white`}
           style={{
             width: `${getValue()}%`, // 진행률을 백분율로 설정
             backgroundImage: getGradientColor(), // 티어에 따른 색상 적용
           }}
-        >
-          {/* 진행 바 위에는 텍스트 없음 */}
-        </div>
+        ></div>
       </div>
-
-      {/* Rating 텍스트, 진행된 만큼 바로 아래에 위치 */}
       <div
         className="absolute text-sm font-semibold text-gray-700"
         style={{

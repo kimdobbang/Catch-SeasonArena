@@ -15,11 +15,9 @@ export const Matching = () => {
     window.location.href = "/game";
   };
 
-  const userRating = useSelector((state: RootState) => state.user.rating);
   const userAvatar = useSelector(
     (state: RootState) => state.user.selectedAvatar,
   );
-  const userNickname = useSelector((state: RootState) => state.user.nickname);
 
   return (
     <div className="w-full h-full ">
@@ -38,12 +36,8 @@ export const Matching = () => {
         />
       </div>
       <div className="w-full h-[70%] flex flex-col items-center gap-6">
-        <UserNameContainer
-          className="mt-4"
-          nickname={userNickname}
-          rating={userRating}
-        />
-        <TierProgressBar rating={userRating} />
+        <UserNameContainer className="mt-4" />
+        <TierProgressBar />
         <div className="w-full px-4">
           {/* w-full로 부모 요소를 꽉 채우고 px-4로 padding 추가 */}
           <Body1Text className="!text-left text-catch-main-400 ">

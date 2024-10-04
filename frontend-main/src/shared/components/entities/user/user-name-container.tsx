@@ -1,16 +1,22 @@
 import Pencil from "@/assets/icons/pencil.svg?react";
+import { useState } from "react";
 import { Body2Text, TierBadge } from "../../atoms";
-import { getTierByRating } from "@/app/types/tier";
+import { NicknameChangeModal } from "@entities/index";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+
 interface UserNameContainerProps {
-  nickname: string;
-  rating: number;
   className?: string;
 }
-export const UserNameContainer = ({
-  nickname = "닉네임",
-  rating = 800,
-  className,
-}: UserNameContainerProps) => {
+export const UserNameContainer = ({ className }: UserNameContainerProps) => {
+  const { nickname, rating, tier } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div
       className={`bg-gradient-to-r p-3 from-catch-sub-300 to-catch-main-400 flex flex-row rounded-xl w-[293px] h-[77px] bg-catch-main-400 ${className}`}
@@ -22,14 +28,21 @@ export const UserNameContainer = ({
       <div className="pl-3 w-[70%] h-full flex flex-col justify-center">
         <Body2Text className="!text-left text-white">{nickname}</Body2Text>
         <Body2Text className="!text-left text-white">
-          {getTierByRating(rating)} · {rating}
+          {tier} · {rating}
         </Body2Text>
       </div>
       <div className="w-[10%] h-full flex flex-col justify-start">
-        <button>
+        <button onClick={openModal}>
           <Pencil />
         </button>
       </div>
+      {isModalOpen && (
+        <NicknameChangeModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          currentNickname={nickname}
+        />
+      )}
     </div>
   );
 };
