@@ -58,6 +58,7 @@ public class RecommendService {
 
     public void entryPlayer(EntryRequestDto requestDto) {
         Player player = Player.createPlayer(requestDto);
+        log.info("BE/MATCHING - player " + player);
         playerStore.getWaitingPlayers().add(player);
         messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), playerStore.getWaitingPlayers().size());
     }
