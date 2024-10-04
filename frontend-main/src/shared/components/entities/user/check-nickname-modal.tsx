@@ -1,4 +1,5 @@
-// src\shared\components\entities\user\modify-nickname-modal.tsx
+// src/shared/components/entities/user/modify-nickname-modal.tsx
+
 import { useState, useEffect, useCallback } from "react";
 import { checkNicknameExists, changeNicknameSave } from "@/app/apis/memberApi";
 import { NicknameInput } from "@atoms/index";
@@ -6,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { setNickname } from "@/app/redux/slice/authSlice";
 
+// Debounce 함수 (중복 체크 최적화)
 const debounce = <T extends (...args: Parameters<T>) => Promise<void>>(
   func: T,
   delay: number,
@@ -26,23 +28,25 @@ export const NicknameChangeModal = ({
   onClose: () => void;
   currentNickname: string;
 }) => {
-  const [nickname, setNicknameState] = useState(currentNickname || ""); // 초기값 빈 문자열로 설정
+  const [nickname, setNicknameState] = useState(currentNickname || "");
   const [isChecking, setIsChecking] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState<boolean | null>(null);
   const [error, setError] = useState("");
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const dispatch = useDispatch();
 
+  // 중복 확인 API 호출
   const checkNicknameAvailability = useCallback(
-    async (accessToken: string, name: string): Promise<void> => {
+    async (name: string): Promise<void> => {
+      if (name.trim().length === 0) return;
       setIsChecking(true);
       try {
-        const result = await checkNicknameExists(accessToken, name);
-        setIsDuplicate(result);
-        setError(result ? "누군가 선점한 닉네임이에요😮" : "");
-      } catch (error) {
-        setError("중복확인 오류! 다시 시도해주세요😅");
-        console.log(error);
+        const { isDuplicate, error } = await checkNicknameExists(
+          accessToken,
+          name,
+        );
+        setIsDuplicate(isDuplicate);
+        setError(error || (isDuplicate ? "누군가 선점한 닉네임이에요 😮" : ""));
       } finally {
         setIsChecking(false);
       }
@@ -55,29 +59,35 @@ export const NicknameChangeModal = ({
     [checkNicknameAvailability],
   );
 
-  const handleNicknameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setNicknameState(e.target.value);
-    },
-    [],
-  );
+  // 닉네임 변경 처리
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNicknameState(value);
+    setError("");
 
-  const handleNewNicknameSave = useCallback(async () => {
-    if (isDuplicate === false && nickname.trim().length > 0) {
+    if (value.trim().length > 0) {
+      debouncedCheckNickname(value);
+    } else {
+      setIsDuplicate(null);
+    }
+  };
+
+  // 저장 API 호출
+  const handleNewNicknameSave = async () => {
+    if (!isDuplicate && nickname.trim().length > 0) {
       try {
         await changeNicknameSave(accessToken, nickname);
         dispatch(setNickname(nickname));
         onClose();
-      } catch (error) {
+      } catch {
         setError("닉네임 저장 중 오류 발생");
-        console.log(error);
       }
     }
-  }, [nickname, isDuplicate, dispatch, onClose]);
+  };
 
   useEffect(() => {
     if (nickname !== currentNickname && nickname.trim().length > 0) {
-      debouncedCheckNickname(accessToken, nickname);
+      debouncedCheckNickname(nickname);
     }
   }, [nickname, currentNickname, debouncedCheckNickname]);
 
@@ -100,7 +110,12 @@ export const NicknameChangeModal = ({
           isDuplicate={isDuplicate}
         />
 
+        {isDuplicate === false && (
+          <p className="mt-2 text-green-500"> 훌륭한 닉네임이에요 😊</p>
+        )}
+        {isDuplicate === true && <div className="relative mt-2"></div>}
         {error && <p className="mt-2 text-red-500">{error}</p>}
+
         <div className="flex justify-end mt-4 space-x-2">
           <button
             className="p-2 rounded font-pretendard text-catch-gray-999 bg-catch-gray-200"
@@ -112,19 +127,11 @@ export const NicknameChangeModal = ({
           <button
             onClick={handleNewNicknameSave}
             className={`p-2 font-pretendard text-catch-gray-000 rounded-xs ${
-              isChecking ||
-              isDuplicate === true ||
-              error ||
-              nickname.trim().length === 0 // 공백 문자열 처리
+              isChecking || isDuplicate || nickname.trim().length === 0
                 ? "bg-gray-300 opacity-50 cursor-not-allowed"
                 : "bg-catch-main-400"
             }`}
-            disabled={
-              isChecking ||
-              isDuplicate === true ||
-              !!error ||
-              nickname.trim().length === 0 // 공백 또는 undefined 처리
-            }
+            disabled={isChecking || isDuplicate || nickname.trim().length === 0}
           >
             변경
           </button>

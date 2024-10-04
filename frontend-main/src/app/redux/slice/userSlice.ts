@@ -16,8 +16,8 @@ export interface UserState extends UserInfo {
 const initialState: UserState = {
   email: "user@example.com",
   nickname: "닉네임을 수정하세요",
-  rating: 500,
-  tier: getTierByRating(500),
+  rating: 1,
+  tier: getTierByRating(1),
   selectedAvatar: 2,
   stats: {
     hp: 100,
