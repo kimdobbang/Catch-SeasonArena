@@ -10,7 +10,7 @@ function joinRoom(roomCode, nickname, playerData) {
 
 function startGame() {
   new Phaser.Game(config); // Phaser 게임게임 시작
-  setTimeout(() => (gameStarted = true), 3000);
+  setTimeout(() => (gameStarted = true), 4000);
 }
 
 // // 클라이언트: 쿼리 스트링에서 roomCode와 nickname 추출
@@ -47,7 +47,7 @@ const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: true,
+      debug: false,
     },
   },
   scale: {
@@ -82,6 +82,8 @@ let MAGNETIC_COUNT = 0;
 let lastSkillUsedTime = 0;
 let skillCooldown = 10000;
 let cooldownText;
+let startTime = Date.now();
+
 
 function preload() {
   //플레이어
@@ -369,6 +371,8 @@ function create() {
       socket.disconnect();
     }
   });
+
+  setStaticMessage(scene);
 
   // <<100fps로 상태 업데이트 받기>>
   socket.on("stateUpdate", ({ players, radius }) => {
@@ -837,4 +841,55 @@ function showDamageText(scene, damage, player) {
       damageText.destroy();
     },
   });
+}
+
+function showText(scene, delayTime, text) {
+  // 화면 상단에 텍스트 표시 (x: 중앙, y: 50 위치에 빨간색 텍스트)
+  const warningText = scene.add.text(scene.scale.width / 2, 200, text, {
+    font: "32px Arial",
+    fill: "#ff0000", // 빨간색 텍스트
+  }).setOrigin(0.5, 0.5).setScrollFactor(0);
+
+  // 2초 동안 유지 후 투명해지면서 사라지는 애니메이션
+  scene.tweens.add({
+    targets: warningText,
+    alpha: 0, // 점점 투명해짐
+    ease: 'Power1', // 부드러운 트윈 효과
+    delay: delayTime, // 2초 후 실행
+    duration: 500, // 사라지는 데 걸리는 시간
+    onComplete: () => {
+      warningText.destroy(); // 애니메이션이 끝나면 텍스트 제거
+    }
+  });
+}
+
+function setStaticMessage(scene) {
+  setTimeout(() => {
+    showText(scene, 2, "자기장이 줄어듭니다!");
+  }, 5000);
+  
+  setTimeout(() => {
+    showText(scene, 1, "START");
+  }, 4000);
+
+  setTimeout(() => {
+    showText(scene, 1, "1");
+  }, 3000);
+  
+  setTimeout(() => {
+    showText(scene, 1, "2");
+  }, 2000);
+
+  setTimeout(() => {
+    showText(scene, 1, "3");
+  }, 1000);
+
+  setTimeout(() => {
+    showText(scene, 2, "자기장이 강해집니다!");
+  }, 60000);
+  
+  setTimeout(() => {
+    showText(scene, 2, "자기장이 강해집니다!");
+  }, 120000); 
+
 }
