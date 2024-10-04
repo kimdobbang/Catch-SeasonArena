@@ -64,10 +64,11 @@ public class RecommendService {
     }
 
     public void matchingGame(){
-        log.info("BE/MATCHING - player size {}", playerStore.getWaitingPlayers().size());
         if(playerStore.getWaitingPlayers().size() < PLAYER_SIZE){
             return;
         }
+
+        log.info("BE/MATCHING - matching player size {}", playerStore.getWaitingPlayers().size());
 
         for(int i=0; i < RATING_MAX; i += RATING_RANGE){
             Player lowerPlayer = Player.createRangePlayer(i);
