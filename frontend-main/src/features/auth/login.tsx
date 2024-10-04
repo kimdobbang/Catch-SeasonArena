@@ -3,8 +3,8 @@ import config from "@/config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginUser, fetchUserInfo } from "@/app/apis/authApi";
-import { setToken, setUser } from "@/app/redux/slice/authSlice";
+import { loginUser } from "@/app/apis/authApi";
+import { handleLoginSuccess } from "@/shared/utils/fetch-user-info";
 import { ServiceTitle, Copyright } from "@ui/index";
 import {
   InputField,
@@ -40,13 +40,7 @@ export const Login = () => {
       const { accessToken } = await loginUser({ email, password });
 
       if (accessToken) {
-        dispatch(setToken(accessToken));
-
-        const userInfo = await fetchUserInfo(accessToken);
-        dispatch(
-          setUser({ email: userInfo.email, nickName: userInfo.nickName }),
-        );
-        navigate("/main");
+        await handleLoginSuccess(accessToken, dispatch, navigate);
       }
     } catch (error) {
       setErrorMessage("입력 정보를 확인 바랍니다😅");

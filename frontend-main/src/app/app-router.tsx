@@ -17,6 +17,7 @@ import {
   InventoryPage,
   CombinationPage,
   CollectionbookPage,
+  MatchingPage,
 } from "@/pages/index";
 
 // PrivateRoute 컴포넌트
@@ -101,6 +102,10 @@ export const AppRouter = () => {
             {
               path: "/collectionbook",
               element: <CollectionbookPage />,
+            },
+            {
+              path: "/matching",
+              element: <MatchingPage />,
             },
           ],
         },
