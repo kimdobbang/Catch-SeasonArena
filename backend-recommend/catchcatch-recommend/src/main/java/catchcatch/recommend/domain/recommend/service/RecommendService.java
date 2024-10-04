@@ -80,7 +80,7 @@ public class RecommendService {
                     .stream().sorted(Comparator.comparingLong(Player::getEntryTime))
                     .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
-            if(matchedPlayers.size() == 0) return;
+            if(matchedPlayers.size() == 0) continue;
 
             int rating = checkWaitingTime(matchedPlayers.first());
 
