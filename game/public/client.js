@@ -27,9 +27,9 @@ function startGame() {
 // });
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://172.30.1.70:3000");
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -481,9 +481,13 @@ function createPlayer(scene, players) {
 
     // 무기 생성
     const weaponKey = `weapon${player.weaponImage}`;
+    let weaponScale = 0.2;
+    if(player.weaponImage === "1"){
+      weaponScale = 0.3;
+    }
     const weapon = scene.add
       .image(player.x + 50, player.y, weaponKey)
-      .setScale(0.2);
+      .setScale(weaponScale);
     clientPlayers[player.socketId].weapon = weapon;
 
     // 플레이어 생성
