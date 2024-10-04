@@ -1,7 +1,7 @@
 import Pencil from "@/assets/icons/pencil.svg?react";
 import { useState } from "react";
 import { Body2Text, TierBadge } from "../../atoms";
-import { NicknameChangeModal } from "@entities/index";
+import { NicknameChangeModal } from "@/features/main/check-nickname-modal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 
