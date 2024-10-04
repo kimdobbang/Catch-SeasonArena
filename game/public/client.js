@@ -27,9 +27,9 @@ function startGame() {
 // });
 
 // <<phaser config>>
-const socket = io("https://j11b106.p.ssafy.io");
+// const socket = io("https://j11b106.p.ssafy.io");
 // const socket = io("http://172.30.1.70:3000");
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -83,7 +83,7 @@ let lastSkillUsedTime = 0;
 let skillCooldown = 10000;
 let cooldownText;
 let startTime = Date.now();
-
+let skillImageKey;
 function preload() {
   //플레이어
   this.load.image("player1", "./assets/player/player1.png");
@@ -98,7 +98,14 @@ function preload() {
   this.load.image("weapon9", "./assets/weapon/9.png");
   //스킬
   this.load.image("bomb", "./assets/skill/bomb.png");
-  this.load.image("scarecrow", "./assets/skill/scarecrow.png");
+  this.load.image("Sbomb", "./assets/skill/bomb.png");
+  this.load.image("Sscarecrow", "./assets/skill/scarecrow.png");
+  this.load.image("Smoon", "./assets/skill/moon.png");
+  this.load.image("Sddugi", "./assets/skill/ddugi.png");
+  this.load.image("Sdragonfly", "./assets/skill/dragonfly.png");
+  this.load.image("Smushroom", "./assets/skill/mushroom.png");
+
+  this.load.image("sword", "./assets/weapon/sword.png")
 
   this.load.spritesheet("effects1", "./assets/sprite/effects1.png", {
     frameWidth: 64,
@@ -249,10 +256,18 @@ function create() {
 
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(320, 700, 50, 0xf29627)
+    .circle(320, 700, 50, 0xF29627)
     .setInteractive()
     .setScrollFactor(0);
 
+  // 버튼 위에 이미지 추가 ("sword" 이미지를 사용하고 스케일을 0.2로 설정)  
+  const swordImage = this.add
+  .image(320, 700, "sword") 
+  .setScale(0.1) 
+  .setScrollFactor(0)
+  .setAngle(-100); 
+
+    
   attackButton.on("pointerdown", () => {
     if (gameStarted && !clientPlayers[socket.id].isAttacking) {
       // 플레이어가 공격할 때 애니메이션 시작
@@ -268,7 +283,7 @@ function create() {
 
   // <<스킬 버튼>>
   const skillButton = this.add
-    .circle(320, 600, 25, 0x4caf50)
+    .circle(320, 600, 25, 0xF8D18F) 
     .setInteractive()
     .setScrollFactor(0);
   cooldownText = this.add
@@ -276,6 +291,13 @@ function create() {
     .setOrigin(0.5)
     .setScrollFactor(0);
   cooldownText.setVisible(false);
+  let skillImage;
+  setTimeout(() => {
+    skillImage = this.add
+      .image(320, 603, skillImageKey) 
+      .setScale(0.09)
+      .setScrollFactor(0);
+  }, 3000); // 3초 대기 후 이미지 표시
 
   skillButton.on("pointerdown", () => {
     const currentTime = Date.now();
@@ -288,6 +310,10 @@ function create() {
       cooldownText.setText(skillCooldown / 1000);
       cooldownText.setVisible(true);
 
+      if (skillImage) {
+        skillImage.setVisible(false); // 스킬 이미지 숨기기
+      }
+
       // 남은 쿨다운 시간을 갱신하는 함수
       const updateCooldown = setInterval(() => {
         const elapsedTime = Date.now() - lastSkillUsedTime;
@@ -298,6 +324,9 @@ function create() {
         if (remainingCooldown <= 0) {
           cooldownText.setVisible(false);
           skillButton.setAlpha(1);
+          if (skillImage) {
+            skillImage.setVisible(true);
+          }
           clearInterval(updateCooldown); // 업데이트 중지
         } else {
           cooldownText.setText(remainingCooldown);
@@ -584,26 +613,33 @@ function createPlayer(scene, players) {
 
 // 스킬 설정
 function setSkill(skill) {
-  switch (skill) {
-    case "3": // 솔 폭탄
-      skillCooldown = 20000;
-      break;
-    case "4": // 드래곤플라이
-      skillCooldown = 30000;
-      break;
-    case "7": // 뚜기 점프
-      skillCooldown = 30000;
-      break;
-    case "8": // 버섯
-      skillCooldown = 20000;
-      break;
-    case "11": // 갤럭시 문
-      skillCooldown = 70000;
-      break;
-    case "12": // 허수아비
-      skillCooldown = 50000;
-      break;
-  }
+ 
+    switch (skill) {
+      case "3": // 솔 폭탄
+        skillCooldown = 20000;
+        skillImageKey = "Sbomb";
+        break;
+      case "4": // 드래곤플라이
+        skillCooldown = 30000;
+        skillImageKey = "Sdragonfly";
+        break;
+      case "7": // 뚜기 점프
+        skillCooldown = 30000;
+        skillImageKey = "Sddugi";
+        break;
+      case "8": // 버섯
+        skillCooldown = 20000;
+        skillImageKey = "Smushroom";
+        break;
+      case "11": // 갤럭시 문
+        skillCooldown = 70000;
+        skillImageKey = "Smoon";
+        break;
+      case "12": // 허수아비
+        skillCooldown = 50000;
+        skillImageKey = "Sscarecrow";
+        break;
+    }
 }
 
 // <<무기 업데이트>>
