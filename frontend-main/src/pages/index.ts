@@ -17,3 +17,5 @@ export { CollectResultPage } from "@/pages/collect-result-page";
 export { InventoryPage } from "@/pages/inventory-page";
 export { CombinationPage } from "@/pages/combination-page";
 export { CollectionbookPage } from "@/pages/collectionbook-page";
+
+export { MatchingPage } from "@/pages/matching-page";
