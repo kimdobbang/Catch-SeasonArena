@@ -54,6 +54,7 @@ public class GetMyTierRankingUseCaseImpl implements GetMyTierRankingUseCase {
 		Integer start = page * limit;
 		log.info("BE-RANK :  start {}", start);
 		String tier = getUserTierPort.getUserTier(nickname);
+		log.info("BE-RANK : tier {}", tier);
 		Set<ZSetOperations.TypedTuple<Object>> tierRanksSet = getTierRankPort.getTierRank(tier, start);
 		List<UserRank> tierRanks = tierRank(tierRanksSet, tier, start);
 		return  new TierRanking(tierRanks);

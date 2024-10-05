@@ -6,5 +6,5 @@ import java.util.Set;
 
 public interface GetTierRankPort {
 
-    Set<ZSetOperations.TypedTuple<Object>> getTierRank(String tier, Integer cursor);
+    Set<ZSetOperations.TypedTuple<Object>> getTierRank(String tier, Integer start);
 }
