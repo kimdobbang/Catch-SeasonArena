@@ -5,12 +5,12 @@
                 <pattern>%date - %-5p %t %-25logger{5} %F:%L %m%n</pattern>
             </layout>
         </encoder>
-        <topic>auth-log</topic>
+        <topic>auth-logs</topic>
         <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
         <producerConfig>client.id=my-custom-producer-id</producerConfig>
         <producerConfig>retries=1</producerConfig>
-        <producerConfig>bootstrap.servers=3.36.122.163:9092</producerConfig>
+        <producerConfig>bootstrap.servers=3.36.122.163:9093</producerConfig>
         <producerConfig>compression.type=snappy</producerConfig>
         <producerConfig>max.block.ms=1000</producerConfig>
 
