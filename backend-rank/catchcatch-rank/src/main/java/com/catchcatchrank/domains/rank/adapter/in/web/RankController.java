@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.catchcatchrank.domains.rank.application.port.in.GetMyTierRankingUseCase;
+import com.catchcatchrank.domains.rank.application.port.in.GetTierRankingUseCase;
 import com.catchcatchrank.domains.rank.domain.MyTierRanking;
 
 import lombok.RequiredArgsConstructor;
@@ -19,18 +19,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "rank")
 public class RankController {
 
-	private final GetMyTierRankingUseCase getMyRankingService;
+	private final GetTierRankingUseCase getRankingService;
 
 	@GetMapping("/tier/{nickname}/{page}")
-	public ResponseEntity<?> bestRank(@PathVariable String nickname, @PathVariable Integer page) {
+	public ResponseEntity<?> findTierRanking(@PathVariable String nickname, @PathVariable Integer page) {
 		log.info("BE-RANK :  nickname {}, page {}", nickname, page);
 
 		if(page == 0){
-			MyTierRanking myRanking = getMyRankingService.getMyTierRanking(nickname, page);
+			MyTierRanking myRanking = getRankingService.getMyTierRanking(nickname, page);
 			return ResponseEntity.ok().body(myRanking);
 		}
 
-		TierRanking tierRanking = getMyRankingService.getTierRanking(nickname, page);
+		TierRanking tierRanking = getRankingService.getTierRanking(nickname, page);
 		return ResponseEntity.ok().body(tierRanking);
 	}
 }

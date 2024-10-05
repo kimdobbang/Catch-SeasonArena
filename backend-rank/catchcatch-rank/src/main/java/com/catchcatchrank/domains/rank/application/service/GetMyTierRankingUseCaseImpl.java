@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.catchcatchrank.domains.rank.application.port.in.GetMyTierRankingUseCase;
+import com.catchcatchrank.domains.rank.application.port.in.GetTierRankingUseCase;
 import com.catchcatchrank.domains.rank.application.port.out.GetMeRankPort;
 import com.catchcatchrank.domains.rank.application.port.out.GetUserTierPort;
 import com.catchcatchrank.domains.rank.domain.MyTierRanking;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j(topic = "rank")
-public class GetMyTierRankingUseCaseImpl implements GetMyTierRankingUseCase {
+public class GetMyTierRankingUseCaseImpl implements GetTierRankingUseCase {
 
 	private final GetUserTierPort getUserTierPort;
 	private final GetMeRankPort getMeRankPort;
