@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.catchcatchrank.domains.rank.application.port.out.GetTierRankPort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.catchcatchrank.domains.rank.application.port.in.GetMyRankingService;
+import com.catchcatchrank.domains.rank.application.port.in.GetMyTierRankingUseCase;
 import com.catchcatchrank.domains.rank.application.port.out.GetMeRankPort;
-import com.catchcatchrank.domains.rank.application.port.out.GetTop3RankPort;
 import com.catchcatchrank.domains.rank.application.port.out.GetUserTierPort;
-import com.catchcatchrank.domains.rank.domain.MyRanking;
+import com.catchcatchrank.domains.rank.domain.MyTierRanking;
 import com.catchcatchrank.domains.rank.domain.UserRank;
 
 import lombok.RequiredArgsConstructor;
@@ -22,25 +23,29 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j(topic = "rank")
-public class GetMyRankServiceImpl implements GetMyRankingService {
+public class GetMyTierRankingUseCaseImpl implements GetMyTierRankingUseCase {
 
-	private final GetTop3RankPort getTop3RankPort;
 	private final GetUserTierPort getUserTierPort;
 	private final GetMeRankPort getMeRankPort;
+	private final GetTierRankPort getTierRankPort;
+
+	@Value("${rank.limit}")
+	private Integer limit;
 
 	@Override
-	public MyRanking getMyRanking(String nickname) {
+	public MyTierRanking getMyTierRanking(String nickname, Integer page) {
+		Integer start = page * limit;
 		String tier = getUserTierPort.getUserTier(nickname);
-		Set<ZSetOperations.TypedTuple<Object>> top3 = getTop3RankPort.getTop3Rank(tier);
-		List<UserRank> top3Ranks = top3Rank(top3,tier);
+		Set<ZSetOperations.TypedTuple<Object>> tierRanksSet = getTierRankPort.getTierRank(tier, start);
+		List<UserRank> tierRanks = tierRank(tierRanksSet, tier, start);
 		UserRank myRank = myRank(tier, nickname);
-		return  new MyRanking(top3Ranks, myRank);
+		return  new MyTierRanking(tierRanks, myRank);
 	}
 
-	private List<UserRank> top3Rank(Set<ZSetOperations.TypedTuple<Object>> top3, String tier) {
-		int count = 1;
+	private List<UserRank> tierRank(Set<ZSetOperations.TypedTuple<Object>> tierRanksSet, String tier, Integer start) {
+		int count = start+1;
 		List<UserRank> ranks = new ArrayList<>();
-		for (ZSetOperations.TypedTuple<Object> tuple : top3) {
+		for (ZSetOperations.TypedTuple<Object> tuple : tierRanksSet) {
 			String nickname = tuple.getValue().toString();
 			Integer rate = tuple.getScore().intValue();
 
