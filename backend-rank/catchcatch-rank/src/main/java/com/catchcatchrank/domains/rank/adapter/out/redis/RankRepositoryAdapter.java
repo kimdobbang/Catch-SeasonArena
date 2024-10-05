@@ -51,6 +51,12 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		redisTemplate.opsForValue().set(key, tier);
 	}
 
+	@Override
+	public void saveAllRank(Rank rank) {
+		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
+		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getNickName(), rankEntity.getRate());
+	}
+
 	@Transactional
 	@Override
 	public void updateRank(Rank rank) {
@@ -92,6 +98,6 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 
 	@Override
 	public Set<ZSetOperations.TypedTuple<Object>> getTierRank(String tier, Integer start) {
-		return redisTemplate.opsForZSet().reverseRangeWithScores(tier, start, start + limit - 1);
+		return redisTemplate.opsForZSet().reverseRangeWithScores("tier", start, start + limit - 1);
 	}
 }
