@@ -26,5 +26,7 @@
         <appender-ref ref="LOG-KAFKA"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
 </configuration>
