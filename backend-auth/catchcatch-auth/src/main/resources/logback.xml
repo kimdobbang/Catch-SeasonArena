@@ -8,33 +8,21 @@
         <topic>auth-logs</topic>
         <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
-        <producerConfig>client.id=my-custom-producer-id</producerConfig>
         <producerConfig>retries=1</producerConfig>
-        <producerConfig>bootstrap.servers=3.36.122.163:9093</producerConfig>
+        <producerConfig>bootstrap.servers=3.36.122.163:9092</producerConfig>
         <producerConfig>compression.type=snappy</producerConfig>
         <producerConfig>max.block.ms=1000</producerConfig>
-
-        <errorHandler class="ch.qos.logback.core.spi.ErrorHandler">
-            <appender-ref ref="STDOUT"/>
-        </errorHandler>
     </appender>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%date - %-5p %t %-25logger{5} %F:%L %m%n</pattern>
         </encoder>
     </appender>
-
-    <logger name="auth" level="DEBUG" additivity="false">
+    <logger name="auth" level="INFO" additivity="false">
         <appender-ref ref="LOG-KAFKA"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-
-    <logger name="com.github.danielwegener.logback.kafka" level="DEBUG" additivity="false">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="LOG-KAFKA"/>
     </root>
 </configuration>
