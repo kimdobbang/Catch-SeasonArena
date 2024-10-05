@@ -12,6 +12,10 @@
         <producerConfig>bootstrap.servers=3.36.122.163:9092</producerConfig>
         <producerConfig>compression.type=snappy</producerConfig>
         <producerConfig>max.block.ms=1000</producerConfig>
+
+        <errorHandler class="ch.qos.logback.core.spi.ErrorHandler">
+            <appender-ref ref="STDOUT"/>
+        </errorHandler>
     </appender>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -24,7 +28,12 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+    <logger name="com.github.danielwegener.logback.kafka" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOG-KAFKA"/>
     </root>
 </configuration>
