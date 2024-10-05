@@ -10,5 +10,5 @@ import lombok.Getter;
 public class MyTierRanking {
 
 	List<UserRank> tierRanks;
-	UserRank myRank;
+	MyRank myRank;
 }
