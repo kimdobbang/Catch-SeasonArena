@@ -4,5 +4,6 @@ import com.catchcatchrank.domains.rank.domain.Rank;
 
 public interface UpdateTierPort {
 
-	void updateRank(Rank rank);
+	void updateTierRank(Rank rank);
+	void updateAllRank(Rank rank);
 }
