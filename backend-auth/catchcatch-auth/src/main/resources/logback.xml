@@ -18,6 +18,12 @@
             <pattern>%date - %-5p %t %-25logger{5} %F:%L %m%n</pattern>
         </encoder>
     </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <errorHandler class="ch.qos.logback.core.spi.ErrorHandler">
+            <appender-ref ref="STDOUT"/>
+        </errorHandler>
+    </appender>
     <logger name="auth" level="INFO" additivity="false">
         <appender-ref ref="LOG-KAFKA"/>
         <appender-ref ref="STDOUT"/>
