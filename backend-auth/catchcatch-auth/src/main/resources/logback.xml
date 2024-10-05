@@ -5,24 +5,26 @@
                 <pattern>%date - %-5p %t %-25logger{5} %F:%L %m%n</pattern>
             </layout>
         </encoder>
-        <topic>auth-logs</topic>
+        <topic>auth-log</topic>
         <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
         <producerConfig>retries=1</producerConfig>
         <producerConfig>bootstrap.servers=3.36.122.163:9092</producerConfig>
         <producerConfig>compression.type=snappy</producerConfig>
         <producerConfig>max.block.ms=1000</producerConfig>
+
+        <!-- 추가: Kafka로 보내기 전 stdout에 메시지 출력 -->
+
     </appender>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date - %-5p %t %-25logger{5} %F:%L %m%n</pattern>
+            <!-- 콘솔 출력에도 토픽 이름 포함 -->
+            <pattern>%date - %-5p %t %-25logger{5} %F:%L %m [Topic: auth-log]%n</pattern>
         </encoder>
     </appender>
     <logger name="auth" level="INFO" additivity="false">
         <appender-ref ref="LOG-KAFKA"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </root>
+
 </configuration>
