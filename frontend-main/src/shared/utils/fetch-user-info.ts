@@ -1,6 +1,11 @@
 // src/app/utils/authUtils.ts
-import { setToken, setUser } from "@/app/redux/slice/authSlice";
-import { setEquipment, setRating } from "@/app/redux/slice/userSlice";
+import { setToken, setAuthUser } from "@/app/redux/slice/authSlice";
+import {
+  setWeapon,
+  setPassive,
+  setActive,
+  setRating,
+} from "@/app/redux/slice/userSlice";
 import { fetchUserInfo } from "@/app/apis/authApi";
 import { UserState } from "@/app/redux/slice/userSlice";
 import { AppDispatch } from "@/app/redux/store";
@@ -14,13 +19,12 @@ export const handleLoginSuccess = async (
     dispatch(setToken(accessToken));
 
     const data: UserState = await fetchUserInfo(accessToken);
-    console.log("유저정보 조회성공", data);
-    console.log("Fetched rating 확인:", data.rating);
 
-    dispatch(setUser({ email: data.email, nickname: data.nickname }));
-    dispatch(setEquipment(data.equipment));
+    dispatch(setAuthUser({ email: data.email, nickname: data.nickname }));
     dispatch(setRating(data.rating));
-    console.log("Rating dispatched:", data.rating); // 여기서 rating 값이 제대로 전달되는지 확인
+    dispatch(setWeapon(data.equipment.weapon));
+    dispatch(setPassive(data.equipment.passive));
+    dispatch(setActive(data.equipment.active));
 
     navigate("/main");
   } catch (error) {
