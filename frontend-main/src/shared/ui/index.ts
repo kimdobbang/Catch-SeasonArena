@@ -20,3 +20,4 @@ export { ResultLayout } from "./layout/result-layout";
 //  ui
 export { TabBar } from "@ui/tab-bar";
 export { NumberPagination } from "@ui/number-pagination";
+export { Card } from "@ui/card";
