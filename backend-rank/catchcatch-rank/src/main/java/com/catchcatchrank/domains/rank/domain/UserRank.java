@@ -21,7 +21,7 @@ public class UserRank {
 		this.rating = rating;
 	}
 
-	public static UserRank createUserRank(String tier, String nickname, String avatar, Integer tierRanking, Integer rating) {
+	public static UserRank createTierUserRank(String tier, String nickname, String avatar, Integer tierRanking, Integer rating) {
 		return UserRank.builder()
 			.tier(tier)
 			.nickname(nickname)
@@ -29,5 +29,14 @@ public class UserRank {
 			.tierRanking(tierRanking)
 			.rating(rating)
 			.build();
+	}
+
+	public static UserRank createUserRank(String nickname, String avatar, Integer tierRanking, Integer rating) {
+		return UserRank.builder()
+				.nickname(nickname)
+				.avatar(avatar)
+				.tierRanking(tierRanking)
+				.rating(rating)
+				.build();
 	}
 }

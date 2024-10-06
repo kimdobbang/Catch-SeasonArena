@@ -4,6 +4,6 @@ import com.catchcatchrank.domains.rank.domain.MyTierRanking;
 import com.catchcatchrank.domains.rank.domain.TierRanking;
 
 public interface GetTierRankingUseCase {
-	MyTierRanking getMyTierRanking(String nickname, Integer start);
-	TierRanking getTierRanking(String nickname, Integer start);
+	MyTierRanking getMyTierRanking(String nickname, Integer page);
+	TierRanking getTierRanking(String nickname, Integer page);
 }
