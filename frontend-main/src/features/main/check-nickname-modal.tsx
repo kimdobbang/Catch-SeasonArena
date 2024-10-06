@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { checkNicknameExists, changeNicknameSave } from "@/app/apis/memberApi";
 import { NicknameInput } from "@atoms/index";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/app/redux/store";
-import { setNickname } from "@/app/redux/slice/authSlice";
+import { RootState, AppDispatch } from "@/app/redux/store";
+// import { updateAuthNickname } from "@/app/redux/slice/authSlice";
+import { updateUserAndAuthNickname } from "@/app/redux/slice/userSlice";
 
 // Debounce 함수 (중복 체크 최적화)
 const debounce = <T extends (...args: Parameters<T>) => Promise<void>>(
@@ -33,7 +34,7 @@ export const NicknameChangeModal = ({
   const [isDuplicate, setIsDuplicate] = useState<boolean | null>(null);
   const [error, setError] = useState("");
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch(); // useDispatch에 AppDispatch 타입 적용
 
   // 중복 확인 API 호출
   const checkNicknameAvailability = useCallback(
@@ -77,7 +78,7 @@ export const NicknameChangeModal = ({
     if (!isDuplicate && nickname.trim().length > 0) {
       try {
         await changeNicknameSave(accessToken, nickname);
-        dispatch(setNickname(nickname));
+        dispatch(updateUserAndAuthNickname(nickname));
         onClose();
       } catch {
         setError("닉네임 저장 중 오류 발생");
