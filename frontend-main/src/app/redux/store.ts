@@ -10,6 +10,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import sessionStorage from "redux-persist/lib/storage/session";
 import authReducer from "./slice/authSlice";
 import userReducer from "./slice/userSlice";
+import successReducer from "./slice/successSlice";
 
 const persistConfig = {
   key: "root",
@@ -18,8 +19,9 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  user: userReducer,
+  auth: authReducer, // 인증정보
+  user: userReducer, // 사용자정보
+  success: successReducer, // 수집,합성 성공한 아이템 저장
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
