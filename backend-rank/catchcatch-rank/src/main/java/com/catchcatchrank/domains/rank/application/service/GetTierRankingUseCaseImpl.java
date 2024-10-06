@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j(topic = "rank")
-public class GetMyTierRankingUseCaseImpl implements GetTierRankingUseCase {
+public class GetTierRankingUseCaseImpl implements GetTierRankingUseCase {
 
 	private final GetUserTierPort getUserTierPort;
 	private final GetMeRankPort getMeRankPort;
@@ -67,7 +67,7 @@ public class GetMyTierRankingUseCaseImpl implements GetTierRankingUseCase {
 			String nickname = tuple.getValue().toString();
 			Integer rate = tuple.getScore().intValue();
 			Member member = getMemberByNickNamePort.getMemberByNickName(nickname);
-			UserRank userRank = UserRank.createUserRank(tier, nickname, member.getAvatar(), count++, rate);
+			UserRank userRank = UserRank.createTierUserRank(tier, nickname, member.getAvatar(), count++, rate);
 			ranks.add(userRank);
 		}
 		return ranks;
