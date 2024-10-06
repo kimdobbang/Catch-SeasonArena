@@ -1,18 +1,20 @@
 // src/app/redux/slice/userSlice.ts
 // 유저 관리 상태: 도감, 장비, 아바타, 티어, 닉네임(authSlice참조함)
+// src/app/redux/slice/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ItemType } from "@/app/types/common";
 import { UserEquipment, UserStat, UserInfo } from "@/app/types/userType";
 import { Tier, getTierByRating } from "@/app/types/tier";
-import { setUser } from "./authSlice";
+import { setAuthUser, updateAuthNickname } from "./authSlice";
+import { AppThunk } from "@/app/redux/store";
 
 export interface UserState extends UserInfo {
   rating: number;
   tier: Tier;
   selectedAvatar: number;
   stats: UserStat;
-  equipment: UserEquipment<ItemType, number | null>;
+  equipment: UserEquipment;
 }
+
 const initialState: UserState = {
   email: "user@example.com",
   nickname: "닉네임을 수정하세요",
@@ -35,48 +37,48 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    updateUserNickname: (state, action: PayloadAction<string>) => {
+      state.nickname = action.payload;
+    },
+    updateUserEmail: (state, action: PayloadAction<string>) => {
+      state.email = action.payload;
+    },
     setSelectedAvatar: (state, action: PayloadAction<number>) => {
       state.selectedAvatar = action.payload;
     },
-
     setRating: (state, action: PayloadAction<number>) => {
+      console.log("Received rating 리덕스:", action.payload); // 디버깅용 로그
       state.rating = action.payload;
-      state.tier = getTierByRating(action.payload);
+      state.tier = getTierByRating(action.payload) as Tier;
     },
-
     updateRatingByGameResult: (state, action: PayloadAction<number>) => {
-      state.rating += action.payload; // 전달된 값만큼 레이팅을 업데이트
+      state.rating += action.payload;
       state.tier = getTierByRating(state.rating);
     },
 
-    // 사용자가 착용 중인 장비(무기, 액티브, 패시브 아이템)를 설정 -> 인벤토리를 나갈 때 한꺼번에 설정하자
-    setEquipment: (
-      state,
-      action: PayloadAction<UserEquipment<ItemType, number | null>>,
-    ) => {
-      state.equipment = action.payload;
+    // 개별 장비 업데이트 액션 추가
+    setWeapon: (state, action: PayloadAction<number | null>) => {
+      state.equipment.weapon = action.payload;
     },
-
-    // 장비랑 stats 어케해야할지 모르겠엄 하나하나씩 (3가지 * 2개) 6개 액션 만드는건 아닌거같고.
-    // 4페이지 나갈때? 닫을때 저장되어야하나... 해보며 수정하자
-
-    // HP 수정
+    setActive: (state, action: PayloadAction<number | null>) => {
+      state.equipment.active = action.payload;
+    },
+    setPassive: (state, action: PayloadAction<number | null>) => {
+      state.equipment.passive = action.payload;
+    },
+    // 유저 스탯 추가
     setHp: (state, action: PayloadAction<number>) => {
       state.stats.hp = action.payload;
     },
-
-    // Coverage 수정
     setCoverage: (state, action: PayloadAction<number>) => {
       state.stats.coverage = action.payload;
     },
-
-    // Speed 수정
     setSpeed: (state, action: PayloadAction<number>) => {
       state.stats.speed = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(setUser, (state, action) => {
+    builder.addCase(setAuthUser, (state, action) => {
       console.log(
         "authSlice's setUser dispatched in userSlice",
         action.payload,
@@ -87,6 +89,22 @@ const userSlice = createSlice({
   },
 });
 
-export const { setSelectedAvatar, setRating, setEquipment } = userSlice.actions;
+// 유저 닉네임을 변경할 때 authSlice의 닉네임도 업데이트
+export const updateUserAndAuthNickname =
+  (nickname: string): AppThunk =>
+  (dispatch) => {
+    console.log("Updating nickname:", nickname); // 디버깅용 로그
+    dispatch(updateAuthNickname(nickname)); // authSlice 업데이트
+    dispatch(updateUserNickname(nickname)); // userSlice 업데이트
+  };
+
+export const {
+  setSelectedAvatar,
+  setRating,
+  setWeapon,
+  setActive,
+  setPassive,
+  updateUserNickname,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,5 +1,10 @@
 //store.ts
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  combineReducers,
+  ThunkAction,
+  Action,
+} from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import sessionStorage from "redux-persist/lib/storage/session";
 import authReducer from "./slice/authSlice";
@@ -12,8 +17,8 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  auth: authReducer, // 인증정보
-  user: userReducer, // 사용자정보
+  auth: authReducer,
+  user: userReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,6 +37,14 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
+
+export const persistor = persistStore(store);

@@ -23,22 +23,15 @@ export const authSlice = createSlice({
       state.accessToken = action.payload;
       state.isAuthenticated = true;
     },
-    setUser: (state, action: PayloadAction<UserInfo>) => {
+    setAuthUser: (state, action: PayloadAction<UserInfo>) => {
       state.userInfo = action.payload;
     },
-    setNickname: (state, action: PayloadAction<string>) => {
+    updateAuthNickname: (state, action: PayloadAction<string>) => {
       if (state.userInfo) {
         state.userInfo.nickname = action.payload;
       }
     },
-    deleteToken: (state) => {
-      state.accessToken = "";
-      state.isAuthenticated = false;
-    },
-    deleteUser: (state) => {
-      state.userInfo = initialUserInfo;
-    },
-    logout: (state) => {
+    clearAuthState: (state) => {
       state.accessToken = "";
       state.userInfo = initialUserInfo;
       state.isAuthenticated = false;
@@ -46,12 +39,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const {
-  setToken,
-  setUser,
-  setNickname,
-  deleteToken,
-  deleteUser,
-  logout,
-} = authSlice.actions;
+export const { setToken, setAuthUser, updateAuthNickname, clearAuthState } =
+  authSlice.actions;
 export default authSlice.reducer;
