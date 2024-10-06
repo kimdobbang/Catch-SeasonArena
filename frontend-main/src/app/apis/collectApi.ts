@@ -99,11 +99,11 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
 
 export const sendPublicImagesToServer = async () => {
   const imagePaths = [
-    "/image1.png", // public 폴더 내 이미지 경로
-    "/image2.png", // 추가적인 이미지 경로
-    "/image3.png",
-    "/image4.png",
-    "/image5.png",
+    "/collect-test/image1.png", // public 폴더 내 이미지 경로
+    "/collect-test/image2.png", // 추가적인 이미지 경로
+    "/collect-test/image3.png",
+    "/collect-test/image4.png",
+    "/collect-test/image5.png",
   ];
 
   const formData = new FormData();

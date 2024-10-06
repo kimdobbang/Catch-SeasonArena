@@ -1,7 +1,7 @@
 import { AvatarFace, Sub2Text } from "@/shared/components/atoms";
-import { ResultButtonsProps } from "./result-buttons";
+import { ResultButtonsProps } from "./item-result-buttons";
 
-export const FailContent = ({ behavior }: ResultButtonsProps) => {
+export const ItemFailContent = ({ behavior }: ResultButtonsProps) => {
   return (
     <div className="flex flex-col items-center w-full h-full">
       <AvatarFace number={1} emotion="sad" />

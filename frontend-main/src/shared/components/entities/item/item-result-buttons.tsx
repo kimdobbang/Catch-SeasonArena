@@ -6,7 +6,7 @@ export interface ResultButtonsProps {
   behavior?: "combine" | "collect";
 }
 
-export const ResultButtons = ({ isSuccess }: ResultButtonsProps) => {
+export const ItemResultButtons = ({ isSuccess }: ResultButtonsProps) => {
   const navigate = useNavigate();
 
   const handleInventoryBtnClick = () => {
@@ -19,6 +19,7 @@ export const ResultButtons = ({ isSuccess }: ResultButtonsProps) => {
 
   return (
     <>
+      {/*수집후 N분간 수집 불가 로직 추가해야함 */}
       <PrimaryButton
         showIcon={false}
         onClick={handleInventoryBtnClick}

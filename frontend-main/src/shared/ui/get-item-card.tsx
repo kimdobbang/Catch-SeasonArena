@@ -1,3 +1,4 @@
+/** 수집, 합성에서 사용되는 카드 */
 import {
   Body1Text,
   Caption1Text,
@@ -10,7 +11,7 @@ import { RootState } from "@/app/redux/store";
 import { Line } from "./line";
 import { getDurability } from "../utils/format";
 import { ItemGrade, ItemType } from "@/app/types/common";
-export const CollectCard = ({ onClose }: { onClose: () => void }) => {
+export const GetItemCard = ({ onClose }: { onClose: () => void }) => {
   const { name, itemId, type, grade, effect } = useSelector(
     (state: RootState) => state.success,
   );
@@ -26,14 +27,11 @@ export const CollectCard = ({ onClose }: { onClose: () => void }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col justify-center w-full h-full bg-white rounded-md">
-          <div className="h-[5%] w-full justify-between flex p-2 mt-2">
+          <div className="h-[5%] w-full justify-end flex p-2 mt-2">
             <CircleTag
               grade={grade as ItemGrade}
               className="bg-catch-sub-200"
             />
-            <button onClick={onClose} className="text-catch-sub-200 text-body1">
-              X
-            </button>
           </div>
           <div className="h-[75%] w-full flex flex-col justify-center gap-2 items-center">
             <div className="w-[100px] h-[100px] rounded-xl">

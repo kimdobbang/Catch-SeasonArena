@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { AutumnItemImage, Body2Text } from "@/shared/components/atoms";
 import { DescriptionBox } from "./description-box";
-import { ResultButtonsProps } from "./result-buttons";
+import { ResultButtonsProps } from "./item-result-buttons";
 import { ItemGrade, ItemType } from "@/app/types/common";
-import { CollectCard } from "@/shared/ui";
+import { GetItemCard } from "@/shared/ui";
 
-export const SuccessContent = ({ behavior }: ResultButtonsProps) => {
+export const ItemSuccessContent = ({ behavior }: ResultButtonsProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { name, itemId, type, grade, effect } = useSelector(
     (state: RootState) => state.success,
@@ -20,7 +20,6 @@ export const SuccessContent = ({ behavior }: ResultButtonsProps) => {
 
   // 모달 닫기 함수
   const closeModal = () => {
-    console.log("모달닫기");
     setIsModalOpen(false);
   };
 
@@ -58,7 +57,7 @@ export const SuccessContent = ({ behavior }: ResultButtonsProps) => {
         </div>
         <DescriptionBox type={tType} grade={tGrade} skill={tEffect} />
       </div>
-      {isModalOpen && <CollectCard onClose={closeModal} />}
+      {isModalOpen && <GetItemCard onClose={closeModal} />}
     </div>
   );
 };

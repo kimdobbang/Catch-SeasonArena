@@ -1,3 +1,5 @@
+/* 수집, 합성 성공시 결과를 저장 
+-> entities/item/success-content 와 ui/collect-card 에서 사용합니다 */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProcessedResult } from "@/app/apis/collectApi";
 
