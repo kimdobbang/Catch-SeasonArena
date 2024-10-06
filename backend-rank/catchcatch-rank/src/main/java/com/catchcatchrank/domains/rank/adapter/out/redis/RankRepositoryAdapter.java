@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j(topic = "rank")
 public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetRatePort,
-	GetUserTierPort, GetMeRankPort, GetTierRankPort {
+	GetUserTierPort, GetMeRankPort, GetTierRankPort, GetAllRankPort {
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
@@ -106,5 +106,10 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 	@Override
 	public Set<ZSetOperations.TypedTuple<Object>> getTierRank(String tier, Integer start) {
 		return redisTemplate.opsForZSet().reverseRangeWithScores(tier, start, start + limit - 1);
+	}
+
+	@Override
+	public Set<ZSetOperations.TypedTuple<Object>> getAllRank(Integer start) {
+		return redisTemplate.opsForZSet().reverseRangeWithScores("ranking_all", start, start + limit - 1);
 	}
 }
