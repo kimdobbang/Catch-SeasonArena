@@ -7,8 +7,8 @@ export { TierProgressBar } from "./user/tier-progress-bar";
 export { CircleAvatar } from "./user/circle-avatar";
 
 // 수집, 합성 결과
-export { ItemFail } from "./item/item-fail";
-export { ItemSuccess } from "./item/item-success";
+export { FailComponent } from "./item/fail-component";
+export { SuccessComponent } from "./item/success-component";
 
 // 인벤토리 관련
 export { ItemLibrary } from "./inventory/items-library";

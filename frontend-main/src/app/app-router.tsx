@@ -13,7 +13,7 @@ import {
   AvatarPage,
   RankingPage,
   CollectPage,
-  CollectResultPage,
+  ItemResultPage,
   InventoryPage,
   CombinationPage,
   CollectionbookPage,
@@ -118,10 +118,14 @@ export const AppRouter = () => {
               element: <CollectPage />,
             },
             {
-              path: "result",
-              element: <CollectResultPage />,
+              path: ":resultType", // 동적 파라미터 추가
+              element: <ItemResultPage />,
             },
           ],
+        },
+        {
+          path: "combination/:resultType", // 동적 파라미터 추가
+          element: <ItemResultPage />,
         },
       ],
     },

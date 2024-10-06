@@ -1,5 +1,5 @@
 // import { useEffect, useState } from "react";
-import { ItemFail } from "@entities/index";
+// import { ItemFail } from "@entities/index";
 // import { ItemSuccess } from "@entities/index";
 
 // // API 응답 타입 정의
@@ -39,7 +39,7 @@ export const CollectResultPage = () => {
       {/* 조건부 렌더링: 결과에 따라 다른 컴포넌트 렌더링 */}
       {/* {result === "success" && <ItemFail />}
       {result === "fail" && <ItemSuccess />} */}
-      <ItemFail />
+      {/* <ItemFail /> */}
     </div>
   );
 };

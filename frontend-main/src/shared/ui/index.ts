@@ -15,6 +15,7 @@ export { NavBarBackground } from "./layout/nav-bar-background";
 export { Layout, HeaderLayout } from "./layout/layouts";
 export { MainLayout } from "./layout/layouts";
 export { Background } from "./layout/background";
+export { ResultLayout } from "./layout/result-layout";
 
 //  ui
 export { TabBar } from "@ui/tab-bar";
