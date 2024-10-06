@@ -5,6 +5,7 @@ import { Item } from "@/app/types/common";
 import { ItemCell } from "@atoms/index";
 import { TabBar, NumberPagination } from "@ui/index";
 import { useItemFilter } from "@/features/index";
+import { InventoryItemCard } from "@entities/index";
 import { fetchUserItems } from "@/app/apis/inventoryApi";
 import { RootState } from "@/app/redux/store";
 
@@ -15,6 +16,8 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
   const [items, setItems] = useState<Item[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("weapon");
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
@@ -57,6 +60,21 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
     }
   }, [currentPage]);
 
+  // 아이템 클릭 시 InventoryItemCard 열기
+  const handleItemClick = (item: Item) => {
+    console.log("Item clicked:", item); // 클릭 시 로그
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  // InventoryItemCard 닫기
+  const handleCloseModal = () => {
+    console.log("isModalOpen:", isModalOpen); // 모달 상태 로그
+    console.log("selectedItem:", selectedItem); // 선택된 아이템 로그
+    setIsModalOpen(false);
+    setSelectedItem(null); // 선택된 아이템 초기화
+  };
+
   return (
     <div className="flex flex-col">
       <MemoizedTabBar
@@ -68,11 +86,12 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell
-              key={itemData.id}
-              id={itemData.id}
+              id={itemData.id} //id: inventoryItem.id,
+              itemId={itemData.itemId} // itemId: itemDto.id,
               name={itemData.name}
               image={itemData.image}
               type={itemData.type}
+              onClick={() => handleItemClick(itemData)} // 클릭 시 모달 열기
             />
           ))}
         </div>
@@ -83,6 +102,10 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
         />
+        {/* InventoryItemCard 렌더링 */}
+        {isModalOpen && selectedItem && (
+          <InventoryItemCard item={selectedItem} onClose={handleCloseModal} />
+        )}
         {children}
       </div>
     </div>

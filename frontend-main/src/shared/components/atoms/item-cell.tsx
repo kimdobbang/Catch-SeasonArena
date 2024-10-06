@@ -1,12 +1,13 @@
 // src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
+import { AutumnItemImage } from "@atoms/index"; // AutumnItemImage 컴포넌트 임포트
 
 interface ItemCellProps {
-  onClick?: () => void;
+  onClick: () => void;
   id?: number;
-  itemId?: number;
-  name: string;
-  type: ItemType;
+  itemId: number;
+  name?: string;
+  type?: ItemType;
   grade?: ItemGrade;
   skill?: string;
   season?: Season;
@@ -16,20 +17,13 @@ interface ItemCellProps {
   className?: string;
 }
 
-export const ItemCell = ({
-  onClick,
-  name,
-  image,
-  className,
-}: ItemCellProps) => {
+export const ItemCell = ({ onClick, itemId, className }: ItemCellProps) => {
   return (
     <div onClick={onClick}>
       <div
         className={`flex items-center justify-center w-16 h-16 rounded-sm bg-catch-gray-000 ${className}`}
       >
-        {image ? (
-          <img src={image} alt={name} className="object-contain w-12 h-12" />
-        ) : null}
+        <AutumnItemImage itemId={itemId} />
       </div>
     </div>
   );

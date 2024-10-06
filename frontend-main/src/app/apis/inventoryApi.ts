@@ -8,7 +8,7 @@ interface InventoryItem {
   findInventoriesItemResponseDto: Item;
   durability: number;
 }
-
+// 인벤토리 전체조회
 export const fetchUserItems = async (accessToken: string): Promise<Item[]> => {
   const response = await fetch(
     `${config.API_BASE_URL}/api/auth/inventories/items`,
