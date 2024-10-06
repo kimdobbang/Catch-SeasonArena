@@ -9,8 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { Line } from "./line";
-import { getDurability } from "../utils/format";
-import { ItemGrade, ItemType } from "@/app/types/common";
+import { ItemGrade, ItemType, getDurability } from "@/app/types/common";
 export const GetItemCard = ({ onClose }: { onClose: () => void }) => {
   const { name, itemId, type, grade, effect } = useSelector(
     (state: RootState) => state.success,
