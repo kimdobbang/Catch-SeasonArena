@@ -1,35 +1,41 @@
-// <<HTTP API 통신>>
-function joinRoom(roomCode, nickname, playerData) {
-  ROOMCODE = roomCode;
-  socket.emit("joinRoom", {
-    roomCode,
-    nickname,
-    playerData,
-  });
-}
-
+// <<게임 연결>>
 function startGame() {
-  new Phaser.Game(config); // Phaser 게임게임 시작
+  new Phaser.Game(config); // Phaser 게임 시작
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-overlay").style.display = "none";
   setTimeout(() => (gameStarted = true), 4000);
 }
 
-// // 클라이언트: 쿼리 스트링에서 roomCode와 nickname 추출
-// const queryParams = new URLSearchParams(window.location.search);
-// const roomCode = queryParams.get('roomcode');
-// const nickname = queryParams.get('nickname');
+// <<전역변수 선언>>
+let ROOMCODE;
+let gameStarted = false;
+let playerGroup;
+let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체, visible, galaxymoon, hp:100}
+let MAGNETIC = {};
+let MAGNETIC_FIELD;
+let MAP_LENGTH = 5000;
+let MAGNETIC_COUNT = 0;
+let lastSkillUsedTime = 0;
+let skillCooldown = 10000;
+let cooldownText;
+let startTime = Date.now();
+let skillImageKey;
 
-// // Socket.io 클라이언트 초기화 시 roomCode와 nickname을 서버에 전달
-// const socket = io('https://j11b106.p.ssafy.io', {
-//   query: {
-//     roomCode,
-//     nickname
-//   }
-// });
+// 클라이언트: 쿼리 스트링에서 roomCode와 nickname 추출
+const queryParams = new URLSearchParams(window.location.search);
+const roomCode = queryParams.get("roomcode");
+const nickname = queryParams.get("nickname");
+const rating = queryParams.get("rating");
+ROOMCODE = roomCode;
 
-// <<phaser config>>
-// const socket = io("https://j11b106.p.ssafy.io");
-// const socket = io("http://172.30.1.70:3000");
-const socket = io("http://localhost:3000");
+// Socket.io 클라이언트 초기화 시 roomCode와 nickname을 서버에 전달
+const socket = io("https://j11b106.p.ssafy.io", {
+  query: {
+    roomCode,
+    nickname,
+    rating,
+  },
+});
 
 // 게임 시작
 socket.on("gameStart", (magnetic) => {
@@ -70,20 +76,6 @@ const config = {
   },
 };
 
-// <<전역변수 선언>>
-let ROOMCODE;
-let gameStarted = false;
-let playerGroup;
-let clientPlayers = {}; // {player : 페이저 객체, weapon, nickname, hpBar, isAttacking, point : 페이저 객체, visible, galaxymoon, hp:100}
-let MAGNETIC = {};
-let MAGNETIC_FIELD;
-let MAP_LENGTH = 5000;
-let MAGNETIC_COUNT = 0;
-let lastSkillUsedTime = 0;
-let skillCooldown = 10000;
-let cooldownText;
-let startTime = Date.now();
-let skillImageKey;
 function preload() {
   //플레이어
   this.load.image("player1", "./assets/player/player1.png");
@@ -92,20 +84,25 @@ function preload() {
   this.load.image("player4", "./assets/player/player4.png");
   this.load.image("pumpkin", "./assets/player/pumpkin.png");
   //무기
-  this.load.image("weapon0", "./assets/weapon/0.png");
-  this.load.image("weapon1", "./assets/weapon/1.png");
-  this.load.image("weapon5", "./assets/weapon/5.png");
-  this.load.image("weapon9", "./assets/weapon/9.png");
+  this.load.image("weapon0", "./assets/weapon/weapon0.png");
+  this.load.image("weapon1", "./assets/weapon/weapon1.png");
+  this.load.image("weapon5", "./assets/weapon/weapon5.png");
+  this.load.image("weapon9", "./assets/weapon/weapon9.png");
   //스킬
   this.load.image("bomb", "./assets/skill/bomb.png");
+  this.load.image("scarecrow", "./assets/skill/scarecrow.png");
+  //아이콘
   this.load.image("Sbomb", "./assets/skill/bomb.png");
   this.load.image("Sscarecrow", "./assets/skill/scarecrow.png");
   this.load.image("Smoon", "./assets/skill/moon.png");
   this.load.image("Sddugi", "./assets/skill/ddugi.png");
   this.load.image("Sdragonfly", "./assets/skill/dragonfly.png");
   this.load.image("Smushroom", "./assets/skill/mushroom.png");
+  this.load.image("sword", "./assets/weapon/sword.png");
 
-  this.load.image("sword", "./assets/weapon/sword.png")
+  this.load.on("loaderror", function (file) {
+    console.error("Failed to load: ", file.key);
+  });
 
   this.load.spritesheet("effects1", "./assets/sprite/effects1.png", {
     frameWidth: 64,
@@ -120,7 +117,7 @@ function preload() {
     frameHeight: 64,
   });
 
-  setTimeout(() => {
+  this.load.on("complete", () => {
     // bomb 애니메이션
     this.anims.create({
       key: "3",
@@ -181,13 +178,14 @@ function preload() {
       frameRate: 10,
       repeat: 0,
     });
-  }, 2000);
+  });
 }
 
 function create() {
   const scene = this;
   playerGroup = this.physics.add.group({ collideWorldBounds: true });
 
+  console.log("방 번호: " + ROOMCODE);
   socket.emit("getPlayersInfo", ROOMCODE);
 
   // 배경 설정
@@ -219,9 +217,9 @@ function create() {
     x: 80,
     y: 700,
     radius: 50,
-    base: this.add.circle(0, 0, 50, 0xF29627).setOrigin(0.5).setScrollFactor(0),
+    base: this.add.circle(0, 0, 50, 0xf29627).setOrigin(0.5).setScrollFactor(0),
     thumb: this.add
-      .circle(0, 0, 25, 0xF8D18F)
+      .circle(0, 0, 25, 0xf8d18f)
       .setOrigin(0.5)
       .setScrollFactor(0),
     dir: "360",
@@ -256,18 +254,17 @@ function create() {
 
   // <<공격 버튼>>
   const attackButton = this.add
-    .circle(320, 700, 50, 0xF29627)
+    .circle(320, 700, 50, 0xf29627)
     .setInteractive()
     .setScrollFactor(0);
 
-  // 버튼 위에 이미지 추가 ("sword" 이미지를 사용하고 스케일을 0.2로 설정)  
+  // 버튼 위에 이미지 추가 ("sword" 이미지를 사용하고 스케일을 0.2로 설정)
   const swordImage = this.add
-  .image(320, 700, "sword") 
-  .setScale(0.1) 
-  .setScrollFactor(0)
-  .setAngle(-100); 
+    .image(320, 700, "sword")
+    .setScale(0.1)
+    .setScrollFactor(0)
+    .setAngle(-100);
 
-    
   attackButton.on("pointerdown", () => {
     if (gameStarted && !clientPlayers[socket.id].isAttacking) {
       // 플레이어가 공격할 때 애니메이션 시작
@@ -283,7 +280,7 @@ function create() {
 
   // <<스킬 버튼>>
   const skillButton = this.add
-    .circle(320, 600, 25, 0xF8D18F) 
+    .circle(320, 600, 25, 0xf8d18f)
     .setInteractive()
     .setScrollFactor(0);
   cooldownText = this.add
@@ -294,7 +291,7 @@ function create() {
   let skillImage;
   setTimeout(() => {
     skillImage = this.add
-      .image(320, 603, skillImageKey) 
+      .image(320, 603, skillImageKey)
       .setScale(0.09)
       .setScrollFactor(0);
   }, 3000); // 3초 대기 후 이미지 표시
@@ -613,33 +610,32 @@ function createPlayer(scene, players) {
 
 // 스킬 설정
 function setSkill(skill) {
- 
-    switch (skill) {
-      case "3": // 솔 폭탄
-        skillCooldown = 20000;
-        skillImageKey = "Sbomb";
-        break;
-      case "4": // 드래곤플라이
-        skillCooldown = 30000;
-        skillImageKey = "Sdragonfly";
-        break;
-      case "7": // 뚜기 점프
-        skillCooldown = 30000;
-        skillImageKey = "Sddugi";
-        break;
-      case "8": // 버섯
-        skillCooldown = 20000;
-        skillImageKey = "Smushroom";
-        break;
-      case "11": // 갤럭시 문
-        skillCooldown = 70000;
-        skillImageKey = "Smoon";
-        break;
-      case "12": // 허수아비
-        skillCooldown = 50000;
-        skillImageKey = "Sscarecrow";
-        break;
-    }
+  switch (skill) {
+    case "3": // 솔 폭탄
+      skillCooldown = 20000;
+      skillImageKey = "Sbomb";
+      break;
+    case "4": // 드래곤플라이
+      skillCooldown = 30000;
+      skillImageKey = "Sdragonfly";
+      break;
+    case "7": // 뚜기 점프
+      skillCooldown = 30000;
+      skillImageKey = "Sddugi";
+      break;
+    case "8": // 버섯
+      skillCooldown = 20000;
+      skillImageKey = "Smushroom";
+      break;
+    case "11": // 갤럭시 문
+      skillCooldown = 70000;
+      skillImageKey = "Smoon";
+      break;
+    case "12": // 허수아비
+      skillCooldown = 50000;
+      skillImageKey = "Sscarecrow";
+      break;
+  }
 }
 
 // <<무기 업데이트>>

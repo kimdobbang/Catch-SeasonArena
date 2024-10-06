@@ -48,18 +48,20 @@ const rooms = new Map();
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
 // 전역변수 관리
-const PLAYER_SIZE = 6;
+const PLAYER_SIZE = 20;
 const MAP_LENGTH = 5000;
 const WEAPON_LENGTH = 100;
 const KNOCKBACK_FORCE = 120;
 const KNOCKBACK_DURATION = 100; // 100ms
 const LOCATION = [];
 
+// 첫 시작지점 설정
 for (let i = 0; i < 20; i++) {
   const x = 1000 + Math.floor(i / 5) * 1000; // x 값은 1000씩 증가
   const y = 800 + (i % 5) * 800; // y 값은 800씩 증가
   LOCATION.push({ x: x, y: y });
 }
+
 // <<게임방 관리>>
 // 방을 생성하거나 기존 방에 플레이어 추가
 function joinPlayer(
@@ -69,7 +71,8 @@ function joinPlayer(
   profileImage,
   weapon,
   passive,
-  skill
+  skill,
+  rating
 ) {
   // 플레이어 객체 생성
   const player = {
@@ -89,7 +92,7 @@ function joinPlayer(
     reach: 1,
     canMove: true,
     kill: 0,
-    rating: 500,
+    rating: rating,
     protect: 1,
     skill: skill,
     invincibility: false, // 무적
@@ -135,7 +138,13 @@ function joinPlayer(
   }
 }
 
-async function handlePlayerJoin(nickname, roomCode, socket, playerData) {
+async function handlePlayerJoin(
+  nickname,
+  roomCode,
+  rating,
+  socket,
+  playerData
+) {
   try {
     // getPlayerData 비동기 함수 호출
     if (playerData === 0) {
@@ -211,7 +220,8 @@ async function handlePlayerJoin(nickname, roomCode, socket, playerData) {
       profileImage,
       weapon,
       passive,
-      skill
+      skill,
+      rating
     );
 
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
@@ -224,13 +234,11 @@ async function handlePlayerJoin(nickname, roomCode, socket, playerData) {
 io.on("connection", (socket) => {
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
-  // 게임방 참여 (나중에 socket.on 지우기, 클라에서도 지우기)
-  socket.on("joinRoom", ({ roomCode, nickname, playerData }) => {
-    // // 클라이언트에서 보낸 roomCode와 nickname 조회
-    // const { roomCode, nickname } = socket.handshake.query;
+  // 클라이언트에서 보낸 roomCode와 nickname 조회
+  const { roomCode, nickname, rating } = socket.handshake.query;
 
-    handlePlayerJoin(nickname, roomCode, socket, playerData);
-  });
+  // 플레이어 참여
+  handlePlayerJoin(nickname, roomCode, rating, socket, 0);
 
   // 게임 연결 종료
   socket.on("disconnect", () => {
@@ -480,7 +488,7 @@ async function saveResultToRedis(nickname, result) {
       rank: result.rank,
       rating: result.rating,
     });
-    // await redisClient.expire(nickname, 60);
+    await redisClient.expire(nickname, 60);
     console.log(`데이터 저장 성공: ${nickname}`);
   } catch (err) {
     console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
