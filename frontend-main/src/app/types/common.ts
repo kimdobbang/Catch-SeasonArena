@@ -38,6 +38,13 @@ export const generateItemImagePath = (itemId: number): string => {
   return `/items/${itemId}.png`;
 };
 
+export const getDurability = (grade: string) => {
+  if (grade === "normal") return 5;
+  else if (grade === "rare") return 10;
+  else if (grade === "legend") return 15;
+  else return 5;
+};
+
 // 타입별 한국어 이름 매핑
 export const seasonNames: Record<Season, string> = {
   spring: "봄",
