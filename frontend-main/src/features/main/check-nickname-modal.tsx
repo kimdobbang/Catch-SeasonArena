@@ -1,14 +1,11 @@
 // src/shared/components/entities/user/modify-nickname-modal.tsx
-
 import { useState, useEffect, useCallback } from "react";
 import { checkNicknameExists, changeNicknameSave } from "@/app/apis/memberApi";
 import { NicknameInput } from "@atoms/index";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/app/redux/store";
-// import { updateAuthNickname } from "@/app/redux/slice/authSlice";
 import { updateUserAndAuthNickname } from "@/app/redux/slice/userSlice";
 
-// Debounce 함수 (중복 체크 최적화)
 const debounce = <T extends (...args: Parameters<T>) => Promise<void>>(
   func: T,
   delay: number,
@@ -34,7 +31,7 @@ export const NicknameChangeModal = ({
   const [isDuplicate, setIsDuplicate] = useState<boolean | null>(null);
   const [error, setError] = useState("");
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const dispatch: AppDispatch = useDispatch(); // useDispatch에 AppDispatch 타입 적용
+  const dispatch: AppDispatch = useDispatch();
 
   // 중복 확인 API 호출
   const checkNicknameAvailability = useCallback(

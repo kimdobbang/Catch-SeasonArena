@@ -23,7 +23,6 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
       try {
         const fetchedItems = await fetchUserItems(accessToken);
         setItems(fetchedItems);
-        console.log(fetchedItems);
       } catch (error) {
         console.error("아이템을 가져오는 데 실패했습니다.", error);
       }
