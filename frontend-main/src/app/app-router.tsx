@@ -18,6 +18,7 @@ import {
   CombinationPage,
   CollectionbookPage,
   MatchingPage,
+  TestPage,
 } from "@/pages/index";
 
 // PrivateRoute 컴포넌트
@@ -126,6 +127,10 @@ export const AppRouter = () => {
         {
           path: "combination/:resultType", // 동적 파라미터 추가
           element: <ItemResultPage />,
+        },
+        {
+          path: "test", // 동적 파라미터 추가
+          element: <TestPage />,
         },
       ],
     },
