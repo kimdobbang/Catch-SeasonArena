@@ -1,12 +1,13 @@
 // src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
+import { Caption2Text } from "@/shared/components/atoms/texts/caption2-text";
 
 interface ItemCellProps {
   onClick?: () => void;
   id?: number;
   index?: number;
   name: string;
-  type: ItemType;
+  type?: ItemType;
   grade?: ItemGrade;
   skill?: string;
   season?: Season;
@@ -29,7 +30,9 @@ export const CollectionbookCell = ({
       >
         {image ? (
           <img src={image} alt={name} className="object-contain w-12 h-12" />
-        ) : null}
+        ) : (
+          <Caption2Text>soon..</Caption2Text>
+        )}
       </div>
     </div>
   );
