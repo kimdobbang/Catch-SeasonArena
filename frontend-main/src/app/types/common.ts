@@ -25,6 +25,7 @@ export interface Item {
   description: string;
   image: string;
   durability: number;
+  isEquipped?: boolean;
 }
 
 export type ItemGrade = "normal" | "rare" | "legend";

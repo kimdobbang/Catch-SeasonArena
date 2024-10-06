@@ -7,6 +7,7 @@ interface InventoryItem {
   id: number;
   findInventoriesItemResponseDto: Item;
   durability: number;
+  isEquipped: boolean;
 }
 // 인벤토리 전체조회
 export const fetchUserItems = async (accessToken: string): Promise<Item[]> => {
@@ -37,6 +38,7 @@ export const fetchUserItems = async (accessToken: string): Promise<Item[]> => {
       season: itemDto.season.toLowerCase(),
       image: generateItemImagePath(itemDto.id),
       durability: inventoryItem.durability,
+      isEquipped: inventoryItem.isEquipped,
     };
   });
 };
