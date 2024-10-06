@@ -28,8 +28,7 @@ public class FindMyInfoServiceImpl implements FindMyInfoUseCase {
         Member member = findMemberPort.findMember(email);
         List<Inventory> inventories = findEquipInventoryByEmailPort.findEquipInventoryByEmail(email);
 
-        FindMyInfoResponseDto responseDto = FindMyInfoResponseDto.createFindMyInfoResponseDto(
-                findMemberPort.findMember(email), inventories);
+        FindMyInfoResponseDto responseDto = FindMyInfoResponseDto.createFindMyInfoResponseDto(member, inventories);
 
         return responseDto;
     }
