@@ -19,8 +19,9 @@ public class MemberRepositoryAdapter implements GetMemberByNickNamePort, UpdateM
 	private final MemberRepository memberRepository;
 
 	@Override
-	public MemberEntity getMemberByNickName(String nickName) {
-		return memberRepository.findByNicknameAndIsDeleted(nickName,false).orElseThrow(() -> new ExceptionResponse(CustomException.NOT_FOUND_MEMBER_EXCEPTION));
+	public Member getMemberByNickName(String nickName) {
+		return Member.createMemberToEntity(memberRepository.findByNicknameAndIsDeleted(nickName,false)
+				.orElseThrow(() -> new ExceptionResponse(CustomException.NOT_FOUND_MEMBER_EXCEPTION)));
 	}
 
 	@Override

@@ -2,17 +2,13 @@ package com.catchcatchrank.domains.rank.adapter.out.redis;
 
 import java.util.Set;
 
+import com.catchcatchrank.domains.rank.application.port.out.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.catchcatchrank.domains.rank.application.port.out.GetMeRankPort;
-import com.catchcatchrank.domains.rank.application.port.out.GetTop3RankPort;
-import com.catchcatchrank.domains.rank.application.port.out.GetRatePort;
-import com.catchcatchrank.domains.rank.application.port.out.GetUserTierPort;
-import com.catchcatchrank.domains.rank.application.port.out.UpdateTierPort;
-import com.catchcatchrank.domains.rank.application.port.out.SaveRankPort;
 import com.catchcatchrank.domains.rank.domain.Rank;
 
 import lombok.RequiredArgsConstructor;
@@ -21,18 +17,27 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Component
 @Slf4j(topic = "rank")
-public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetRatePort, GetTop3RankPort,
-	GetUserTierPort, GetMeRankPort {
+public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetRatePort,
+	GetUserTierPort, GetMeRankPort, GetTierRankPort {
 
 	private final RedisTemplate<String, Object> redisTemplate;
 
+	@Value("${rank.limit}")
+	private Integer limit;
+
 	private String getTier(double rate) {
-		if (rate <= 100) {
+		if (rate <= 500) {
 			return "ranking_bronze";
-		} else if (rate <= 200) {
+		} else if (rate <= 1000) {
 			return "ranking_sliver";
-		} else {
+		} else if (rate <= 1500){
 			return "ranking_gold";
+		} else if (rate <= 2000) {
+			return "ranking_platinum";
+		} else if (rate <= 2500) {
+			return "ranking_dia";
+		} else {
+			return "ranking_ruby";
 		}
 	}
 
@@ -46,9 +51,15 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		redisTemplate.opsForValue().set(key, tier);
 	}
 
+	@Override
+	public void saveAllRank(Rank rank) {
+		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
+		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getNickName(), rankEntity.getRate());
+	}
+
 	@Transactional
 	@Override
-	public void updateRank(Rank rank) {
+	public void updateTierRank(Rank rank) {
 		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
 		String preTier = getUserTier(rankEntity.getNickName());
 		String changedTier = getTier(rankEntity.getRate());
@@ -64,6 +75,13 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		redisTemplate.opsForValue().set(rankEntity.getNickName() + "ranking", changedTier);
 	}
 
+	@Transactional
+	@Override
+	public void updateAllRank(Rank rank) {
+		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
+		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getNickName(), rankEntity.getRate());
+	}
+
 	@Override
 	public Integer getRate(String nickname) {
 		String tier = getUserTier(nickname);
@@ -71,12 +89,6 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		Double rate = redisTemplate.opsForZSet().score(tier, nickname);
 		return rate != null ? rate.intValue() : null;
 	}
-
-	@Override
-	public Set<ZSetOperations.TypedTuple<Object>> getTop3Rank(String tier) {
-		return redisTemplate.opsForZSet().reverseRangeWithScores(tier,0,3);
-	}
-
 
 	@Override
 	public String getUserTier(String nickname) {
@@ -89,5 +101,10 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 
 	public Integer getUserRate(String tier, String nickname) {
 		return redisTemplate.opsForZSet().score(tier, nickname).intValue();
+	}
+
+	@Override
+	public Set<ZSetOperations.TypedTuple<Object>> getTierRank(String tier, Integer start) {
+		return redisTemplate.opsForZSet().reverseRangeWithScores(tier, start, start + limit - 1);
 	}
 }

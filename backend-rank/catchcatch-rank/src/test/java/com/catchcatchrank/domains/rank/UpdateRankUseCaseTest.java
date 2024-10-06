@@ -48,7 +48,7 @@ public class UpdateRankUseCaseTest {
 	public void 랭크_업데이트_테스트 () {
 		//given
 		BDDMockito.given(getRatePort.getRate(kafkaUpdateRankEntity.getNickname())).willReturn(1);
-		BDDMockito.doNothing().when(updateTierPort).updateRank(any(Rank.class));
+		BDDMockito.doNothing().when(updateTierPort).updateTierRank(any(Rank.class));
 
 
 		//when then

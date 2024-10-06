@@ -42,7 +42,8 @@ public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 		log.info("BE-RANK : nickName {}", kafkaUpdateRankEntity.getNickname());
 
 		Rank rank = new Rank(kafkaUpdateRankEntity.getNickname(), calculateRate);
-		updateTierPort.updateRank(rank);
+		updateTierPort.updateTierRank(rank);
+		updateTierPort.updateAllRank(rank);
 		eventPublisher.publishEvent(rank);
 	}
 

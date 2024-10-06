@@ -5,4 +5,5 @@ import com.catchcatchrank.domains.rank.domain.Rank;
 public interface SaveRankPort {
 
 	void saveUserScore(Rank rank);
+	void saveAllRank(Rank rank);
 }

@@ -5,7 +5,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.catchcatchrank.domains.member.adapter.out.persistence.MemberEntity;
 import com.catchcatchrank.domains.member.appclication.port.GetMemberByNickNamePort;
 import com.catchcatchrank.domains.member.appclication.port.UpdateMemberRankPort;
 import com.catchcatchrank.domains.member.domain.Member;
@@ -28,12 +27,10 @@ public class MemberServiceImpl {
 	@Async
 	public void updateRank(Rank rank) {
 
-		MemberEntity memberEntity = getMemberByNickNamePort.getMemberByNickName(rank.getNickName());
-		log.info("BE-RANK :  member rate {}" , memberEntity.getRating());
-
-		 Member member = Member.createMemberToEntity(memberEntity);
-		 log.info("BE-RANK : rank {}" , rank.getRate());
-		 member.updateRate(rank.getRate());
-		 updateMemberRankPort.updateRank(member);
+		Member member = getMemberByNickNamePort.getMemberByNickName(rank.getNickName());
+		log.info("BE-RANK :  member rate {}" , member.getRating());
+		log.info("BE-RANK : rank {}" , rank.getRate());
+		member.updateRate(rank.getRate());
+		updateMemberRankPort.updateRank(member);
 	}
 }

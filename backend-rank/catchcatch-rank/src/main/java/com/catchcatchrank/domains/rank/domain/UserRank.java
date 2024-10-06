@@ -1,6 +1,5 @@
 package com.catchcatchrank.domains.rank.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,24 +7,27 @@ import lombok.Getter;
 public class UserRank {
 
 	private String tier;
-	private String nickName;
-	private Integer tierRank;
-	private Integer rate;
+	private String nickname;
+	private String avatar;
+	private Integer tierRanking;
+	private Integer rating;
 
 	@Builder
-	private UserRank(String tier, String nickName, Integer tierRank, Integer rate) {
+	private UserRank(String tier, String nickname, String avatar, Integer tierRanking, Integer rating) {
 		this.tier = tier;
-		this.nickName = nickName;
-		this.tierRank = tierRank;
-		this.rate = rate;
+		this.nickname = nickname;
+		this.avatar = avatar;
+		this.tierRanking = tierRanking;
+		this.rating = rating;
 	}
 
-	public static UserRank createUserRank(String tier, String nickName, Integer tierRank, Integer rate) {
+	public static UserRank createUserRank(String tier, String nickname, String avatar, Integer tierRanking, Integer rating) {
 		return UserRank.builder()
 			.tier(tier)
-			.nickName(nickName)
-			.tierRank(tierRank)
-			.rate(rate)
+			.nickname(nickname)
+			.avatar(avatar)
+			.tierRanking(tierRanking)
+			.rating(rating)
 			.build();
 	}
 }

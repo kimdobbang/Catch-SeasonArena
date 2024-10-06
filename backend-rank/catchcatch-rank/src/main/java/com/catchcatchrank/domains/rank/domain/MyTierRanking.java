@@ -7,8 +7,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MyRanking {
+public class MyTierRanking {
 
-	List<UserRank> topRanks;
-	UserRank myRank;
+	List<UserRank> tierRanks;
+	MyRank myRank;
 }

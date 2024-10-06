@@ -24,5 +24,6 @@ public class SaveRankUseCaseImpl implements SaveRankUseCase {
 	public void saveRank(KafkaRankEntity kafkaRankEntity) {
 		Rank rank = Rank.fromKafkaRankEntity(kafkaRankEntity);
 		saveRankPort.saveUserScore(rank);
+		saveRankPort.saveAllRank(rank);
 	}
 }
