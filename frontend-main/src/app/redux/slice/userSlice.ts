@@ -47,7 +47,6 @@ const userSlice = createSlice({
       state.selectedAvatar = action.payload;
     },
     setRating: (state, action: PayloadAction<number>) => {
-      console.log("Received rating 리덕스:", action.payload); // 디버깅용 로그
       state.rating = action.payload;
       state.tier = getTierByRating(action.payload) as Tier;
     },
@@ -93,7 +92,6 @@ const userSlice = createSlice({
 export const updateUserAndAuthNickname =
   (nickname: string): AppThunk =>
   (dispatch) => {
-    console.log("Updating nickname:", nickname); // 디버깅용 로그
     dispatch(updateAuthNickname(nickname)); // authSlice 업데이트
     dispatch(updateUserNickname(nickname)); // userSlice 업데이트
   };
