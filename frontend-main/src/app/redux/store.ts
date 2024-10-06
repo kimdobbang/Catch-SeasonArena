@@ -15,7 +15,7 @@ import successReducer from "./slice/successSlice";
 const persistConfig = {
   key: "root",
   storage: sessionStorage,
-  whitelist: ["auth", "user", "success"],
+  whitelist: ["auth", "user"],
 };
 
 const rootReducer = combineReducers({

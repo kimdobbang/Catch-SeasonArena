@@ -25,6 +25,14 @@ export const successSlice = createSlice({
       state.grade = action.payload.grade;
       state.effect = action.payload.effect;
     },
+    // Success 데이터를 초기화하는 리듀서 (삭제하는 액션)
+    clearSuccess: (state) => {
+      state.name = "";
+      state.itemId = 0;
+      state.type = "";
+      state.grade = "";
+      state.effect = "";
+    },
   },
 });
 
