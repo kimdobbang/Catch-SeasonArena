@@ -13,9 +13,10 @@ export { AvatarPage } from "@/pages/avatar-page";
 export { RankingPage } from "@/pages/ranking-page";
 
 export { CollectPage } from "@/pages/collect-page";
-export { CollectResultPage } from "@/pages/collect-result-page";
 export { InventoryPage } from "@/pages/inventory-page";
 export { CombinationPage } from "@/pages/combination-page";
 export { CollectionbookPage } from "@/pages/collectionbook-page";
 
 export { MatchingPage } from "@/pages/matching-page";
+export { ItemResultPage } from "@/pages/item-result-page";
+export { TestPage } from "@/pages/test-page";

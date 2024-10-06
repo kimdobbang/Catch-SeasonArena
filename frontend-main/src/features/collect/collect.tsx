@@ -1,11 +1,24 @@
 import { useRef, useEffect, useState } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { ResponseCollectData } from "@/app/apis/collectApi";
 import { useNavigate } from "react-router-dom";
 import { CameraButton } from "./camera-button";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
+import {
+  sendImagesToServer,
+  sendPublicImagesToServer,
+} from "@/app/apis/collectApi";
+import { setSuccess } from "@/app/redux/slice/successSlice";
 
 export const Collect = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSuccessResponse = (responseData: ResponseCollectData) => {
+    dispatch(setSuccess(responseData.data.processed_result)); // processed_result 데이터를 저장
+  };
+
+  // const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
@@ -18,6 +31,9 @@ export const Collect = () => {
 
   useEffect(() => {
     console.log("Captured Images updated:", capturedImages);
+    if (capturedImages.length >= 5) {
+      handleSendImages();
+    }
   }, [capturedImages]);
 
   useEffect(() => {
@@ -100,71 +116,49 @@ export const Collect = () => {
           setCapturedImages((prevCapturedImages) => {
             const updatedImages = [...prevCapturedImages, imageUrl];
             capturedImagesRef.current = updatedImages; // ref 업데이트
+            // 로그를 추가하여 이미지 배열 확인
+            console.log("Updated images array: ", updatedImages);
             return updatedImages;
           });
 
           // 캡처된 이미지 수를 추적
           capturedLen.current++;
+          console.log(`Image ${capturedLen.current} captured`); // 각 이미지가 제대로 캡처되는지 확인
 
-          if (capturedLen.current >= 20) {
+          if (capturedLen.current >= 5) {
             clearInterval(interval);
-            sendImagesToServer();
           }
         }
       }
     }, 100); // 100ms마다 캡처
   };
 
-  const sendImagesToServer = async () => {
-    console.log("CAptured Images 배열: ", capturedImages);
-    const formData = new FormData();
-
-    // 이메일을 formData에 추가
-    formData.append("email", "seung@dd"); // 이메일을 "email"이라는 key로 추가
-
-    console.log("Captured Images for upload:", capturedImagesRef.current);
-
-    // 이미지 배열의 각 이미지 URL을 Blob 형태로 변환하여 FormData에 추가
-    capturedImagesRef.current.forEach((image, index) => {
-      console.log("Processing image:", index); // 각 이미지가 처리되는지 확인
-
-      const byteString = atob(image.split(",")[1]);
-      const mimeString = image.split(",")[0].split(":")[1].split(";")[0];
-
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-
-      const blob = new Blob([ab], { type: mimeString });
-
-      // Blob의 정보 출력
-      console.log("Blob 생성 완료:", blob);
-      console.log("Blob 크기:", blob.size); // Blob의 크기 출력
-      console.log("Blob 타입:", blob.type); // Blob의 MIME 타입 출력
-
-      formData.append("formData", blob, `captured-image-${index + 1}.png`);
-    });
-
-    // FormData 확인을 위한 콘솔 로그 출력
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
-
+  const handleSendImages = async () => {
     try {
-      const response = await axios.post(
-        "https://j11b106.p.ssafy.io/api/ai/collections",
-        formData, // 이미지 파일 배열과 이메일을 포함한 FormData 전송
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-      console.log("Images sent to server:", response.data);
+      const response = await sendImagesToServer(capturedImagesRef.current);
+      console.log("API 응답: ", response);
     } catch (error) {
-      console.error("Error sending images to server:", error);
+      console.error("이미지 전송 중 오류 발생: ", error);
+    }
+  };
+
+  const successTest = async () => {
+    try {
+      const response = await sendPublicImagesToServer();
+      if (response.status === "success") {
+        console.log("호출 성공!");
+        handleSuccessResponse(response);
+        navigate("/collect/success");
+      } else if (response.status === "failure") {
+        console.log("실패한 결과: ", response);
+        navigate("/collect/fail");
+      } else {
+        console.log("API 호출 실패: 알 수 없는 상태");
+        navigate("/collect/fail");
+      }
+    } catch (error) {
+      console.error("Error during API call:", error);
+      navigate("/collect/fail");
     }
   };
 
@@ -207,7 +201,7 @@ export const Collect = () => {
         className="text-black bg-white border "
       />
 
-      <button onClick={() => navigate("processing")}>수집 게임으로 이동</button>
+      <button onClick={successTest}>성공 테스트 버튼</button>
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
         <h3 className="text-lg font-bold">Captured Images:</h3>
         <div className="flex flex-wrap gap-2">
