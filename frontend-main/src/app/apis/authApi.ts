@@ -99,6 +99,15 @@ export const fetchUserInfo = async (
   if (!response.ok) {
     throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
   }
-  const data = await response.json();
-  return data;
+  const { data } = await response.json();
+  return {
+    ...data,
+    rating: data.rating,
+    selectedAvatar: Number(data.selectedAvatar),
+    equipment: {
+      weapon: data.equipment.weapon,
+      active: data.equipment.active,
+      passive: data.equipment.passive,
+    },
+  };
 };
