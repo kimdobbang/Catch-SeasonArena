@@ -10,7 +10,7 @@
         <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
         <producerConfig>retries=1</producerConfig>
         <producerConfig>bootstrap.servers=3.36.122.163:9092</producerConfig>
-        <producerConfig>compression.type=snappy</producerConfig>
+        <producerConfig>compression.type=none</producerConfig>
         <producerConfig>max.block.ms=1000</producerConfig>
 
         <errorHandler class="ch.qos.logback.core.spi.ErrorHandler">
