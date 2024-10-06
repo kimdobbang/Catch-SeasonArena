@@ -9,7 +9,7 @@ export const AutumnItemImage = ({ itemId }: { itemId: number | null }) => {
   return (
     <img
       src={imagePath}
-      alt={`Item ${itemId}`}
+      alt={`ItemId ${itemId}`}
       className="object-contain w-[80%] h-[80%]"
     />
   );

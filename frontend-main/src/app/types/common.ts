@@ -25,6 +25,7 @@ export interface Item {
   description: string;
   image: string;
   durability: number;
+  isEquipped?: boolean;
 }
 
 export type ItemGrade = "normal" | "rare" | "legend";
@@ -36,6 +37,13 @@ export type InventoryItem = Pick<Item, "id" | "itemId" | "name" | "type">;
 
 export const generateItemImagePath = (itemId: number): string => {
   return `/items/${itemId}.png`;
+};
+
+export const getDurability = (grade: string) => {
+  if (grade === "normal") return 5;
+  else if (grade === "rare") return 10;
+  else if (grade === "legend") return 15;
+  else return 5;
 };
 
 // 타입별 한국어 이름 매핑

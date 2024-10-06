@@ -1,14 +1,17 @@
 // src/features/inventory/inventory-userinfo.tsx
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
+import { Item } from "@/app/types/common";
 import { getTierByRating } from "@/app/types/tier";
-import { InGameStats } from "@/features/index";
+import { AvatarBody, TierBadge, Body1Text } from "@atoms/index";
 import { EquippedItems } from "@entities/index";
-import { AvatarBody } from "@atoms/index";
-import { TierBadge } from "@atoms/index";
-import { Body1Text } from "@atoms/index";
+import { InGameStats } from "@/features/index";
 
-export const InventoryUserInfo = () => {
+interface InventoryUserInfoProps {
+  items: Item[];
+}
+
+export const InventoryUserInfo = ({ items }: InventoryUserInfoProps) => {
   const { selectedAvatar, rating } = useSelector(
     (state: RootState) => state.user,
   );
@@ -24,10 +27,24 @@ export const InventoryUserInfo = () => {
       <div className="w-full ml-10 ">
         <div className="flex items-center">
           <TierBadge rating={rating} />
-          <Body1Text className=" text-catch-tier-Bronze">{userTier}</Body1Text>
+          <Body1Text className=" text-catch-gray-500">{userTier}</Body1Text>
         </div>
         <InGameStats />
-        <EquippedItems showCaption={true} />
+        <EquippedItems
+          showCaption={true}
+          equippedItems={{
+            weapon:
+              items.find((item) => item.type === "weapon" && item.isEquipped) ||
+              null,
+            active:
+              items.find((item) => item.type === "active" && item.isEquipped) ||
+              null,
+            passive:
+              items.find(
+                (item) => item.type === "passive" && item.isEquipped,
+              ) || null,
+          }}
+        />
       </div>
     </div>
   );
