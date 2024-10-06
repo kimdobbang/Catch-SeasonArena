@@ -319,8 +319,8 @@ io.on("connection", (socket) => {
     const room = rooms.get(roomCode);
     if (!room) return;
     const attacker = getPlayer(socket.id);
-    const skill = attacker.skill;
     if (attacker) {
+      const skill = attacker.skill;
       // 공격 범위 내 플레이어 감지
       useSkill(room, attacker, skill, roomCode);
 
