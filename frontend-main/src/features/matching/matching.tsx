@@ -3,7 +3,11 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { RootState } from "@/app/redux/store";
 import { useSelector } from "react-redux";
-import { Body1Text, PrimaryButton } from "@/shared/components/atoms";
+import {
+  Body1Text,
+  Caption2Text,
+  PrimaryButton,
+} from "@/shared/components/atoms";
 import {
   TierProgressBar,
   UserNameContainer,
@@ -128,13 +132,8 @@ export const Matching = () => {
 
   return (
     <div className="w-full h-full ">
-      <div
-        className="w-full h-[30%] flex flex-col items-center justify-center"
-        style={{
-          background:
-            "linear-gradient(1deg, #FEF8EC -2.21%, rgba(254, 251, 245, 0.53) 51.4%, rgba(255, 255, 255, 0) 99.05%)",
-        }}
-      >
+      {/* 유저 아바타*/}
+      <div className="w-full h-[20%] flex flex-col items-center justify-center">
         <CircleAvatar
           avatarIcon={true}
           number={selectedAvatar}
@@ -142,47 +141,58 @@ export const Matching = () => {
           width={96}
         />
       </div>
-      <div className="w-full h-[70%] flex flex-col items-center gap-6">
+      {/* 유저 정보, 프로그레스바, 장착 무기*/}
+      <div className="w-full h-[35%] flex flex-col items-center gap-6">
         <UserNameContainer className="mt-4" />
         <TierProgressBar />
-
-        <div className="w-full px-4">
-          <Body1Text className="!text-left text-catch-main-400 ">
-            2024 Autumn
-          </Body1Text>
-        </div>
-        {!isMatchingStatus ? (
-          <PrimaryButton
-            showIcon={false}
-            onClick={connect}
-            size="small"
-            color="main"
-          >
-            연결
-          </PrimaryButton>
-        ) : (
-          <>
-            <PrimaryButton
-              showIcon={false}
-              onClick={sendMessage}
-              size="small"
-              color="main"
-            >
-              메시지 전송
-            </PrimaryButton>
-            <PrimaryButton
-              showIcon={false}
-              onClick={disconnect}
-              size="small"
-              color="white"
-            >
-              연결 해제
-            </PrimaryButton>
-            <button onClick={goToGame}>게임으로 이동</button>
-          </>
-        )}
+        {/*  장착 무기 들어가야 함*/}
       </div>
-      <NavBarBackground className="mt-3" />
+      {/* 게임 버튼들 */}
+      <div className="w-full h-[20%] gap-3 flex flex-col items-center">
+        <div className="w-full px-4">
+          <Body1Text className=" text-catch-main-400">2024 Autumn</Body1Text>
+        </div>
+        <div className="flex items-center justify-center">
+          {!isMatchingStatus ? (
+            // 연결 버튼 누르기 전
+            <div>
+              <PrimaryButton
+                showIcon={false}
+                onClick={connect}
+                size="small"
+                color="main"
+              >
+                연결
+              </PrimaryButton>
+              <Caption2Text className="text-catch-gray-300">
+                배틀에 사용할 장착 수집물을 확인하세요
+              </Caption2Text>
+            </div>
+          ) : (
+            // 연결 버튼 누른 후
+            <div className="flex flex-col gap-1">
+              <PrimaryButton
+                showIcon={false}
+                onClick={sendMessage}
+                size="small"
+                color="main"
+              >
+                메시지 전송
+              </PrimaryButton>
+              <PrimaryButton
+                showIcon={false}
+                onClick={disconnect}
+                size="small"
+                color="white"
+              >
+                연결 해제
+              </PrimaryButton>
+              <button onClick={goToGame}>게임으로 이동</button>
+            </div>
+          )}
+        </div>
+      </div>
+      <NavBarBackground className="mt-3 " />
     </div>
   );
 };
