@@ -2,6 +2,7 @@ package catchcatch.recommend.domain.recommend.service;
 
 import catchcatch.recommend.domain.recommend.domain.Player;
 import catchcatch.recommend.domain.recommend.requestdto.EntryRequestDto;
+import catchcatch.recommend.domain.recommend.requestdto.ExitRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +61,11 @@ public class RecommendService {
         Player player = Player.createPlayer(requestDto);
         playerStore.getWaitingPlayers().add(player);
         log.info("BE/MATCHING - player size " + playerStore.getWaitingPlayers().size());
+    }
+
+    public void exitPlayerByNickname(ExitRequestDto requestDto) {
+        Boolean checkExit = playerStore.getWaitingPlayers().removeIf(player -> player.getNickname().equals(requestDto.nickname()));
+        log.info("BE-MATCHING/ check exit player - {} ", checkExit);
     }
 
     public void matchingGame(){
