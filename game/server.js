@@ -72,7 +72,8 @@ function joinPlayer(
   weapon,
   passive,
   skill,
-  rating
+  rating,
+  email
 ) {
   // 플레이어 객체 생성
   const player = {
@@ -93,6 +94,7 @@ function joinPlayer(
     canMove: true,
     kill: 0,
     rating: rating,
+    email: email,
     protect: 1,
     skill: skill,
     invincibility: false, // 무적
@@ -138,27 +140,19 @@ function joinPlayer(
   }
 }
 
-async function handlePlayerJoin(
-  nickname,
-  roomCode,
-  rating,
-  socket,
-  playerData
-) {
+async function handlePlayerJoin(socket, nickname, roomCode, rating, email) {
   try {
     // getPlayerData 비동기 함수 호출
-    if (playerData === 0) {
-      const redisData = await getPlayerData(nickname, roomCode);
+    const redisData = await getPlayerData(nickname, roomCode);
 
-      if (!redisData) {
-        return;
-      }
-
-      console.log(redisData);
-      playerData = Number(redisData);
-
-      console.log("playerData는 " + playerData);
+    if (!redisData) {
+      return;
     }
+
+    console.log(redisData);
+    const playerData = Number(redisData);
+
+    console.log("playerData는 " + playerData);
 
     let profileImage;
     let weapon = 0;
@@ -221,7 +215,8 @@ async function handlePlayerJoin(
       weapon,
       passive,
       skill,
-      rating
+      rating,
+      email
     );
 
     console.log(`( 게임방 참가 ) 소켓ID : ${socket.id}, 방 번호 : ${roomCode}`);
@@ -235,10 +230,10 @@ io.on("connection", (socket) => {
   console.log(`( 소켓 연결 ) 소켓ID : ${socket.id}`);
 
   // 클라이언트에서 보낸 roomCode와 nickname 조회
-  const { roomCode, nickname, rating } = socket.handshake.query;
+  const { roomCode, nickname, rating, email } = socket.handshake.query;
 
   // 플레이어 참여
-  handlePlayerJoin(nickname, roomCode, rating, socket, 0);
+  handlePlayerJoin(socket, nickname, roomCode, rating, email);
 
   // 게임 연결 종료
   socket.on("disconnect", () => {
@@ -369,6 +364,7 @@ setInterval(() => {
           const time = Math.round((Date.now() - room.startTime) / 1000);
           const rank = room.players.size;
           const rating = player.rating;
+          const email = player.email;
 
           // 데이터셋을 객체로 만들기
           const result = {
@@ -377,6 +373,7 @@ setInterval(() => {
             time: time,
             rank: rank,
             rating: rating,
+            email: email,
           };
 
           sendMessage(result); // 카프카로 전송
@@ -481,8 +478,9 @@ async function getPlayerData(nickname, roomCode) {
 // <<result 객체를 Redis에 저장하는 함수>>
 async function saveResultToRedis(nickname, result) {
   try {
-    // HSET 명령을 통해 nickname을 키로 나머지 데이터를 저장
-    await redisClient.hSet(nickname, {
+    // HSET 명령을 통해 email을 키로 나머지 데이터를 저장
+    await redisClient.hSet(result.email, {
+      nickname: nickname,
       kill: result.kill,
       time: result.time,
       rank: result.rank,

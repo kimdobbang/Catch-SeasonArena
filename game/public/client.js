@@ -26,6 +26,7 @@ const queryParams = new URLSearchParams(window.location.search);
 const roomCode = queryParams.get("roomcode");
 const nickname = queryParams.get("nickname");
 const rating = queryParams.get("rating");
+const email = queryParams.get("email");
 ROOMCODE = roomCode;
 
 // Socket.io 클라이언트 초기화 시 roomCode와 nickname을 서버에 전달
@@ -34,6 +35,7 @@ const socket = io("https://j11b106.p.ssafy.io", {
     roomCode,
     nickname,
     rating,
+    email,
   },
 });
 
