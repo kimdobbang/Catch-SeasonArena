@@ -1,37 +1,24 @@
 //src/shared/components/entities/inventory/items-library.tsx
-import React, { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useCallback } from "react";
 import { Item } from "@/app/types/common";
 import { ItemCell } from "@atoms/index";
 import { TabBar, NumberPagination } from "@ui/index";
 import { useItemFilter } from "@/features/index";
-import { fetchUserItems } from "@/app/apis/inventoryApi";
-import { RootState } from "@/app/redux/store";
+import { InventoryItemCard } from "@entities/index";
 
 const MemoizedTabBar = React.memo(TabBar);
 
-export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
+interface ItemLibraryProps {
+  items: Item[];
+  children?: React.ReactNode;
+}
+
+export const ItemLibrary = ({ items, children }: ItemLibraryProps) => {
   const itemsPerPage = 8;
-  const [items, setItems] = useState<Item[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("weapon");
-
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-
-  useEffect(() => {
-    const loadItems = async () => {
-      try {
-        const fetchedItems = await fetchUserItems(accessToken);
-        setItems(fetchedItems);
-      } catch (error) {
-        console.error("아이템을 가져오는 데 실패했습니다.", error);
-      }
-    };
-
-    if (accessToken) {
-      loadItems();
-    }
-  }, []);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { currentItems, totalPages } = useItemFilter(
     items,
@@ -57,6 +44,16 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
     }
   }, [currentPage]);
 
+  const handleItemClick = (item: Item) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
+
   return (
     <div className="flex flex-col">
       <MemoizedTabBar
@@ -68,11 +65,12 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell
-              key={itemData.id}
               id={itemData.id}
+              itemId={itemData.itemId}
               name={itemData.name}
               image={itemData.image}
               type={itemData.type}
+              onClick={() => handleItemClick(itemData)}
             />
           ))}
         </div>
@@ -83,6 +81,9 @@ export const ItemLibrary = ({ children }: { children?: React.ReactNode }) => {
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
         />
+        {isModalOpen && selectedItem && (
+          <InventoryItemCard item={selectedItem} onClose={handleCloseModal} />
+        )}
         {children}
       </div>
     </div>

@@ -14,3 +14,4 @@ export { SuccessComponent } from "@entities/result/success-component";
 export { ItemLibrary } from "@entities/inventory/items-library";
 export { EquippedItems } from "@entities/inventory/equipped-Items"; // 장착한 3 개
 export { EquippedCell } from "@entities/inventory/equipped-cell"; // 장착한 1개
+export { InventoryItemCard } from "@entities/inventory/inventory-item-card";

@@ -15,7 +15,6 @@ export const OAuthCallbackPage = () => {
     const accessToken = pathSegments[pathSegments.length - 1];
 
     if (accessToken) {
-      console.log("OAuth 로그인 성공, 토큰 저장 완료:", accessToken);
       await handleLoginSuccess(accessToken, dispatch, navigate);
     } else {
       setErrorMessage("OAuth 로그인 실패: URL에 유효한 토큰이 없습니다.");
