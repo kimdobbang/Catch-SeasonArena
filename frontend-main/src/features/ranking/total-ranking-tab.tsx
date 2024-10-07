@@ -16,9 +16,9 @@ export const TotalRankingTab = () => {
         <UserRankingBox avatar={1} nickname="Jack" rating={300} rank={120} />
         <UserRankingBox avatar={1} nickname="Jack" rating={300} rank={120} />
 
-        <div ref={ref} style={{ height: "20px", backgroundColor: "lightgray" }}>
+        {/* <div ref={ref} style={{ height: "20px", backgroundColor: "lightgray" }}>
           {hasNextPage ? "Loading more..." : "No more data to load"}
-        </div>
+        </div> */}
       </div>
     </div>
   );
