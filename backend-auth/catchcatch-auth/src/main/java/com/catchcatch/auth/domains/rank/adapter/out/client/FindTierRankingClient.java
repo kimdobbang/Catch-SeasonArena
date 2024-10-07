@@ -11,6 +11,6 @@ import java.util.Map;
 @FeignClient(name = "FindTierRankingClient", url = "https://j11b106.p.ssafy.io/api/rank/rankings")
 public interface FindTierRankingClient {
 
-    @GetMapping(value = "/tier/{nickname}/{page}", consumes = "application/json")
-    ResponseEntity<Map<String, Object>> findTierRanking(@PathVariable String nickname, @PathVariable Integer page);
+    @GetMapping(value = "/tier/{email}/{page}", consumes = "application/json")
+    ResponseEntity<Map<String, Object>> findTierRanking(@PathVariable String email, @PathVariable Integer page);
 }
