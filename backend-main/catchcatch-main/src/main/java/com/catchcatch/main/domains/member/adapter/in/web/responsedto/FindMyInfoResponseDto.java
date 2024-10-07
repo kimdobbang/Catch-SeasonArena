@@ -5,7 +5,6 @@ import com.catchcatch.main.domains.item.adapter.out.persistence.Type;
 import com.catchcatch.main.domains.member.domain.Member;
 import com.catchcatch.main.global.exception.CustomException;
 import com.catchcatch.main.global.exception.ExceptionResponse;
-import jakarta.validation.constraints.Null;
 import lombok.Builder;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public record FindMyInfoResponseDto(
         String nickname,
         Integer rating,
         String selectedAvatar,
-        EquipmentDto equipment
+        EquipmentsDto equipment
 ) {
 
     public static FindMyInfoResponseDto createFindMyInfoResponseDto(Member member, List<Inventory> equipItems) {
@@ -29,30 +28,30 @@ public record FindMyInfoResponseDto(
                 .build();
     }
 
-    private static EquipmentDto createEquipment(List<Inventory> equipItems) {
-        Long[] itemType = new Long[3];
+    private static EquipmentsDto createEquipment(List<Inventory> equipItems) {
+        EquipmentDto[] itemType = new EquipmentDto[3];
 
         for(int i=0; i<equipItems.size(); i++) {
             Inventory inventory = equipItems.get(i);
             if(inventory.getItem().getType().equals(Type.WEAPON)
                 && itemType[0] == null){
-                itemType[0] = inventory.getItem().getId();
+                itemType[0] = new EquipmentDto(inventory.getId(), inventory.getItem().getId());
                 continue;
             }
             if(inventory.getItem().getType().equals(Type.ACTIVE)
                 && itemType[1] == null){
-                itemType[1] = inventory.getItem().getId();
+                itemType[1] = new EquipmentDto(inventory.getId(), inventory.getItem().getId());
                 continue;
             }
             if(inventory.getItem().getType().equals(Type.PASSIVE)
                 && itemType[2] == null){
-                itemType[2] = inventory.getItem().getId();
+                itemType[2] = new EquipmentDto(inventory.getId(), inventory.getItem().getId());
                 continue;
             }
 
             throw new ExceptionResponse(CustomException.DUPLICATED_EQUIPMENT_TYPE_EXCEPTION);
         }
 
-        return new EquipmentDto(itemType[0], itemType[1], itemType[2]);
+        return new EquipmentsDto(itemType[0], itemType[1], itemType[2]);
     }
 }
