@@ -15,11 +15,11 @@ public class RedisAdapter implements EndGamePort {
 	private final RedisTemplate<String, Object> redisTemplate;
 
 	@Override
-	public EndGame getEndGame(String userNickname) {
-		Integer getKill = Integer.parseInt((String)redisTemplate.opsForHash().get(userNickname, "kill"));
-		Integer getTime = Integer.parseInt((String)redisTemplate.opsForHash().get(userNickname, "time"));
-		Integer getRank = Integer.parseInt((String)redisTemplate.opsForHash().get(userNickname, "rank"));
-		Integer getRating = Integer.parseInt((String)redisTemplate.opsForHash().get(userNickname, "rating"));
+	public EndGame getEndGame(String memberEmail) {
+		Integer getKill = Integer.parseInt((String)redisTemplate.opsForHash().get(memberEmail, "kill"));
+		Integer getTime = Integer.parseInt((String)redisTemplate.opsForHash().get(memberEmail, "time"));
+		Integer getRank = Integer.parseInt((String)redisTemplate.opsForHash().get(memberEmail, "rank"));
+		Integer getRating = Integer.parseInt((String)redisTemplate.opsForHash().get(memberEmail, "rating"));
 		EndGameEntity endGameEntity = EndGameEntity.of(getKill, getTime, getRank, getRating);
 		return EndGame.fromEndGameEntity(endGameEntity);
 	}

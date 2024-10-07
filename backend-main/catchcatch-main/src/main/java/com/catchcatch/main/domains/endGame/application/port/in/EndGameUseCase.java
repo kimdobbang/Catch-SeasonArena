@@ -4,5 +4,5 @@ import com.catchcatch.main.domains.endGame.domain.EndGame;
 
 public interface EndGameUseCase {
 
-	EndGame getEndGame(String userNickname);
+	EndGame getEndGame(String memberEmail);
 }

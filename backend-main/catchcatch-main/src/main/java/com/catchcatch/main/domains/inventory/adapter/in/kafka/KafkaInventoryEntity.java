@@ -11,5 +11,5 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class KafkaInventoryEntity {
-	private String nickname;
+	private String email;
 }
