@@ -1,8 +1,8 @@
 import { useState } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-// import { RootState } from "@/app/redux/store";
-// import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { useSelector } from "react-redux";
 import { Body1Text, PrimaryButton } from "@/shared/components/atoms";
 import {
   TierProgressBar,
@@ -15,30 +15,18 @@ export const Matching = () => {
   const [isMatchingStatus, setIsMatchingStatus] = useState(false); // 매칭 상태 관리
   const [stompClient, setStompClient] = useState<Client | null>(null); // STOMP 클라이언트 상태
   const [isConnected, setIsConnected] = useState(false); // 연결 상태 관리
-  const [nickname, setNickname] = useState(""); // 닉네임 상태
-  const [rating, setRating] = useState<number>(500); // 레이팅 상태
+
   const [roomcode, setRoomcode] = useState("");
 
-  // const nickname = useSelector((state: RootState) => state.user.nickname);
-  // const rating = useSelector((state: RootState) => state.user.rating);
-
-  // const userAvatar = useSelector(
-  //   (state: RootState) => state.user.selectedAvatar,
-  // );
-
-  // const userAvatar = useSelector(
-  //   (state: RootState) => state.user.selectedAvatar,
-  // );
+  const { nickname, rating, email, selectedAvatar, equipment } = useSelector(
+    (state: RootState) => state.user,
+  );
 
   const goToGame = () => {
-    window.location.href = `/game?nickname=${nickname}&rating=${rating}&roomcode=${roomcode}`;
+    window.location.href = `/game?nickname=${nickname}&email=${email}&rating=${rating}&roomcode=${roomcode}`;
   };
-  const connect = () => {
-    if (!nickname) {
-      alert("닉네임을 입력하세요.");
-      return;
-    }
 
+  const connect = () => {
     const socket = new SockJS("https://j11b106.p.ssafy.io/api/matching");
 
     // STOMP 클라이언트 생성
@@ -107,14 +95,21 @@ export const Matching = () => {
       return;
     }
 
+    const equipmentArr: number[] = [];
+
+    // active가 null일 수 있으므로 optional chaining과 nullish coalescing 사용
+    equipmentArr.push(equipment.weapon?.itemId ?? 0); // equipment.active가 null이면 0을 추가
+    equipmentArr.push(equipment.active?.itemId ?? 0); // equipment.passive가 null이면 0을 추가
+    equipmentArr.push(equipment.passive?.itemId ?? 0); // 두 번째 passive.itemId도 동일 처리
+
     const requestDto = {
       nickname: nickname,
-      rating: rating, // 레이팅 정수 변환
-      items: [1, 2, 3],
-      avatar: "1",
+      rating: rating,
+      items: equipmentArr,
+      avatar: selectedAvatar.toString(),
     };
 
-    // stompClient?.send 대신 publish 사용
+    // 서버에 매칭 요청 메시지 보내기
     stompClient?.publish({
       destination: "/api/matching/pub/entry",
       body: JSON.stringify(requestDto),
@@ -142,26 +137,9 @@ export const Matching = () => {
       >
         <CircleAvatar
           avatarIcon={true}
-          number={1}
+          number={selectedAvatar}
           emotion="normal"
           width={96}
-        />
-
-        <input
-          type="text"
-          id="nickname"
-          placeholder="닉네임 입력"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
-        <input
-          type="number"
-          id="rating"
-          placeholder="레이팅 입력"
-          value={rating}
-          onChange={(e) =>
-            setRating(e.target.value ? parseInt(e.target.value) : 500)
-          }
         />
       </div>
       <div className="w-full h-[70%] flex flex-col items-center gap-6">
