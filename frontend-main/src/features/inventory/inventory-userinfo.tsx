@@ -2,21 +2,18 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { Item } from "@/app/types/common";
-import { getTierByRating } from "@/app/types/tier";
 import { AvatarBody, TierBadge, Body1Text } from "@atoms/index";
 import { EquippedItems } from "@entities/index";
 import { InGameStats } from "@/features/index";
 
 interface InventoryUserInfoProps {
-  items: Item[];
+  items: Item[]; // API로 가져온 items 배열
 }
 
 export const InventoryUserInfo = ({ items }: InventoryUserInfoProps) => {
-  const { selectedAvatar, rating } = useSelector(
+  const { selectedAvatar, rating, tier } = useSelector(
     (state: RootState) => state.user,
-  );
-
-  const userTier = getTierByRating(rating);
+  ); // Redux에서 아바타와 티어 정보 가져오기
 
   return (
     <div className="flex items-center h-[30%]">
@@ -27,24 +24,10 @@ export const InventoryUserInfo = ({ items }: InventoryUserInfoProps) => {
       <div className="w-full ml-10 ">
         <div className="flex items-center">
           <TierBadge rating={rating} />
-          <Body1Text className=" text-catch-gray-500">{userTier}</Body1Text>
+          <Body1Text className=" text-catch-gray-500">{tier}</Body1Text>
         </div>
         <InGameStats />
-        <EquippedItems
-          showCaption={true}
-          equippedItems={{
-            weapon:
-              items.find((item) => item.type === "weapon" && item.isEquipped) ||
-              null,
-            active:
-              items.find((item) => item.type === "active" && item.isEquipped) ||
-              null,
-            passive:
-              items.find(
-                (item) => item.type === "passive" && item.isEquipped,
-              ) || null,
-          }}
-        />
+        <EquippedItems items={items} showCaption={true} />
       </div>
     </div>
   );

@@ -2,34 +2,39 @@
 // 유저 관리 상태: 도감, 장비, 아바타, 티어, 닉네임(authSlice참조함)
 // src/app/redux/slice/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserEquipment, UserStat, UserInfo } from "@/app/types/userType";
+import { UserStat, UserInfo } from "@/app/types/userType";
 import { Tier, getTierByRating } from "@/app/types/tier";
 import { setAuthUser, updateAuthNickname } from "./authSlice";
 import { AppThunk } from "@/app/redux/store";
+import { EquipmentItem } from "@/app/types/common";
 
 export interface UserState extends UserInfo {
   rating: number;
   tier: Tier;
   selectedAvatar: number;
   stats: UserStat;
-  equipment: UserEquipment;
+  equipment: {
+    weapon: EquipmentItem;
+    active: EquipmentItem;
+    passive: EquipmentItem;
+  };
 }
 
 const initialState: UserState = {
-  email: "user@example.com",
+  email: "user@default.com",
   nickname: "닉네임을 수정하세요",
   rating: 1,
   tier: getTierByRating(1),
-  selectedAvatar: 2,
+  selectedAvatar: 1,
   stats: {
     hp: 100,
     coverage: 10,
     speed: 10,
   },
   equipment: {
-    weapon: 1,
-    active: null,
-    passive: null,
+    weapon: { inventoryId: null, itemId: null },
+    active: { inventoryId: null, itemId: null },
+    passive: { inventoryId: null, itemId: null },
   },
 };
 
@@ -54,15 +59,14 @@ const userSlice = createSlice({
       state.rating += action.payload;
       state.tier = getTierByRating(state.rating);
     },
-
     // 개별 장비 업데이트 액션 추가
-    setWeapon: (state, action: PayloadAction<number | null>) => {
+    setWeapon: (state, action: PayloadAction<EquipmentItem>) => {
       state.equipment.weapon = action.payload;
     },
-    setActive: (state, action: PayloadAction<number | null>) => {
+    setActive: (state, action: PayloadAction<EquipmentItem>) => {
       state.equipment.active = action.payload;
     },
-    setPassive: (state, action: PayloadAction<number | null>) => {
+    setPassive: (state, action: PayloadAction<EquipmentItem>) => {
       state.equipment.passive = action.payload;
     },
     // 유저 스탯 추가
