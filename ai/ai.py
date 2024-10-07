@@ -84,7 +84,7 @@ async def detect_objects(
                             "confidence": float(conf),
                             "itemId": class_name_to_item_id[class_name]
                         }
-                     
+
                         kafka_logs.append({
                             "class_name": class_name,
                             "confidence": float(conf),
@@ -99,8 +99,10 @@ async def detect_objects(
     if detectResult:
         itemId = detectResult["itemId"]
 
-        if itemId in item_data:
-            item_info = item_data[str(itemId)]
+        # 리스트에서 id 값을 비교하여 해당 item 찾기
+        item_info = next((item for item in item_data if item["id"] == itemId), None)
+
+        if item_info:
             processed_result = {
                 "name": item_info['name'],
                 "itemId": itemId,
