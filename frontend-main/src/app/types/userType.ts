@@ -17,4 +17,7 @@ export interface UserStat {
   speed: number;
 }
 
-export type UserEquipment = Record<ItemType, number | null>; // key는 ItemType (weapon, active, passive)이고 value는 itemId (number | null)
+export type UserEquipment = Record<
+  ItemType,
+  { inventoryId: number | null; itemId: number | null }
+>;

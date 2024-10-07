@@ -1,6 +1,11 @@
 // src/app/types/common.ts
 // 여러 도메인이나 모듈에서 전역으로 사용되는 타입을 정의
 
+export interface EquipmentItem {
+  inventoryId: number | null;
+  itemId: number | null;
+}
+
 export interface Collection {
   // 수정 필요
   itemId: number;
@@ -15,7 +20,7 @@ export interface Collection {
 }
 
 export interface Item {
-  id: number;
+  inventoryId: number;
   itemId: number;
   name: string;
   type: ItemType;
@@ -33,7 +38,10 @@ export type Season = "spring" | "summer" | "autumn" | "winter";
 export type ItemType = "weapon" | "active" | "passive";
 
 // 아래는 수정 or 삭제 예정
-export type InventoryItem = Pick<Item, "id" | "itemId" | "name" | "type">;
+export type InventoryItem = Pick<
+  Item,
+  "inventoryId" | "itemId" | "name" | "type"
+>;
 
 export const generateItemImagePath = (itemId: number): string => {
   return `/items/${itemId}.png`;

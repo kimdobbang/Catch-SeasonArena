@@ -10,7 +10,7 @@ const MemoizedTabBar = React.memo(TabBar);
 
 interface ItemLibraryProps {
   items: Item[];
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export const ItemLibrary = ({ items, children }: ItemLibraryProps) => {
@@ -65,7 +65,7 @@ export const ItemLibrary = ({ items, children }: ItemLibraryProps) => {
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell
-              id={itemData.id}
+              inventoryId={itemData.inventoryId}
               itemId={itemData.itemId}
               name={itemData.name}
               image={itemData.image}
