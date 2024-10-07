@@ -7,16 +7,17 @@ import lombok.Getter;
 @Getter
 public class RedisRankEntity {
 
-	private String nickName;
+	private String email;
 	private Integer rate;
 
-	public RedisRankEntity(String nickName, Integer rate) {
-		this.nickName = nickName;
+	public RedisRankEntity(String email, Integer rate) {
+		this.email = email;
 		this.rate = rate;
 	}
 
 	public static RedisRankEntity fromRank(Rank rank) {
-		return new RedisRankEntity(rank.getNickName(), rank.getRate());
+
+		return new RedisRankEntity(rank.getEmail(), rank.getRate());
 	}
 }
 

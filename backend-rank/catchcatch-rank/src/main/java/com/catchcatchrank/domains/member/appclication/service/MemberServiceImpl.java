@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.catchcatchrank.domains.member.appclication.port.GetMemberByNickNamePort;
+import com.catchcatchrank.domains.member.appclication.port.GetMemberByEmailPort;
 import com.catchcatchrank.domains.member.appclication.port.UpdateMemberRankPort;
 import com.catchcatchrank.domains.member.domain.Member;
 import com.catchcatchrank.domains.rank.domain.Rank;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "rank")
 public class MemberServiceImpl {
 
-	private final GetMemberByNickNamePort getMemberByNickNamePort;
+	private final GetMemberByEmailPort getMemberByNickNamePort;
 	private final UpdateMemberRankPort updateMemberRankPort;
 
 	@Transactional
@@ -27,7 +27,7 @@ public class MemberServiceImpl {
 	@Async
 	public void updateRank(Rank rank) {
 
-		Member member = getMemberByNickNamePort.getMemberByNickName(rank.getNickName());
+		Member member = getMemberByNickNamePort.getMemberByEmail(rank.getEmail());
 		log.info("BE-RANK :  member rate {}" , member.getRating());
 		log.info("BE-RANK : rank {}" , rank.getRate());
 		member.updateRate(rank.getRate());

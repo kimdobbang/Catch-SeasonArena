@@ -40,14 +40,14 @@ public class UpdateRankUseCaseTest {
 	@BeforeEach
 	public void init() {
 		kafkaUpdateRankEntity = new KafkaUpdateRankEntity("1" , 1 , 1 , 1 , 1);
-		rank = new Rank(kafkaUpdateRankEntity.getNickname(), 1);
+		rank = new Rank(kafkaUpdateRankEntity.getEmail(), 1);
 	}
 
 	@Test
 	@DisplayName("랭크 업데이트")
 	public void 랭크_업데이트_테스트 () {
 		//given
-		BDDMockito.given(getRatePort.getRate(kafkaUpdateRankEntity.getNickname())).willReturn(1);
+		BDDMockito.given(getRatePort.getRate(kafkaUpdateRankEntity.getEmail())).willReturn(1);
 		BDDMockito.doNothing().when(updateTierPort).updateTierRank(any(Rank.class));
 
 

@@ -45,23 +45,23 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 	public void saveUserScore(Rank rank) {
 		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
 		String tier = getTier(rankEntity.getRate());
-		redisTemplate.opsForZSet().add(tier, rankEntity.getNickName(), rankEntity.getRate());
+		redisTemplate.opsForZSet().add(tier, rankEntity.getEmail(), rankEntity.getRate());
 
-		String key = rankEntity.getNickName() + "ranking";  // 이메일을 키로 사용
+		String key = rankEntity.getEmail() + "ranking";  // 이메일을 키로 사용
 		redisTemplate.opsForValue().set(key, tier);
 	}
 
 	@Override
 	public void saveAllRank(Rank rank) {
 		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
-		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getNickName(), rankEntity.getRate());
+		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getEmail(), rankEntity.getRate());
 	}
 
 	@Transactional
 	@Override
 	public void updateTierRank(Rank rank) {
 		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
-		String preTier = getUserTier(rankEntity.getNickName());
+		String preTier = getUserTier(rankEntity.getEmail());
 		String changedTier = getTier(rankEntity.getRate());
 
 		log.info("BE-RANK 현재 랭크 : {}" ,rankEntity.getRate());
@@ -69,17 +69,17 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		log.info("BE-RANK : 변화 된 티어 {}", changedTier);
 
 		if (preTier != null && !preTier.equals(changedTier)) {
-			redisTemplate.opsForZSet().remove(preTier, rankEntity.getNickName());
+			redisTemplate.opsForZSet().remove(preTier, rankEntity.getEmail());
 		}
-		redisTemplate.opsForZSet().add(changedTier, rankEntity.getNickName(), rankEntity.getRate());
-		redisTemplate.opsForValue().set(rankEntity.getNickName() + "ranking", changedTier);
+		redisTemplate.opsForZSet().add(changedTier, rankEntity.getEmail(), rankEntity.getRate());
+		redisTemplate.opsForValue().set(rankEntity.getEmail() + "ranking", changedTier);
 	}
 
 	@Transactional
 	@Override
 	public void updateAllRank(Rank rank) {
 		RedisRankEntity rankEntity = RedisRankEntity.fromRank(rank);
-		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getNickName(), rankEntity.getRate());
+		redisTemplate.opsForZSet().add("ranking_all", rankEntity.getEmail(), rankEntity.getRate());
 	}
 
 	@Override

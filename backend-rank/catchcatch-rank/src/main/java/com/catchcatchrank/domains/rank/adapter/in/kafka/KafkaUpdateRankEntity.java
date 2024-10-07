@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KafkaUpdateRankEntity {
 
-	private String nickname;
+	private String email;
 	private Integer kill;
 	private Integer time;
 	private Integer rank;

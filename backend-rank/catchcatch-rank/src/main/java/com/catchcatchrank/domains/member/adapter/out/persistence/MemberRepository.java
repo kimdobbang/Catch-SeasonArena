@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
-	Optional<MemberEntity> findByNicknameAndIsDeleted(String nickname, boolean deleted);
+	Optional<MemberEntity> findByEmailAndIsDeleted(String email, boolean deleted);
 
 	@Query(value = "SELECT * FROM member WHERE is_deleted = false ORDER BY rating DESC LIMIT 5", nativeQuery = true)
 	List<MemberEntity> findTop5ByOrderByRatingDesc();
