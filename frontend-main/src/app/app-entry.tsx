@@ -5,11 +5,16 @@ import "@app/variables.css";
 import "./index.css";
 import { AppRouter } from "./app-router";
 import { store } from "./redux/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const root = document.getElementById("root") as HTMLElement;
-
+const queryClient = new QueryClient();
 ReactDOM.createRoot(root).render(
   <ReduxProvider store={store}>
-    <RouterProvider router={AppRouter()} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={AppRouter()} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </ReduxProvider>,
 );
