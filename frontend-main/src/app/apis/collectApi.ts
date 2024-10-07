@@ -81,7 +81,7 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
 
   try {
     const response = await axios.post(
-      "https://j11b106.p.ssafy.io/api/ai/collections",
+      "http://192.168.31.251:8000/api/ai/collections",
       formData, // 이미지 파일 배열과 이메일을 포함한 FormData 전송
       {
         headers: {
@@ -124,7 +124,7 @@ export const sendPublicImagesToServer = async () => {
 
     // 서버로 이미지 전송
     const serverResponse = await axios.post(
-      "https://j11b106.p.ssafy.io/api/ai/collections", // 실제 서버 URL로 변경
+      "http://192.168.31.251:8000/api/ai/collections", // 실제 서버 URL로 변경
       formData,
       {
         headers: {
