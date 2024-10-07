@@ -67,7 +67,7 @@ public class GetTierRankingUseCaseImpl implements GetTierRankingUseCase {
 			String email = tuple.getValue().toString();
 			Integer rate = tuple.getScore().intValue();
 			Member member = getMemberByEmailPort.getMemberByEmail(email);
-			UserRank userRank = UserRank.createTierUserRank(tier, email, member.getAvatar(), count++, rate);
+			UserRank userRank = UserRank.createTierUserRank(tier, member.getNickname(), member.getAvatar(), count++, rate);
 			ranks.add(userRank);
 		}
 		return ranks;
