@@ -1,6 +1,6 @@
 package com.catchcatchrank.domains.rank.application.service;
 
-import com.catchcatchrank.domains.member.appclication.port.GetMemberByNickNamePort;
+import com.catchcatchrank.domains.member.appclication.port.GetMemberByEmailPort;
 import com.catchcatchrank.domains.member.domain.Member;
 import com.catchcatchrank.domains.rank.application.port.in.GetAllRankingUseCase;
 import com.catchcatchrank.domains.rank.application.port.out.GetAllRankPort;
@@ -27,7 +27,7 @@ public class GetAllRankingUseCaseImpl implements GetAllRankingUseCase {
     private final GetUserTierPort getUserTierPort;
     private final GetAllRankPort getAllRankPort;
     private final GetMeRankPort getMeRankPort;
-    private final GetMemberByNickNamePort getMemberByNickNamePort;
+    private final GetMemberByEmailPort getMemberByEmailPort;
 
     @Value("${rank.limit:5}")
     private Integer limit;
@@ -57,10 +57,10 @@ public class GetAllRankingUseCaseImpl implements GetAllRankingUseCase {
         int count = start+1;
         List<UserRank> ranks = new ArrayList<>();
         for (ZSetOperations.TypedTuple<Object> tuple : tierRanksSet) {
-            String nickname = tuple.getValue().toString();
+            String email = tuple.getValue().toString();
             Integer rate = tuple.getScore().intValue();
-            Member member = getMemberByNickNamePort.getMemberByNickName(nickname);
-            UserRank userRank = UserRank.createUserRank(nickname, member.getAvatar(), count++, rate);
+            Member member = getMemberByEmailPort.getMemberByEmail(email);
+            UserRank userRank = UserRank.createUserRank(email, member.getAvatar(), count++, rate);
             ranks.add(userRank);
         }
         return ranks;

@@ -1,22 +1,21 @@
 package com.catchcatchrank.domains.rank.domain;
 
 import com.catchcatchrank.domains.rank.adapter.in.kafka.KafkaRankEntity;
-import com.catchcatchrank.domains.rank.adapter.out.redis.RedisRankEntity;
 
 import lombok.Getter;
 
 @Getter
 public class Rank {
 
-	private String nickName;
+	private String email;
 	private Integer rate;
 
-	public Rank(String nickName, Integer rate) {
-		this.nickName = nickName;
+	public Rank(String email, Integer rate) {
+		this.email = email;
 		this.rate = rate;
 	}
 
 	public static Rank fromKafkaRankEntity(KafkaRankEntity kafkaRankEntity) {
-		return new Rank(kafkaRankEntity.getNickName(), kafkaRankEntity.getRank());
+		return new Rank(kafkaRankEntity.getEmail(), kafkaRankEntity.getRank());
 	}
 }

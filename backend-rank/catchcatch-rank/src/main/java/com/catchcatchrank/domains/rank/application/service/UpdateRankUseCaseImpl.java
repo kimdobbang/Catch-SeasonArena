@@ -26,11 +26,11 @@ public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 	@Override
 	@Transactional
 	public void updateRank(KafkaUpdateRankEntity kafkaUpdateRankEntity) {
-		log.info("BE-RANK :  userNickname {}", kafkaUpdateRankEntity.getNickname());
+		log.info("BE-RANK :  userEmail {}", kafkaUpdateRankEntity.getEmail());
 		log.info("BE-RANK :  kill {}", kafkaUpdateRankEntity.getKill());
 		Integer score = calculateScore(kafkaUpdateRankEntity.getKill(), kafkaUpdateRankEntity.getTime(),
 			kafkaUpdateRankEntity.getRank());
-		Integer preRate = getRatePort.getRate(kafkaUpdateRankEntity.getNickname());
+		Integer preRate = getRatePort.getRate(kafkaUpdateRankEntity.getEmail());
 		Integer calculateRate = preRate + score;
 
 		if (calculateRate < 0) {
@@ -39,9 +39,9 @@ public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 		log.info("BE-RANK : score 계산 {}", score);
 		log.info("BE-RANK : 이전 레이트 {}", preRate);
 		log.info("BE-RANK : 계산된 레이트 {}", calculateRate);
-		log.info("BE-RANK : nickName {}", kafkaUpdateRankEntity.getNickname());
+		log.info("BE-RANK : email {}", kafkaUpdateRankEntity.getEmail());
 
-		Rank rank = new Rank(kafkaUpdateRankEntity.getNickname(), calculateRate);
+		Rank rank = new Rank(kafkaUpdateRankEntity.getEmail(), calculateRate);
 		updateTierPort.updateTierRank(rank);
 		updateTierPort.updateAllRank(rank);
 		eventPublisher.publishEvent(rank);
