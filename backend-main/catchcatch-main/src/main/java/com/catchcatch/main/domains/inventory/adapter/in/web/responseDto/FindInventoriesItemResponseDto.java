@@ -12,7 +12,7 @@ import lombok.Builder;
 
 @Builder
 public record FindInventoriesItemResponseDto(
-	Long id,
+	Long itemId,
 	String name,
 	Season season,
 	Type type,
@@ -24,7 +24,7 @@ public record FindInventoriesItemResponseDto(
 
 	public static FindInventoriesItemResponseDto fromItem(Item item) {
 		return FindInventoriesItemResponseDto.builder()
-			.id(item.getId())
+			.itemId(item.getId())
 			.name(item.getName())
 			.season(item.getSeason())
 			.type(item.getType())
