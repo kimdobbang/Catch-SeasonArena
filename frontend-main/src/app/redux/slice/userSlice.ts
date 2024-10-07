@@ -78,10 +78,6 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(setAuthUser, (state, action) => {
-      console.log(
-        "authSlice's setUser dispatched in userSlice",
-        action.payload,
-      );
       state.nickname = action.payload.nickname;
       state.email = action.payload.email;
     });

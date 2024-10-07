@@ -1,16 +1,24 @@
 import { Body1Text, PrimaryButton } from "@/shared/components/atoms";
 import { AvatarCollectButton } from "./avatar-collect-button";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { useNavigate } from "react-router-dom";
+import { changeAvatarSave } from "@/app/apis/memberApi";
+
 export const Avatar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Redux 액션 디스패치
   const avatar = useSelector((state: RootState) => state.user.selectedAvatar);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const [changeAvatar, setChangeAvatar] = useState(avatar);
 
   const onChangeSubmit = () => {
     // API 호출 후 페이지 이동
+    if (changeAvatar === avatar) {
+      alert("현재와 다른 아바타를 골라주세요!");
+    }
+    changeAvatarSave(changeAvatar, accessToken, dispatch);
     navigate("/main");
   };
 

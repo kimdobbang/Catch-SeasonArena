@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/app/api/memberApi.ts
 import config from "@/config";
+import axios from "axios";
+import { setSelectedAvatar } from "@/app/redux/slice/userSlice"; // 액션을 가져옵니다.
 
 // 닉네임 중복 확인 API
 export const checkNicknameExists = async (
@@ -54,5 +57,34 @@ export const changeNicknameSave = async (
   } catch (error) {
     console.error("닉네임 변경 중 오류 발생:", error);
     throw error;
+  }
+};
+
+// 아바타 변경 API
+export const changeAvatarSave = async (
+  selectAvatar: number,
+  accessToken: string,
+  dispatch: any,
+) => {
+  try {
+    const response = await axios.patch(
+      `${config.API_BASE_URL}/api/auth/members/avatar`,
+      {
+        avatar: selectAvatar,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    console.log("변경 결과: ", response);
+    // Redux 상태 업데이트
+    if (response.status === 200) {
+      dispatch(setSelectedAvatar(selectAvatar));
+    }
+  } catch {
+    console.log("에러");
   }
 };

@@ -3,7 +3,6 @@
 // 불필요한, 개발 미완된, 수정중인 ui 격리하s는 진입점 역할
 
 export { Copyright } from "./copyright";
-export { Line } from "./line";
 // export  { Modal } from "./Modal";
 // export  { Pagination } from "./Pagination";
 
@@ -15,7 +14,10 @@ export { NavBarBackground } from "./layout/nav-bar-background";
 export { Layout, HeaderLayout } from "./layout/layouts";
 export { MainLayout } from "./layout/layouts";
 export { Background } from "./layout/background";
+export { ResultLayout } from "./layout/result-layout";
 
 //  ui
 export { TabBar } from "@ui/tab-bar";
 export { NumberPagination } from "@ui/number-pagination";
+export { GetItemCard } from "@ui/get-item-card";
+export { Line } from "@ui/line";
