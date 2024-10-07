@@ -4,7 +4,7 @@ import { Caption2Text } from "@/shared/components/atoms/texts/caption2-text";
 
 interface ItemCellProps {
   onClick?: () => void;
-  id?: number;
+  id: number;
   index?: number;
   name: string;
   type?: ItemType;
@@ -22,9 +22,10 @@ export const CollectionbookCell = ({
   name,
   image,
   className,
+  id,
 }: ItemCellProps) => {
   return (
-    <div onClick={onClick}>
+    <div onClick={id < 100 ? onClick : undefined}>
       <div
         className={`flex items-center justify-center w-16 h-24 rounded-sm bg-catch-gray-000 ${className}`}
       >
