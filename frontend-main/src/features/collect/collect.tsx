@@ -136,7 +136,13 @@ export const Collect = () => {
   const handleSendImages = async () => {
     try {
       const response = await sendImagesToServer(capturedImagesRef.current);
-      console.log("API 응답: ", response);
+      if (response.status === "failure") {
+        alert(`API 디텍션 실패 응답: ${response.message}`);
+      } else if (response.state === "success") {
+        alert(`성공: ${response.data.processed_result.name}`);
+      } else {
+        alert("이유모를 실패");
+      }
     } catch (error) {
       console.error("이미지 전송 중 오류 발생: ", error);
     }
