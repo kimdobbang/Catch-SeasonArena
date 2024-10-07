@@ -33,10 +33,10 @@ public class RecommendService {
     private final HashMap<String, Integer> avatars;
     private final ElasticsearchService elasticsearchService;
     private final MatchStatistics matchStatistics;
-    private int USERSIZE;
 
-    @Autowired
     private PlayerStore playerStore;
+
+    private int USERSIZE;
 
     @Value("${rating.range}")
     private Integer RATING_RANGE;
@@ -50,11 +50,12 @@ public class RecommendService {
     @Value("${waiting.time}")
     private Long WAITING_TIME;
 
-    public RecommendService(SimpMessagingTemplate messagingTemplate, RedisTemplate<String, Object> redisTemplate, ElasticsearchService elasticsearchService, MatchStatistics matchStatistics) {
+    public RecommendService(SimpMessagingTemplate messagingTemplate, RedisTemplate<String, Object> redisTemplate, ElasticsearchService elasticsearchService, MatchStatistics matchStatistics, PlayerStore playerStore) {
         this.messagingTemplate = messagingTemplate;
         this.redisTemplate = redisTemplate;
         this.elasticsearchService = elasticsearchService;
         this.matchStatistics = matchStatistics;
+        this.playerStore = playerStore;
         this.avatars = new HashMap<>();
 
         initializeAvatars();
@@ -106,8 +107,8 @@ public class RecommendService {
                         .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
                 log.info("BACK/MATCHING - limit player size {}", limitMatchedPlayers.size());
-                notifyPlayers(limitMatchedPlayers);
                 saveMattchedLogs(limitMatchedPlayers);
+                notifyPlayers(limitMatchedPlayers);
                 playerStore.getWaitingPlayers().removeAll(limitMatchedPlayers);
                 matchedPlayers.removeAll(limitMatchedPlayers);
             }

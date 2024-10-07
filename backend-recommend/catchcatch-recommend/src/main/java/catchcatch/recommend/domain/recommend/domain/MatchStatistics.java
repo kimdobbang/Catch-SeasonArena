@@ -2,6 +2,7 @@ package catchcatch.recommend.domain.recommend.domain;
 
 import catchcatch.recommend.domain.recommend.requestdto.MatchData;
 import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class MatchStatistics {
 
     private Map<String, MatchData[][]> MATCHED_DATA;

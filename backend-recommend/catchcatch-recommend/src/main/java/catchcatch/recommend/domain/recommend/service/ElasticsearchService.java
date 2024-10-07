@@ -2,39 +2,52 @@ package catchcatch.recommend.domain.recommend.service;
 
 import catchcatch.recommend.domain.recommend.domain.MatchStatistics;
 import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
-import org.elasticsearch.action.index.IndexRequest;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ElasticsearchService {
 
-    private final RestHighLevelClient client;
+    private final ElasticsearchClient client;
     private final ObjectMapper objectMapper;
+    private final MatchStatistics matchStatistics;
 
-    public ElasticsearchService(RestHighLevelClient client, ObjectMapper objectMapper) {
-        this.client = client;
-        this.objectMapper = objectMapper;
-    }
-    public void saveMatchData(MatchingDataDto data) throws IOException {
-        IndexRequest request = new IndexRequest("matching-data-index");
-        String jsonString = objectMapper.writeValueAsString(data);
-        request.source(jsonString, XContentType.JSON);
+    public String saveMatchData(MatchingDataDto data) throws IOException {
+        // 색인화할 데이터의 인덱스 이름 설정
+        String indexName = "matching-data-index";
+        log.info("BE/MATCING - 매칭 성공 저장 {}");
 
-        client.index(request, RequestOptions.DEFAULT);
+        // 데이터 색인화 요청
+        IndexResponse response = client.index(i -> i
+                .index(indexName)               // 인덱스 이름 설정
+                .document(data)                // MatchingDataDto 객체 전달
+        );
+
+        // 결과 반환 (색인화 결과 확인)
+        return response.result().name();
     }
     public MatchStatistics calculateMatchStatistics() throws IOException {
         List<MatchingDataDto> matchingDataList = fetchMatchDataFromElasticsearch();
-
-        MatchStatistics matchStatistics = new MatchStatistics();
 
         Map<String, Map<Integer, Map<Integer, List<MatchingDataDto>>>> groupedData = matchingDataList.stream()
                 .collect(Collectors.groupingBy(
@@ -79,26 +92,20 @@ public class ElasticsearchService {
 
 
     private List<MatchingDataDto> fetchMatchDataFromElasticsearch() throws IOException {
-        SearchRequest searchRequest = new SearchRequest("matching-data-index");
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.matchAllQuery());
-        searchRequest.source(searchSourceBuilder);
-
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        // Elasticsearch에서의 검색 요청
+        SearchResponse<MatchingDataDto> searchResponse = client.search(s -> s
+                .index("matching-data-index")  // 검색할 인덱스 설정
+                .query(Query.of(q -> q         // 쿼리 설정
+                        .matchAll(MatchAllQuery.of(m -> m))  // 모든 문서 검색
+                )), MatchingDataDto.class);
 
         List<MatchingDataDto> matchingDataList = new ArrayList<>();
-        searchResponse.getHits().forEach(hit -> {
-            try {
-                MatchingDataDto data = objectMapper.readValue(hit.getSourceAsString(), MatchingDataDto.class);
-                matchingDataList.add(data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        HitsMetadata<MatchingDataDto> hits = searchResponse.hits();
 
-        return matchingDataList;
-    }
-    public void close() throws IOException {
-        client.close();
+        for (Hit<MatchingDataDto> hit : hits.hits()) {
+            matchingDataList.add(hit.source()); // 검색 결과에서 소스 추가
+        }
+
+        return matchingDataList; // 결과 반환
     }
 }
