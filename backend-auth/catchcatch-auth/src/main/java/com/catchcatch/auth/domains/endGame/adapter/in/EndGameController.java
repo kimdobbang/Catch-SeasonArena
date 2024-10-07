@@ -32,7 +32,7 @@ public class EndGameController {
 
 		Member member = ((PrincipalDetails) authentication.getPrincipal()).getMember();
 		try {
-			ResponseEntity<Map<String, Object>> response = endGameClient.endGameInfo(member.getNickname());
+			ResponseEntity<Map<String, Object>> response = endGameClient.endGameInfo(member.getEmail());
 			return ResponseEntity.ok().body(response.getBody());
 
 		}catch (FeignException e) {

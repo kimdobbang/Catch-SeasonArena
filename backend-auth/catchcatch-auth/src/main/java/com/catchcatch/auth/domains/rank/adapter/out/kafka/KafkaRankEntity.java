@@ -10,11 +10,11 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class KafkaRankEntity {
 
-	private String nickName;
+	private String email;
 	private Integer rank;
 
 
 	public static KafkaRankEntity createKafkaRankEntity(Member member) {
-		return new KafkaRankEntity(member.getNickname(), member.getRating());
+		return new KafkaRankEntity(member.getEmail(), member.getRating());
 	}
 }

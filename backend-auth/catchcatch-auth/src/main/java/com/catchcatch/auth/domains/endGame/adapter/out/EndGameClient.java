@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "EndGameClient", url = "https://j11b106.p.ssafy.io/api/main/endgame")
 public interface EndGameClient {
 
-	@GetMapping(value = "/{nickname}", consumes = "application/json")
-	ResponseEntity<Map<String, Object>> endGameInfo(@PathVariable("nickname") String nickname);
+	@GetMapping(value = "/{email}", consumes = "application/json")
+	ResponseEntity<Map<String, Object>> endGameInfo(@PathVariable("email") String email);
 }
