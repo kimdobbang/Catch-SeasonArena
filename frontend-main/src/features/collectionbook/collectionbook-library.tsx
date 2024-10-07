@@ -8,6 +8,8 @@ import {
   fetchUserCollectionbookItems,
 } from "@/app/apis/collectionbook-api";
 import { useCollectionbookSeasonFilter } from "@/app/hooks/use-collectionbook-season-filter";
+import { CollectionbookItemCard } from "./collectionbook-item-card";
+import { Season } from "@/app/types/common";
 
 const MemoizedTabBar = React.memo(TabBar);
 
@@ -19,6 +21,10 @@ export const CollectionbookLibrary = ({
   const itemsPerPage = 16;
   const [items, setItems] = useState<CollectionbookItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("autumn"); // 계절 필터링 기본값
+  const [selectedItem, setSelectedItem] = useState<CollectionbookItem | null>(
+    null,
+  ); // 선택된 아이템 상태
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림/닫힘 상태
 
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
@@ -38,6 +44,23 @@ export const CollectionbookLibrary = ({
         createdAt: null,
         count: 0,
       });
+    }
+    const restSeasons: Season[] = ["spring", "summer", "winter"];
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 16; j++) {
+        filledItems.push({
+          item: {
+            id: 1000 + j,
+            name: "Empty Item",
+            season: restSeasons[i],
+            description: "This is an empty slot.",
+            image: "",
+            grade: "legend",
+          },
+          createdAt: null,
+          count: 0,
+        });
+      }
     }
     return filledItems;
   };
@@ -70,6 +93,16 @@ export const CollectionbookLibrary = ({
     setSelectedCategory(season);
   }, []);
 
+  const handleItemClick = (item: CollectionbookItem) => {
+    setSelectedItem(item); // 선택된 아이템 설정
+    setIsModalOpen(true); // 모달 열기
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+    setSelectedItem(null); // 선택된 아이템 초기화
+  };
+
   return (
     <div className="flex flex-col">
       <MemoizedTabBar
@@ -85,11 +118,21 @@ export const CollectionbookLibrary = ({
               id={itemData.item.id}
               name={itemData.item.name}
               image={itemData.item.image}
+              onClick={() => handleItemClick(itemData)}
             />
           ))}
         </div>
         {children}
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-40 bg-opacity-50 backdrop-blur-sm"></div>
+      )}
+      {isModalOpen && selectedItem && (
+        <CollectionbookItemCard
+          item={selectedItem}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
