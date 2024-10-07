@@ -27,3 +27,6 @@ export { InGameStats } from "@/features/inventory/ingame-stats";
 
 // 도감 관련
 export { Collectionbook } from "@/features/collectionbook/collectionbook";
+
+// 랭킹 관련
+export { UserRankingSkeletonBox } from "@/features/ranking/user-ranking-skeleton-box";
