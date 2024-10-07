@@ -15,8 +15,8 @@ public class EndGameServiceImpl implements EndGameUseCase {
 	private final EndGamePort endGamePort;
 
 	@Override
-	public EndGame getEndGame(String userNickname) {
-		EndGame endGame = endGamePort.getEndGame(userNickname);
+	public EndGame getEndGame(String memberEmail) {
+		EndGame endGame = endGamePort.getEndGame(memberEmail);
 		Integer score = calculateScore(endGame.getKill(), endGame.getTime(),
 			endGame.getRank());
 		Integer preRate = endGame.getRating();

@@ -24,9 +24,9 @@ public class EndGameController {
 	private final EndGameUseCase endGameUseCase;
 	private final HttpResponseUtil httpResponseUtil;
 
-	@GetMapping("/{member-nickname}")
-	public ResponseEntity<?> endGame(@PathVariable("member-nickname") String memberNickname) {
-		EndGame endGame = endGameUseCase.getEndGame(memberNickname);
+	@GetMapping("/{member-email}")
+	public ResponseEntity<?> endGame(@PathVariable("member-email") String memberEmail) {
+		EndGame endGame = endGameUseCase.getEndGame(memberEmail);
 
 		return httpResponseUtil.createResponse(endGame);
 	}
