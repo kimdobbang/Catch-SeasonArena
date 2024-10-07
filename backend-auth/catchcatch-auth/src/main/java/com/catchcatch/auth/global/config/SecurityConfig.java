@@ -69,6 +69,7 @@ public class SecurityConfig {
                         "/api/auth/members/avatar/**",
                         "/api/auth/members/nickname/**").hasRole("USER")
                 .requestMatchers("/api/auth/inventories/**").hasRole("USER")
+                .requestMatchers("/api/auth/rankings/**").hasRole("USER")
                 .requestMatchers("/api/auth/v3/api-docs/**", "/api/auth/swagger-ui/**", "/api/auth/swagger-resources/**").permitAll()
                 .requestMatchers("/api/auth/members/**").permitAll()
             .anyRequest().authenticated());
