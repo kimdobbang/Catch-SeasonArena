@@ -78,7 +78,7 @@ export const CollectionbookLibrary = ({
       />
 
       <div className="pt-6 bg-catch-sub-100">
-        <div className="grid grid-cols-4 gap-4 mx-6 h-full">
+        <div className="grid h-full grid-cols-4 gap-4 mx-6">
           {currentItems.map((itemData) => (
             <CollectionbookCell
               key={itemData.item.id}

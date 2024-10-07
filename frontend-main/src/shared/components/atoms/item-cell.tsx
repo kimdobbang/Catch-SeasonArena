@@ -1,10 +1,10 @@
 // src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
-import { AutumnItemImage } from "@atoms/index"; // AutumnItemImage 컴포넌트 임포트
+import { AutumnItemImage } from "@atoms/index";
 
 interface ItemCellProps {
   onClick: () => void;
-  id?: number;
+  inventoryId: number;
   itemId: number;
   name?: string;
   type?: ItemType;

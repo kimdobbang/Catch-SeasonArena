@@ -31,12 +31,12 @@ export const fetchUserItems = async (accessToken: string): Promise<Item[]> => {
 
     return {
       ...itemDto,
-      id: inventoryItem.id,
-      itemId: itemDto.id,
+      inventoryId: inventoryItem.id,
+      itemId: itemDto.itemId,
       type: itemDto.type.toLowerCase(),
       grade: itemDto.grade.toLowerCase(),
       season: itemDto.season.toLowerCase(),
-      image: generateItemImagePath(itemDto.id),
+      image: generateItemImagePath(itemDto.itemId),
       durability: inventoryItem.durability,
       isEquipped: inventoryItem.isEquipped,
     };
