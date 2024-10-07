@@ -25,25 +25,25 @@ public class RankController {
 	private final GetTierRankingUseCase getRankingService;
 	private final GetAllRankingUseCase getAllRankingUseCase;
 
-	@GetMapping("/tier/{nickname}/{page}")
-	public ResponseEntity<?> findTierRanking(@PathVariable String nickname, @PathVariable Integer page) {
-		log.info("BE-RANK :  nickname {}, page {}", nickname, page);
+	@GetMapping("/tier/{email}/{page}")
+	public ResponseEntity<?> findTierRanking(@PathVariable String email, @PathVariable Integer page) {
+		log.info("BE-RANK :  email {}, page {}", email, page);
 
 		if(page == 0){
-			MyTierRanking myRanking = getRankingService.getMyTierRanking(nickname, page);
+			MyTierRanking myRanking = getRankingService.getMyTierRanking(email, page);
 			return ResponseEntity.ok().body(myRanking);
 		}
 
-		TierRanking tierRanking = getRankingService.getTierRanking(nickname, page);
+		TierRanking tierRanking = getRankingService.getTierRanking(email, page);
 		return ResponseEntity.ok().body(tierRanking);
 	}
 
-	@GetMapping("/all/{nickname}/{page}")
-	public ResponseEntity<?> findAllRanking(@PathVariable String nickname, @PathVariable Integer page) {
-		log.info("BE-RANK :  nickname {}, page {}", nickname, page);
+	@GetMapping("/all/{email}/{page}")
+	public ResponseEntity<?> findAllRanking(@PathVariable String email, @PathVariable Integer page) {
+		log.info("BE-RANK :  email {}, page {}", email, page);
 
 		if(page == 0){
-			MyAllRanking myRanking = getAllRankingUseCase.getMyAllRanking(nickname, page);
+			MyAllRanking myRanking = getAllRankingUseCase.getMyAllRanking(email, page);
 			return ResponseEntity.ok().body(myRanking);
 		}
 
