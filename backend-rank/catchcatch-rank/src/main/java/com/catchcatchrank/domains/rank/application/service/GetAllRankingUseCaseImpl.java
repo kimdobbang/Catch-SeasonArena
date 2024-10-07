@@ -33,14 +33,15 @@ public class GetAllRankingUseCaseImpl implements GetAllRankingUseCase {
     private Integer limit;
 
     @Override
-    public MyAllRanking getMyAllRanking(String nickname, Integer page) {
+    public MyAllRanking getMyAllRanking(String email, Integer page) {
         Integer start = page * limit;
         log.info("BE-RANK :  start {}", start);
-        String tier = getUserTierPort.getUserTier(nickname);
+        String tier = getUserTierPort.getUserTier(email);
         log.info("BE-RANK : tier {}", tier);
         Set<ZSetOperations.TypedTuple<Object>> tierRanksSet = getAllRankPort.getAllRank(start);
         List<UserRank> allRanks = tierRank(tierRanksSet, start);
-        MyRank myRank = myRank(tier, nickname);
+        Member member = getMemberByEmailPort.getMemberByEmail(email);
+        MyRank myRank = myRank(tier, member.getNickname());
         return new MyAllRanking(allRanks, myRank);
     }
 
@@ -60,7 +61,7 @@ public class GetAllRankingUseCaseImpl implements GetAllRankingUseCase {
             String email = tuple.getValue().toString();
             Integer rate = tuple.getScore().intValue();
             Member member = getMemberByEmailPort.getMemberByEmail(email);
-            UserRank userRank = UserRank.createUserRank(email, member.getAvatar(), count++, rate);
+            UserRank userRank = UserRank.createUserRank(member.getNickname(), member.getAvatar(), count++, rate);
             ranks.add(userRank);
         }
         return ranks;
