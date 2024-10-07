@@ -65,10 +65,10 @@ export const ItemLibrary = ({ items, children }: ItemLibraryProps) => {
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell
+              key={itemData.inventoryId}
               inventoryId={itemData.inventoryId}
               itemId={itemData.itemId}
               name={itemData.name}
-              image={itemData.image}
               type={itemData.type}
               onClick={() => handleItemClick(itemData)}
             />

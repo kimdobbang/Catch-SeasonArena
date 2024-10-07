@@ -1,11 +1,11 @@
 // src/features/inventory/inventory.tsx
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
 import { ItemLibrary } from "@entities/index";
 import { InventoryUserInfo } from "@/features/index";
 import { BottomNavBar } from "@ui/index";
 import { fetchUserItems } from "@/app/apis/inventoryApi";
+import { RootState } from "@/app/redux/store";
 import { Item } from "@/app/types/common";
 
 export const Inventory = () => {
@@ -17,6 +17,7 @@ export const Inventory = () => {
       try {
         const fetchedItems = await fetchUserItems(accessToken);
         setItems(fetchedItems);
+        console.log(fetchedItems);
       } catch (error) {
         console.error("아이템을 가져오는 데 실패했습니다.", error);
       }
@@ -36,5 +37,3 @@ export const Inventory = () => {
     </div>
   );
 };
-
-// 인벤토리 들어왔다가 나갈때 ?? redux에 장착 아이템 변경 필요할 것 같은가? 정합성 때문엥? 좀 생각해보기
