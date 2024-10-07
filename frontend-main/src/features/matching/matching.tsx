@@ -1,9 +1,13 @@
 import { useState } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-// import { RootState } from "@/app/redux/store";
-// import { useSelector } from "react-redux";
-import { Body1Text, PrimaryButton } from "@/shared/components/atoms";
+import { RootState } from "@/app/redux/store";
+import { useSelector } from "react-redux";
+import {
+  Body1Text,
+  Caption2Text,
+  PrimaryButton,
+} from "@/shared/components/atoms";
 import {
   TierProgressBar,
   UserNameContainer,
@@ -15,30 +19,18 @@ export const Matching = () => {
   const [isMatchingStatus, setIsMatchingStatus] = useState(false); // 매칭 상태 관리
   const [stompClient, setStompClient] = useState<Client | null>(null); // STOMP 클라이언트 상태
   const [isConnected, setIsConnected] = useState(false); // 연결 상태 관리
-  const [nickname, setNickname] = useState(""); // 닉네임 상태
-  const [rating, setRating] = useState<number>(500); // 레이팅 상태
+
   const [roomcode, setRoomcode] = useState("");
 
-  // const nickname = useSelector((state: RootState) => state.user.nickname);
-  // const rating = useSelector((state: RootState) => state.user.rating);
-
-  // const userAvatar = useSelector(
-  //   (state: RootState) => state.user.selectedAvatar,
-  // );
-
-  // const userAvatar = useSelector(
-  //   (state: RootState) => state.user.selectedAvatar,
-  // );
+  const { nickname, rating, email, selectedAvatar, equipment } = useSelector(
+    (state: RootState) => state.user,
+  );
 
   const goToGame = () => {
-    window.location.href = `/game?nickname=${nickname}&rating=${rating}&roomcode=${roomcode}`;
+    window.location.href = `/game?nickname=${nickname}&email=${email}&rating=${rating}&roomcode=${roomcode}`;
   };
-  const connect = () => {
-    if (!nickname) {
-      alert("닉네임을 입력하세요.");
-      return;
-    }
 
+  const connect = () => {
     const socket = new SockJS("https://j11b106.p.ssafy.io/api/matching");
 
     // STOMP 클라이언트 생성
@@ -107,14 +99,21 @@ export const Matching = () => {
       return;
     }
 
+    const equipmentArr: number[] = [];
+
+    // active가 null일 수 있으므로 optional chaining과 nullish coalescing 사용
+    equipmentArr.push(equipment.weapon?.itemId ?? 0); // equipment.active가 null이면 0을 추가
+    equipmentArr.push(equipment.active?.itemId ?? 0); // equipment.passive가 null이면 0을 추가
+    equipmentArr.push(equipment.passive?.itemId ?? 0); // 두 번째 passive.itemId도 동일 처리
+
     const requestDto = {
       nickname: nickname,
-      rating: rating, // 레이팅 정수 변환
-      items: [1, 2, 3],
-      avatar: "1",
+      rating: rating,
+      items: equipmentArr,
+      avatar: selectedAvatar.toString(),
     };
 
-    // stompClient?.send 대신 publish 사용
+    // 서버에 매칭 요청 메시지 보내기
     stompClient?.publish({
       destination: "/api/matching/pub/entry",
       body: JSON.stringify(requestDto),
@@ -133,78 +132,67 @@ export const Matching = () => {
 
   return (
     <div className="w-full h-full ">
-      <div
-        className="w-full h-[30%] flex flex-col items-center justify-center"
-        style={{
-          background:
-            "linear-gradient(1deg, #FEF8EC -2.21%, rgba(254, 251, 245, 0.53) 51.4%, rgba(255, 255, 255, 0) 99.05%)",
-        }}
-      >
+      {/* 유저 아바타*/}
+      <div className="w-full h-[20%] flex flex-col items-center justify-center">
         <CircleAvatar
           avatarIcon={true}
-          number={1}
+          number={selectedAvatar}
           emotion="normal"
           width={96}
         />
-
-        <input
-          type="text"
-          id="nickname"
-          placeholder="닉네임 입력"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-        />
-        <input
-          type="number"
-          id="rating"
-          placeholder="레이팅 입력"
-          value={rating}
-          onChange={(e) =>
-            setRating(e.target.value ? parseInt(e.target.value) : 500)
-          }
-        />
       </div>
-      <div className="w-full h-[70%] flex flex-col items-center gap-6">
+      {/* 유저 정보, 프로그레스바, 장착 무기*/}
+      <div className="w-full h-[35%] flex flex-col items-center gap-6">
         <UserNameContainer className="mt-4" />
         <TierProgressBar />
-
-        <div className="w-full px-4">
-          <Body1Text className="!text-left text-catch-main-400 ">
-            2024 Autumn
-          </Body1Text>
-        </div>
-        {!isMatchingStatus ? (
-          <PrimaryButton
-            showIcon={false}
-            onClick={connect}
-            size="small"
-            color="main"
-          >
-            연결
-          </PrimaryButton>
-        ) : (
-          <>
-            <PrimaryButton
-              showIcon={false}
-              onClick={sendMessage}
-              size="small"
-              color="main"
-            >
-              메시지 전송
-            </PrimaryButton>
-            <PrimaryButton
-              showIcon={false}
-              onClick={disconnect}
-              size="small"
-              color="white"
-            >
-              연결 해제
-            </PrimaryButton>
-            <button onClick={goToGame}>게임으로 이동</button>
-          </>
-        )}
+        {/*  장착 무기 들어가야 함*/}
       </div>
-      <NavBarBackground className="mt-3" />
+      {/* 게임 버튼들 */}
+      <div className="w-full h-[20%] gap-3 flex flex-col items-center">
+        <div className="w-full px-4">
+          <Body1Text className=" text-catch-main-400">2024 Autumn</Body1Text>
+        </div>
+        <div className="flex items-center justify-center">
+          {!isMatchingStatus ? (
+            // 연결 버튼 누르기 전
+            <div>
+              <PrimaryButton
+                showIcon={false}
+                onClick={connect}
+                size="small"
+                color="main"
+              >
+                연결
+              </PrimaryButton>
+              <Caption2Text className="text-catch-gray-300">
+                배틀에 사용할 장착 수집물을 확인하세요
+              </Caption2Text>
+            </div>
+          ) : (
+            // 연결 버튼 누른 후
+            <div className="flex flex-col gap-1">
+              <PrimaryButton
+                showIcon={false}
+                onClick={sendMessage}
+                size="small"
+                color="main"
+              >
+                메시지 전송
+              </PrimaryButton>
+              <PrimaryButton
+                showIcon={false}
+                onClick={disconnect}
+                size="small"
+                color="white"
+              >
+                연결 해제
+              </PrimaryButton>
+              <button onClick={goToGame}>게임으로 이동</button>
+            </div>
+          )}
+        </div>
+      </div>
+      <NavBarBackground className="mt-3 " />
     </div>
   );
 };
