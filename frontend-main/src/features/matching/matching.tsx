@@ -16,8 +16,6 @@ import { NavBarBackground } from "@ui/index";
 export const Matching = () => {
   const [isMatchingStatus, setIsMatchingStatus] = useState(false); // 매칭 상태 관리(연결누르면 true)
   const [stompClient, setStompClient] = useState<Client | null>(null); // STOMP 클라이언트 상태
-  const [isConnected, setIsConnected] = useState(false); // 연결 상태 관리 (ws연결성공시)
-
   const [roomcode, setRoomcode] = useState("");
 
   const { nickname, rating, email, selectedAvatar, equipment } = useSelector(
@@ -28,8 +26,8 @@ export const Matching = () => {
     window.location.href = `/game?nickname=${nickname}&email=${email}&rating=${rating}&roomcode=${roomcode}`;
   };
 
-  const connect = () => {
-    const socket = new SockJS(`${config.API_BASE_URL}api/matching`);
+  const connectAndSendMessage = () => {
+    const socket = new SockJS(`${config.API_BASE_URL}/api/matching`);
 
     // STOMP 클라이언트 생성
     const client = new Client({
@@ -40,11 +38,10 @@ export const Matching = () => {
       heartbeatIncoming: 0, // Heartbeat 설정을 0으로 하여 서버의 Heartbeat 설정을 무시
     });
 
-    console.log("clinet: ", client);
-
     client.onConnect = (frame) => {
       console.log("연결 성공", frame); // frame 정보 출력
-      setIsConnected(true); // 연결 성공 시 상태 업데이트
+      setStompClient(client); // 클라이언트 저장
+      setIsMatchingStatus(true); // 매칭 상태로 변경
 
       client.subscribe(`/api/matching/sub/game/${nickname}`, (message) => {
         console.log("서버로부터 수신한 메시지:", message.body);
@@ -60,6 +57,9 @@ export const Matching = () => {
           console.error("룸코드를 찾을 수 없습니다.");
         }
       });
+
+      // 연결 성공 후 메시지 전송
+      sendMessage(client);
     };
 
     client.onStompError = (frame) => {
@@ -71,28 +71,14 @@ export const Matching = () => {
       console.error("WebSocket 오류:", error);
     };
 
-    client.onDisconnect = () => {
-      console.log("연결 해제");
-      setIsConnected(false); // 연결 해제 시 상태 업데이트
-    };
-
     client.activate(); // WebSocket 연결 활성화
-    setStompClient(client); // 클라이언트 저장
-    setIsMatchingStatus(true); // 매칭 상태로 변경
   };
 
-  const sendMessage = () => {
-    if (!isConnected) {
-      alert("STOMP 연결이 되어 있지 않습니다.");
-      return;
-    }
-
-    const equipmentArr: number[] = [];
-
-    // active가 null일 수 있으므로 optional chaining과 nullish coalescing 사용
-    equipmentArr.push(equipment.weapon?.itemId ?? 0); // equipment.active가 null이면 0을 추가
-    equipmentArr.push(equipment.active?.itemId ?? 0); // equipment.passive가 null이면 0을 추가
-    equipmentArr.push(equipment.passive?.itemId ?? 0); // 두 번째 passive.itemId도 동일 처리
+  // itemId가 있는 것만 필터링하여 배열에 추가
+  const sendMessage = (client: Client) => {
+    const equipmentArr = [equipment.weapon, equipment.active, equipment.passive]
+      .filter((item) => item?.itemId) // itemId가 있는 것만 필터링하여 배열에 추가
+      .map((item) => item.itemId);
 
     const requestDto = {
       nickname: nickname,
@@ -102,7 +88,7 @@ export const Matching = () => {
     };
 
     // 서버에 매칭 요청 메시지 보내기
-    stompClient?.publish({
+    client.publish({
       destination: "/api/matching/pub/entry",
       body: JSON.stringify(requestDto),
     });
@@ -133,7 +119,6 @@ export const Matching = () => {
       <div className="w-full h-[35%] flex flex-col items-center gap-6">
         <UserNameContainer className="mt-4" />
         <TierProgressBar />
-        {/*  장착 무기 들어가야 함*/}
         <EquippedItems showCaption={true} />
       </div>
       {/* 게임 버튼들 */}
@@ -143,11 +128,11 @@ export const Matching = () => {
         </div>
         <div className="flex items-center justify-center">
           {!isMatchingStatus ? (
-            // 연결 버튼 누르기 전
+            // 매칭시작 누르기 전
             <div>
               <PrimaryButton
                 showIcon={true}
-                onClick={connect}
+                onClick={connectAndSendMessage} // 매칭 시작과 메시지 전송 동시 수행
                 size="small"
                 color="main"
               >
@@ -158,16 +143,8 @@ export const Matching = () => {
               </Caption2Text>
             </div>
           ) : (
-            // 연결 버튼 누른 후
+            // 매칭 시작 버튼 누른 후
             <div className="flex flex-col gap-1">
-              <PrimaryButton
-                showIcon={false}
-                onClick={sendMessage}
-                size="small"
-                color="main"
-              >
-                메시지 전송
-              </PrimaryButton>
               <PrimaryButton
                 showIcon={false}
                 onClick={disconnect}

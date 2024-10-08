@@ -19,6 +19,7 @@ import {
   CollectionbookPage,
   MatchingPage,
   TestPage,
+  GameResultPage,
 } from "@/pages/index";
 
 // PrivateRoute 컴포넌트
@@ -132,6 +133,7 @@ export const AppRouter = () => {
           path: "test", // 동적 파라미터 추가
           element: <TestPage />,
         },
+        { path: "game/result", element: <GameResultPage /> },
       ],
     },
   ]);
