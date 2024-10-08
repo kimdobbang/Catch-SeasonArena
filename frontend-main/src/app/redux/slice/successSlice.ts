@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProcessedResult } from "@/app/apis/collect-api";
 
 // ProcessedResult 타입에 수집 시간 추가
-interface ProcessedResultWithTime extends ProcessedResult {
+export interface ProcessedResultWithTime extends ProcessedResult {
   createdTime: number;
 }
 
