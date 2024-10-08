@@ -30,8 +30,8 @@ export const Inventory = () => {
 
   return (
     <div className="w-full h-full">
-      <InventoryUserInfo items={items} />
-      <ItemLibrary items={items}>
+      <InventoryUserInfo items={items} setItems={setItems} />
+      <ItemLibrary items={items} setItems={setItems}>
         <BottomNavBar />
       </ItemLibrary>
     </div>
