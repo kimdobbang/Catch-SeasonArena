@@ -6,7 +6,7 @@ import { updateRatingByGameResult } from "@/app/redux/slice/userSlice";
 import {
   fetchUserGameResult,
   UserGameResult,
-} from "@/app/apis/game-result-apis";
+} from "@/app/apis/game-result-api";
 
 export const GameResult = () => {
   const dispatch = useDispatch();
