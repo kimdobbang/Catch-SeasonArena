@@ -1,12 +1,14 @@
 // src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
 import { AutumnItemImage } from "@atoms/index";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/app/redux/store";
 
 interface ItemCellProps {
   onClick: () => void;
   inventoryId: number;
   itemId: number;
-  name?: string;
+  name: string;
   type?: ItemType;
   grade?: ItemGrade;
   skill?: string;
@@ -17,7 +19,20 @@ interface ItemCellProps {
   className?: string;
 }
 
-export const ItemCell = ({ onClick, itemId, className }: ItemCellProps) => {
+export const ItemCell = ({
+  // inventoryId,
+  itemId,
+  className,
+  onClick,
+}: ItemCellProps) => {
+  // Redux에서 장착 상태 확인
+  // const { equipment } = useSelector((state: RootState) => state.user);
+
+  // // 해당 아이템이 장착되어 있는지 확인
+  // const isEquipped = [equipment.weapon, equipment.active, equipment.passive].some(
+  // (equippedItem) => equippedItem?.inventoryId === inventoryId
+  // // );
+
   return (
     <div onClick={onClick}>
       <div

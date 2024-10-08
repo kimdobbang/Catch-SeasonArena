@@ -1,24 +1,22 @@
+import config from "@/config";
 import { useState } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { RootState } from "@/app/redux/store";
 import { useSelector } from "react-redux";
-import {
-  Body1Text,
-  Caption2Text,
-  PrimaryButton,
-} from "@/shared/components/atoms";
+import { Body1Text, Caption2Text, PrimaryButton } from "@atoms/index";
 import {
   TierProgressBar,
   UserNameContainer,
   CircleAvatar,
-} from "@/shared/components/entities";
-import { NavBarBackground } from "@/shared/ui";
+  EquippedItems,
+} from "@entities/index";
+import { NavBarBackground } from "@ui/index";
 
 export const Matching = () => {
-  const [isMatchingStatus, setIsMatchingStatus] = useState(false); // 매칭 상태 관리
+  const [isMatchingStatus, setIsMatchingStatus] = useState(false); // 매칭 상태 관리(연결누르면 true)
   const [stompClient, setStompClient] = useState<Client | null>(null); // STOMP 클라이언트 상태
-  const [isConnected, setIsConnected] = useState(false); // 연결 상태 관리
+  const [isConnected, setIsConnected] = useState(false); // 연결 상태 관리 (ws연결성공시)
 
   const [roomcode, setRoomcode] = useState("");
 
@@ -31,7 +29,7 @@ export const Matching = () => {
   };
 
   const connect = () => {
-    const socket = new SockJS("https://j11b106.p.ssafy.io/api/matching");
+    const socket = new SockJS(`${config.API_BASE_URL}api/matching`);
 
     // STOMP 클라이언트 생성
     const client = new Client({
@@ -84,16 +82,6 @@ export const Matching = () => {
   };
 
   const sendMessage = () => {
-    if (!nickname) {
-      alert("닉네임을 입력하세요.");
-      return;
-    }
-
-    if (!rating) {
-      alert("레이팅을 입력하세요.");
-      return;
-    }
-
     if (!isConnected) {
       alert("STOMP 연결이 되어 있지 않습니다.");
       return;
@@ -126,7 +114,7 @@ export const Matching = () => {
     if (stompClient !== null) {
       stompClient.deactivate();
       console.log("연결 해제");
-      setIsMatchingStatus(false); // 매칭 상태 해제
+      setIsMatchingStatus(false); // 룸코드 받기 전에만 활성화 매칭대기열 대기상태 해제
     }
   };
 
@@ -146,6 +134,7 @@ export const Matching = () => {
         <UserNameContainer className="mt-4" />
         <TierProgressBar />
         {/*  장착 무기 들어가야 함*/}
+        <EquippedItems showCaption={true} />
       </div>
       {/* 게임 버튼들 */}
       <div className="w-full h-[20%] gap-3 flex flex-col items-center">
@@ -157,12 +146,12 @@ export const Matching = () => {
             // 연결 버튼 누르기 전
             <div>
               <PrimaryButton
-                showIcon={false}
+                showIcon={true}
                 onClick={connect}
                 size="small"
                 color="main"
               >
-                연결
+                매칭시작
               </PrimaryButton>
               <Caption2Text className="text-catch-gray-300">
                 배틀에 사용할 장착 수집물을 확인하세요
