@@ -6,21 +6,24 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 
 export const EquippedItems = ({
-  items,
+  items = [],
   showCaption = true,
 }: {
-  items: Item[]; // API로 가져온 items 배열
+  items?: Item[]; // API로 가져온 items 배열 (optional로 변경)
   showCaption: boolean;
 }) => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const equippedItems = useSelector((state: RootState) => state.user.equipment);
+
+  // items 배열이 존재할 때만 매칭 아이템을 가져옴
   const getEquippedItem = useCallback(
     (inventoryId: number | null) => {
-      return items.find((item) => item.inventoryId === inventoryId) || null;
+      return items?.find((item) => item.inventoryId === inventoryId) || null;
     },
     [items],
   );
+
   const handleItemClick = useCallback((item: Item | null) => {
     if (item) {
       setSelectedItem(item);
@@ -54,7 +57,12 @@ export const EquippedItems = ({
           itemId={equippedItem?.itemId ?? null}
           itemType={type as keyof typeof equippedItems}
           showCaption={showCaption}
-          onClick={() => handleItemClick(matchedItem)}
+          // 클릭 이벤트는 items 배열이 있을 때만 적용
+          onClick={
+            items && matchedItem
+              ? () => handleItemClick(matchedItem)
+              : undefined
+          }
         />
       ))}
 
