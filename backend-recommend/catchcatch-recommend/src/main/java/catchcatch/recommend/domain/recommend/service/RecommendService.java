@@ -84,6 +84,7 @@ public class RecommendService {
 
     public void expectationPlayer(Player player) throws Exception{
         int time = calculateEstimatedMatchTime(player);
+        log.info("BE/MATCHING - expectation {}, : {} " , player, time );
         messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),new ExpectationTimeDto(time, "TIME"));
     }
 
