@@ -1,10 +1,35 @@
-// import { useSelector } from "react-redux";
-// import { RootState } from "@/app/redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 export const InGameStats = () => {
-  // const { stats } = useSelector((state: RootState) => state.user);
+  const { equipment } = useSelector((state: RootState) => state.user);
 
-  // const currentStats = stats;
+  // 장착된 아이템에 따라 체력, 사거리, 속도를 계산하는 함수
+  const calculateStats = () => {
+    let hp = 100; // 기본 체력
+    let coverage = 10; // 기본 사거리
+    let speed = 10; // 기본 속도
+
+    if (equipment.weapon.itemId === 1) {
+      coverage *= 1.3;
+    }
+
+    if (equipment.passive) {
+      switch (equipment.passive.itemId) {
+        case 6:
+          hp *= 2;
+          break;
+        case 10:
+          speed *= 1.3;
+          break;
+      }
+    }
+
+    return { hp, coverage, speed };
+  };
+
+  // 현재 스탯 계산
+  const currentStats = calculateStats();
 
   return (
     <div className="flex-col mb-3">
@@ -13,10 +38,10 @@ export const InGameStats = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            // style={{ width: `${(currentStats.hp / 200) * 100}%` }}
+            style={{ width: `${(currentStats.hp / 200) * 100}%` }}
           />
         </div>
-        {/* <p className="w-8 text-right">{currentStats.hp}</p> */}
+        <p className="w-8 text-right">{currentStats.hp}</p>
       </div>
 
       <div className="flex items-center">
@@ -24,10 +49,10 @@ export const InGameStats = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            // style={{ width: `${(currentStats.coverage / 20) * 100}%` }}
+            style={{ width: `${(currentStats.coverage / 20) * 100}%` }}
           />
         </div>
-        {/* <p className="w-8 text-right">{currentStats.coverage}</p> */}
+        <p className="w-8 text-right">{currentStats.coverage}</p>
       </div>
 
       <div className="flex items-center">
@@ -35,10 +60,10 @@ export const InGameStats = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            // style={{ width: `${(currentStats.speed / 20) * 100}%` }}
+            style={{ width: `${(currentStats.speed / 20) * 100}%` }}
           />
         </div>
-        {/* <p className="w-8 text-right">{currentStats.speed}</p> */}
+        <p className="w-8 text-right">{currentStats.speed}</p>
       </div>
     </div>
   );
