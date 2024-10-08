@@ -7,6 +7,7 @@ import catchcatch.recommend.domain.recommend.requestdto.ExitRequestDto;
 import catchcatch.recommend.domain.recommend.requestdto.MatchData;
 import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
 import catchcatch.recommend.domain.recommend.responsedto.ExpectationTimeDto;
+import catchcatch.recommend.domain.recommend.responsedto.RoomCodeDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,7 +84,7 @@ public class RecommendService {
 
     public void expectationPlayer(Player player) throws Exception{
         int time = calculateEstimatedMatchTime(player);
-        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),new ExpectationTimeDto(time, true));
+        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),new ExpectationTimeDto(time, "TIME"));
     }
 
     public void exitPlayerByNickname(ExitRequestDto requestDto) {
@@ -161,7 +162,7 @@ public class RecommendService {
     }
 
     private void sendRoomIdToPlayer(Player player, String roomId) {
-        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), roomId);
+        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), new RoomCodeDto(roomId,"ROOMCODE"));
     }
 
     public void updateUserSize(){
