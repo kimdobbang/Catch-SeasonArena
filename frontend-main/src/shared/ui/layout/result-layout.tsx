@@ -5,7 +5,7 @@ export interface ResultLayoutProps {
   contentComponent?: React.ReactNode;
   buttonComponent?: React.ReactNode;
   behavior?: "combine" | "collect";
-  isSuccess: boolean;
+  isSuccess?: boolean;
 }
 
 export const ResultLayout = ({
