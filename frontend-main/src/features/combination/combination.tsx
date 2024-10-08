@@ -23,7 +23,7 @@ export const Combination = () => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   interface combinationApiSuccess {
-    id: number;
+    itemId: number;
     name: string;
     season: string;
     type: string;
@@ -42,7 +42,7 @@ export const Combination = () => {
 
     const resultDTO = {
       name: item.name,
-      itemId: item.id,
+      itemId: item.itemId,
       type: item.type,
       grade: item.grade,
       effect: item.effect,

@@ -25,6 +25,8 @@ export const combineItems = async ({
         },
       },
     );
+
+    console.log("합성 결과 보기: ", response.data);
     return response.data;
   } catch (error) {
     console.log("합성 실패: ", error);
