@@ -5,6 +5,7 @@ import com.catchcatch.main.domains.combination.application.port.out.CombiRespons
 import com.catchcatch.main.domains.dictionary.application.port.out.FindDictionariesByEmailPort;
 import com.catchcatch.main.domains.dictionary.application.port.out.SaveDictionariesPort;
 import com.catchcatch.main.domains.dictionary.domain.Dictionaries;
+import com.catchcatch.main.domains.inventory.adapter.in.web.responseDto.FindInventoriesItemResponseDto;
 import com.catchcatch.main.domains.inventory.application.port.out.DeleteInventoryPort;
 import com.catchcatch.main.domains.inventory.application.port.out.FindInventoryByIdAndMemberEmailPort;
 import com.catchcatch.main.domains.inventory.application.port.out.SaveInventoryPort;
@@ -88,7 +89,7 @@ public class CombinationServiceImpl implements CombinationUseCase {
                     .build();
             saveDictionariesPort.saveDictionaries(newDictionary);
         }
-        return new CombiResponseDto("Success", resultItem);
+        return new CombiResponseDto("Success", FindInventoriesItemResponseDto.fromItem(resultItem));
     }
 
     private Grade determineGrade(Grade grade1, Grade grade2) {
