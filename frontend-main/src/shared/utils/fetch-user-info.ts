@@ -25,6 +25,7 @@ export const handleLoginSuccess = async (
     dispatch(setWeapon(data.equipment.weapon));
     dispatch(setPassive(data.equipment.passive));
     dispatch(setActive(data.equipment.active));
+    console.log(data);
 
     navigate("/main");
   } catch (error) {
