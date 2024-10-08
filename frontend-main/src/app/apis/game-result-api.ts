@@ -3,7 +3,7 @@ import config from "@/config";
 
 export interface UserGameResult {
   kill: number;
-  play: number;
+  time: number;
   rank: number;
   rating: number; // 현재 레이팅
   resultRating: number; // 레이팅 증감량
@@ -24,6 +24,6 @@ export const fetchUserGameResult = async (
     throw new Error("게임 결과를 가져오는데 실패했습니다.");
   }
 
-  const data = await response.json();
+  const { data } = await response.json();
   return data as UserGameResult;
 };
