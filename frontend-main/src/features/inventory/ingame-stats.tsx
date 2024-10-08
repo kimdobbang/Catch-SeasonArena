@@ -1,10 +1,10 @@
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/app/redux/store";
 
 export const InGameStats = () => {
-  const { stats } = useSelector((state: RootState) => state.user);
+  // const { stats } = useSelector((state: RootState) => state.user);
 
-  const currentStats = stats;
+  // const currentStats = stats;
 
   return (
     <div className="flex-col mb-3">
@@ -13,10 +13,10 @@ export const InGameStats = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            style={{ width: `${(currentStats.hp / 200) * 100}%` }}
+            // style={{ width: `${(currentStats.hp / 200) * 100}%` }}
           />
         </div>
-        <p className="w-8 text-right">{currentStats.hp}</p>
+        {/* <p className="w-8 text-right">{currentStats.hp}</p> */}
       </div>
 
       <div className="flex items-center">
@@ -24,10 +24,10 @@ export const InGameStats = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            style={{ width: `${(currentStats.coverage / 20) * 100}%` }}
+            // style={{ width: `${(currentStats.coverage / 20) * 100}%` }}
           />
         </div>
-        <p className="w-8 text-right">{currentStats.coverage}</p>
+        {/* <p className="w-8 text-right">{currentStats.coverage}</p> */}
       </div>
 
       <div className="flex items-center">
@@ -35,10 +35,10 @@ export const InGameStats = () => {
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div
             className="bg-catch-main-400 h-2.5 rounded-full"
-            style={{ width: `${(currentStats.speed / 20) * 100}%` }}
+            // style={{ width: `${(currentStats.speed / 20) * 100}%` }}
           />
         </div>
-        <p className="w-8 text-right">{currentStats.speed}</p>
+        {/* <p className="w-8 text-right">{currentStats.speed}</p> */}
       </div>
     </div>
   );
