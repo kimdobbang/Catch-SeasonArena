@@ -3,6 +3,7 @@ package catchcatch.recommend.domain.recommend.service;
 import catchcatch.recommend.domain.recommend.domain.MatchStatistics;
 import catchcatch.recommend.domain.recommend.domain.Player;
 import catchcatch.recommend.domain.recommend.requestdto.EntryRequestDto;
+import catchcatch.recommend.domain.recommend.requestdto.ExitRequestDto;
 import catchcatch.recommend.domain.recommend.requestdto.MatchData;
 import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
 import lombok.extern.slf4j.Slf4j;
