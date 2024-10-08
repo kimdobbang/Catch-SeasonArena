@@ -55,6 +55,12 @@ export const CollectionbookItemCard = ({
   const { bgGradient, badgeColor, gradeName } =
     gradeStyles[grade] || gradeStyles["normal"];
 
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0];
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
@@ -106,9 +112,11 @@ export const CollectionbookItemCard = ({
                 <p className="font-bold text-body2 text-catch-gray-999">
                   {item.count}회 수집
                 </p>
-                <p className="font-medium text-caption1 text-catch-gray-400">
-                  Since {item.createdAt}
-                </p>
+                {item.createdAt && (
+                  <p className="font-medium text-caption1 text-catch-gray-400">
+                    Since {formatDate(item.createdAt)}
+                  </p>
+                )}
               </div>
             </div>
           ) : (

@@ -39,13 +39,16 @@ export const Matching = () => {
   const connectAndSendMessage = async () => {
     try {
       const client = await connectToMatching(nickname, (message) => {
-        const parsedMessage = JSON.parse(message);
-        console.log("수신 데이터 :", parsedMessage.data);
+        const parsedMessage =
+          typeof message === "string" ? JSON.parse(message) : message;
+
+        console.log("수신 parsedMessage :", parsedMessage);
+        console.log("수신 parsedMessage.time :", parsedMessage.time);
+
         if (parsedMessage.type === "ROOMCODE") {
           setRoomcode(parsedMessage.roomId);
         } else if (parsedMessage.type === "TIME") {
           setExpectation(parsedMessage.time);
-          // 매칭 예상 소요시간 = parsedMessage.time (seconds)
         }
       });
 
@@ -122,7 +125,7 @@ export const Matching = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-1">
-              <p>{expectation}</p>
+              <p>예상 매칭 시간: {expectation}</p>
               <PrimaryButton
                 showIcon={false}
                 onClick={disconnect}
