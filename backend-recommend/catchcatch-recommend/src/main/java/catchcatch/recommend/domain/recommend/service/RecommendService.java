@@ -74,6 +74,11 @@ public class RecommendService {
         log.info("BE/MATCHING - player size " + playerStore.getWaitingPlayers().size());
     }
 
+    public void exitPlayerByNickname(ExitRequestDto requestDto) {
+        Boolean checkExit = playerStore.getWaitingPlayers().removeIf(player -> player.getNickname().equals(requestDto.nickname()));
+        log.info("BE-MATCHING/ check exit player - {} ", checkExit);
+    }
+
     public void matchingGame(){
         if(playerStore.getWaitingPlayers().size() < PLAYER_SIZE){
             return;
