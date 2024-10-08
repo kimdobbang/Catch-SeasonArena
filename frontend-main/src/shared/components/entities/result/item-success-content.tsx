@@ -2,16 +2,27 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { AutumnItemImage, Body2Text } from "@/shared/components/atoms";
-import { DescriptionBox } from "./description-box";
+import { DescriptionBox } from "@entities/index";
 import { ResultButtonsProps } from "./item-result-buttons";
 import { ItemGrade, ItemType } from "@/app/types/common";
 import { GetItemCard } from "@/shared/ui";
 
-export const ItemSuccessContent = ({ behavior }: ResultButtonsProps) => {
+export interface ItemProps {
+  name?: string;
+  itemId?: number;
+  type?: ItemType;
+  grade?: ItemGrade;
+  effect?: string;
+}
+
+export const ItemSuccessContent = ({
+  behavior,
+  item,
+}: ResultButtonsProps & { item?: ItemProps }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { name, itemId, type, grade, effect } = useSelector(
-    (state: RootState) => state.success,
-  );
+
+  // Redux에서 값 가져오기 (collect일 때 사용)
+  const successState = useSelector((state: RootState) => state.success);
 
   // 모달 열기 함수
   const openModal = () => {
@@ -23,21 +34,15 @@ export const ItemSuccessContent = ({ behavior }: ResultButtonsProps) => {
     setIsModalOpen(false);
   };
 
-  // 변수에 기본값을 제공하여 초기화
-  let tName: string = "아이템"; // 기본값
-  let tItemId: number = 1;
-  let tType: ItemType = "weapon"; // 기본값
-  let tGrade: ItemGrade = "normal"; // 기본값
-  let tEffect: string = "효과 없음"; // 기본값
+  // behavior에 따라 Redux 또는 props로부터 값 설정
+  const selectedItem = behavior === "collect" ? successState : item;
 
-  if (behavior === "collect") {
-    // 값이 있을 경우 할당, 없으면 기본값 유지
-    tName = name || "아이템";
-    tItemId = itemId || 1;
-    tType = (type?.toLowerCase() as ItemType) || "weapon";
-    tGrade = (grade?.toLowerCase() as ItemGrade) || "normal";
-    tEffect = effect || "효과 없음";
-  }
+  // 변수 초기화
+  const tName = selectedItem?.name || "아이템";
+  const tItemId = selectedItem?.itemId || 1;
+  const tType = (selectedItem?.type as ItemType) || "weapon"; // 소문자로 변환
+  const tGrade = (selectedItem?.grade as ItemGrade) || "normal"; // 소문자로 변환
+  const tEffect = selectedItem?.effect || "효과 없음";
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -57,7 +62,9 @@ export const ItemSuccessContent = ({ behavior }: ResultButtonsProps) => {
         </div>
         <DescriptionBox type={tType} grade={tGrade} skill={tEffect} />
       </div>
-      {isModalOpen && <GetItemCard onClose={closeModal} />}
+      {isModalOpen && (
+        <GetItemCard onClose={closeModal} behavior={behavior} item={item} />
+      )}
     </div>
   );
 };

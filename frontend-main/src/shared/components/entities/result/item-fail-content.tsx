@@ -1,5 +1,5 @@
 import { AvatarFace, Sub2Text } from "@/shared/components/atoms";
-import { ResultButtonsProps } from "./item-result-buttons";
+import { ResultButtonsProps } from "@entities/index";
 
 export const ItemFailContent = ({ behavior }: ResultButtonsProps) => {
   return (

@@ -51,8 +51,9 @@ export const EquippedItems = ({
   return (
     <div className="flex justify-around">
       {equippedItemList.map(({ type, equippedItem, matchedItem }) => (
+        // equippedItem이 존재할 때만 inventoryId에 접근
         <EquippedCell
-          key={equippedItem.inventoryId}
+          key={equippedItem?.inventoryId ?? type}
           inventoryId={equippedItem?.inventoryId ?? null}
           itemId={equippedItem?.itemId ?? null}
           itemType={type as keyof typeof equippedItems}

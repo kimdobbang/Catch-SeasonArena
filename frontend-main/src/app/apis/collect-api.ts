@@ -1,8 +1,7 @@
 // 책임 분리
 // 각 컴포넌트: 상태관리, 스토리지 관리, API 처리 책임
 // Api: API 호출과 서버 통신 책임, 데이터 통신(여기서 상태관리x)
-// import config from "@/config";
-
+import config from "@/config";
 import axios from "axios";
 
 // 수집 api 관련 타입
@@ -81,7 +80,7 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
 
   try {
     const response = await axios.post(
-      "http://192.168.31.251:8000/api/ai/collections",
+      `${config.API_BASE_URL}/api/ai/collections`,
       formData, // 이미지 파일 배열과 이메일을 포함한 FormData 전송
       {
         headers: {
@@ -124,7 +123,7 @@ export const sendPublicImagesToServer = async () => {
 
     // 서버로 이미지 전송
     const serverResponse = await axios.post(
-      "http://192.168.31.251:8000/api/ai/collections", // 실제 서버 URL로 변경
+      `${config.API_BASE_URL}/api/ai/collections`, // 실제 서버 URL로 변경
       formData,
       {
         headers: {
