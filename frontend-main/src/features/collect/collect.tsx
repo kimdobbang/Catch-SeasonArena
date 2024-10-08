@@ -32,7 +32,6 @@ export const Collect = () => {
   const capturedImagesRef = useRef<string[]>([]); // useRef로 상태 값 추적
   const capturedLen = useRef(0);
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
-  const [email, setEmail] = useState(""); // 이메일 상태 추가
   let interval: ReturnType<typeof setInterval> | undefined;
 
   useEffect(() => {
@@ -206,13 +205,6 @@ export const Collect = () => {
       >
         <CameraChangeIcon />
       </button>
-      <input
-        type="email"
-        placeholder="이메일을 입력하세요"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)} // 이메일 입력 필드
-        className="text-black bg-white border "
-      />
 
       <button onClick={successTest}>성공 테스트 버튼</button>
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
