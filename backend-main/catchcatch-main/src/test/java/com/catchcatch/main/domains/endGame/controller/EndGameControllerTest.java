@@ -52,7 +52,7 @@ public class EndGameControllerTest {
 		BDDMockito.given(endGameUseCase.getEndGame("1")).willReturn(endGame);
 
 		//when then
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/main/endGame/1")
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/main/endgame/1")
 			.contentType(MediaType.APPLICATION_JSON)
 		);
 
