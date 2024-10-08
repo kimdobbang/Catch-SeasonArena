@@ -9,12 +9,13 @@ export interface ResultButtonsProps {
 export const ItemResultButtons = ({ isSuccess }: ResultButtonsProps) => {
   const navigate = useNavigate();
 
-  const handleInventoryBtnClick = () => {
-    navigate(isSuccess ? "/inventory" : "/collectionbook");
+  const handleFirstBtnClick = () => {
+    // 성공 시 도감으로, 실패 시 배낭으로 이동
+    navigate(isSuccess ? "/collectionbook" : "/inventory");
   };
 
-  const handleActionBtnClick = () => {
-    navigate(isSuccess ? "/collectionbook" : "/collect");
+  const handleCombinationBtnClick = () => {
+    navigate("/combination");
   };
 
   return (
@@ -22,19 +23,19 @@ export const ItemResultButtons = ({ isSuccess }: ResultButtonsProps) => {
       {/*수집후 N분간 수집 불가 로직 추가해야함 */}
       <PrimaryButton
         showIcon={false}
-        onClick={handleInventoryBtnClick}
+        onClick={handleFirstBtnClick}
         size="big"
         color="sub"
       >
-        {isSuccess ? "배낭 보러가기" : "도감 보러가기"}
+        {isSuccess ? "도감 보러가기" : "배낭 보러가기"}
       </PrimaryButton>
       <PrimaryButton
         showIcon={false}
-        onClick={handleActionBtnClick}
+        onClick={handleCombinationBtnClick}
         size="big"
         color="main"
       >
-        {isSuccess ? "도감 보러가기" : "수집하러 가기"}
+        합성하러가기
       </PrimaryButton>
     </>
   );

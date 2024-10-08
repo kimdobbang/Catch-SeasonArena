@@ -32,9 +32,13 @@ export const ItemResultPage = () => {
   return (
     <>
       {resultType === "success" ? (
-        <SuccessComponent behavior={behavior} item={combinationItem} />
+        <SuccessComponent
+          behavior={behavior}
+          item={combinationItem}
+          isSuccess={true}
+        />
       ) : (
-        <FailComponent behavior={behavior} />
+        <FailComponent behavior={behavior} isSuccess={false} />
       )}
     </>
   );
