@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Body1Text,
   Caption1Text,
@@ -9,25 +9,135 @@ import {
 } from "@atoms/index";
 import { Line } from "@ui/index";
 import { Item, ItemGrade, ItemType, getDurability } from "@/app/types/common";
+import { setWeapon, setPassive, setActive } from "@/app/redux/slice/userSlice";
+import { RootState } from "@/app/redux/store";
+import {
+  equipUserItem,
+  unequipUserItem,
+  deleteUserItem,
+} from "@/app/apis/inventoryApi";
 
 interface InventoryItemCardProps {
   item: Item;
   onClose: () => void;
+  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
   onCombinationClick?: () => void;
 }
 
 export const InventoryItemCard = ({
   item,
   onClose,
+  setItems,
 }: InventoryItemCardProps) => {
-  // 경로에 따라 행동 유형 결정 (인벤토리/합성)
-  const location = useLocation();
-  const behavior = location.pathname.includes("/combination")
-    ? "combination"
-    : "inventory";
-
+  const dispatch = useDispatch();
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const { itemId, name, type, grade, durability, skill } = item;
   const maxDurability = getDurability(grade as ItemGrade);
+
+  // 현재 장착된 무기, 패시브, 액티브 아이템을 가져오기
+  const equippedWeapon = useSelector(
+    (state: RootState) => state.user.equipment.weapon,
+  );
+  const equippedPassive = useSelector(
+    (state: RootState) => state.user.equipment.passive,
+  );
+  const equippedActive = useSelector(
+    (state: RootState) => state.user.equipment.active,
+  );
+
+  // 아이템이 이미 장착된 상태인지 검사
+  const isEquipped =
+    (type === "weapon" &&
+      equippedWeapon &&
+      equippedWeapon.inventoryId === item.inventoryId) ||
+    (type === "passive" &&
+      equippedPassive &&
+      equippedPassive.inventoryId === item.inventoryId) ||
+    (type === "active" &&
+      equippedActive &&
+      equippedActive.inventoryId === item.inventoryId);
+
+  // 아이템 장착 처리 함수
+  const handleEquipClick = async () => {
+    try {
+      if (!accessToken) {
+        throw new Error("토큰이 필요합니다.");
+      }
+
+      if (isEquipped) {
+        // 장착 해제
+        await unequipUserItem(accessToken, item.inventoryId);
+        if (type === "weapon") {
+          dispatch(setWeapon({ inventoryId: null, itemId: null }));
+        } else if (type === "passive") {
+          dispatch(setPassive({ inventoryId: null, itemId: null }));
+        } else if (type === "active") {
+          dispatch(setActive({ inventoryId: null, itemId: null }));
+        }
+      } else {
+        // 장착
+        if (type === "weapon") {
+          if (equippedWeapon.inventoryId !== null) {
+            await unequipUserItem(accessToken, equippedWeapon.inventoryId);
+          }
+          await equipUserItem(accessToken, item.inventoryId);
+          dispatch(setWeapon(item));
+        } else if (type === "passive") {
+          if (equippedPassive.inventoryId !== null) {
+            await unequipUserItem(accessToken, equippedPassive.inventoryId);
+          }
+          await equipUserItem(accessToken, item.inventoryId);
+          dispatch(setPassive(item));
+        } else if (type === "active") {
+          if (equippedActive.inventoryId !== null) {
+            await unequipUserItem(accessToken, equippedActive.inventoryId);
+          }
+          await equipUserItem(accessToken, item.inventoryId);
+          dispatch(setActive(item));
+        }
+      }
+      onClose(); // 모달 닫기
+    } catch (error) {
+      console.error("아이템 장착/해제 중 오류 발생:", error);
+    }
+  };
+
+  // 아이템 삭제 처리 함수
+  const handleDeleteClick = async () => {
+    try {
+      if (!accessToken) {
+        throw new Error("토큰이 필요합니다.");
+      }
+      await deleteUserItem(accessToken, item.inventoryId);
+      setItems((prevItems) =>
+        prevItems.filter(
+          (prevItem) => prevItem.inventoryId !== item.inventoryId,
+        ),
+      );
+      if (
+        type === "weapon" &&
+        equippedWeapon &&
+        equippedWeapon.inventoryId === item.inventoryId
+      ) {
+        dispatch(setWeapon({ inventoryId: null, itemId: null }));
+      } else if (
+        type === "passive" &&
+        equippedPassive &&
+        equippedPassive.inventoryId === item.inventoryId
+      ) {
+        dispatch(setPassive({ inventoryId: null, itemId: null }));
+      } else if (
+        type === "active" &&
+        equippedActive &&
+        equippedActive.inventoryId === item.inventoryId
+      ) {
+        dispatch(setActive({ inventoryId: null, itemId: null }));
+      }
+      onClose();
+    } catch (error) {
+      console.error("아이템 삭제 중 오류 발생:", error);
+    }
+  };
 
   return (
     <div
@@ -66,22 +176,12 @@ export const InventoryItemCard = ({
           <div className="h-[15%] w-full flex items-center justify-center flex-col gap-1">
             <div className="flex flex-row items-center justify-around w-full h-full">
               {/* 인벤토리 */}
-              {behavior === "inventory" && (
-                <button>
-                  <Body2Text className="font-bold text-catch-gray-500">
-                    장착
-                  </Body2Text>
-                </button>
-              )}
-              {/* 합성 */}
-              {behavior === "combination" && (
-                <button>
-                  <Body2Text className="font-bold text-catch-gray-500">
-                    추가
-                  </Body2Text>
-                </button>
-              )}
-              <button>
+              <button onClick={handleEquipClick}>
+                <Body2Text className="font-bold text-catch-gray-500">
+                  {isEquipped ? "해제" : "장착"}
+                </Body2Text>
+              </button>
+              <button onClick={handleDeleteClick}>
                 <Body2Text className="font-bold text-catch-system-color-error">
                   삭제
                 </Body2Text>

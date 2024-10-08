@@ -10,10 +10,15 @@ const MemoizedTabBar = React.memo(TabBar);
 
 interface ItemLibraryProps {
   items: Item[];
+  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
   children: React.ReactNode;
 }
 
-export const ItemLibrary = ({ items, children }: ItemLibraryProps) => {
+export const ItemLibrary = ({
+  items,
+  setItems,
+  children,
+}: ItemLibraryProps) => {
   const itemsPerPage = 8;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("weapon");
@@ -81,8 +86,15 @@ export const ItemLibrary = ({ items, children }: ItemLibraryProps) => {
           onNextPage={handleNextPage}
           onPrevPage={handlePrevPage}
         />
+        {isModalOpen && (
+          <div className="fixed inset-0 z-40 bg-opacity-50 backdrop-blur-sm"></div>
+        )}
         {isModalOpen && selectedItem && (
-          <InventoryItemCard item={selectedItem} onClose={handleCloseModal} />
+          <InventoryItemCard
+            item={selectedItem}
+            onClose={handleCloseModal}
+            setItems={setItems}
+          />
         )}
         {children}
       </div>
