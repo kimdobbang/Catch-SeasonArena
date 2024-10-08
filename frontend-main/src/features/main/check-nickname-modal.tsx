@@ -98,7 +98,7 @@ export const NicknameChangeModal = ({
           가을에 어울리는 특별한 닉네임을 지어주세요
         </h3>
         <label htmlFor="nickname" className="text-catch-gray-400">
-          최대 8글자
+          8글자이내를 권장해요
           <span className="text-red-500 required-dot"> *</span>
         </label>
 

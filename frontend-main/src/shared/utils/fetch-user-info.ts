@@ -19,12 +19,15 @@ export const handleLoginSuccess = async (
     dispatch(setToken(accessToken));
 
     const data: UserState = await fetchUserInfo(accessToken);
+    console.log("fetch 유저정보 util", data);
 
     dispatch(setAuthUser({ email: data.email, nickname: data.nickname }));
     dispatch(setRating(data.rating));
     dispatch(setWeapon(data.equipment.weapon));
     dispatch(setPassive(data.equipment.passive));
     dispatch(setActive(data.equipment.active));
+
+    console.log();
 
     navigate("/main");
   } catch (error) {
