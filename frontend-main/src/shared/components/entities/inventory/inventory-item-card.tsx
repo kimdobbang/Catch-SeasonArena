@@ -20,7 +20,7 @@ import {
 interface InventoryItemCardProps {
   item: Item;
   onClose: () => void;
-  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
+  setItems?: React.Dispatch<React.SetStateAction<Item[]>>;
   onCombinationClick?: () => void;
 }
 
@@ -109,11 +109,13 @@ export const InventoryItemCard = ({
         throw new Error("토큰이 필요합니다.");
       }
       await deleteUserItem(accessToken, item.inventoryId);
-      setItems((prevItems) =>
-        prevItems.filter(
-          (prevItem) => prevItem.inventoryId !== item.inventoryId,
-        ),
-      );
+      if (setItems) {
+        setItems((prevItems) =>
+          prevItems.filter(
+            (prevItem) => prevItem.inventoryId !== item.inventoryId,
+          ),
+        );
+      }
       if (
         type === "weapon" &&
         equippedWeapon &&
