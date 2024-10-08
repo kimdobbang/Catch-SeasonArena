@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 @Builder
 public record DictionariesResponseDto(
-        Item item,
+        ItemDto item,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt,
         int count,

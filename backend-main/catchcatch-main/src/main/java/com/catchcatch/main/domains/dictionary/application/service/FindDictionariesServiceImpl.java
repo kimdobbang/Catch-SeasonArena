@@ -3,6 +3,7 @@ package com.catchcatch.main.domains.dictionary.application.service;
 import com.catchcatch.main.domains.dictionary.application.port.in.FindDictionariesUseCase;
 import com.catchcatch.main.domains.dictionary.application.port.out.FindDictionariesByEmailPort;
 import com.catchcatch.main.domains.dictionary.application.port.out.web.response.DictionariesResponseDto;
+import com.catchcatch.main.domains.dictionary.application.port.out.web.response.ItemDto;
 import com.catchcatch.main.domains.dictionary.domain.Dictionaries;
 import com.catchcatch.main.domains.item.port.out.FindItemPort;
 import com.catchcatch.main.domains.item.domain.Item;
@@ -35,9 +36,11 @@ public class FindDictionariesServiceImpl implements FindDictionariesUseCase {
                     Dictionaries dictionaries = dictionariesMap.get(item.getId());
 
                     return DictionariesResponseDto.builder()
-                            .item(item)
+                            .item(ItemDto.fromItem(item))
                             .count(dictionaries != null ? dictionaries.getCount() : 0)
                             .isCollect(dictionaries != null)
+                            .createdAt(dictionaries != null ? dictionaries.getCreatedAt(): null)
+                            .modifiedAt(dictionaries != null ? dictionaries.getModifiedAt(): null)
                             .build();
                 })
                 .collect(Collectors.toList());
