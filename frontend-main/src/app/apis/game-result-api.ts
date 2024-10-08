@@ -1,7 +1,6 @@
 // src/app/api/game-result-apis.ts
 import config from "@/config";
 
-// 게임 결과 인터페이스 정의
 export interface UserGameResult {
   kill: number;
   play: number;
