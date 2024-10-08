@@ -80,7 +80,7 @@ function joinPlayer(
     socketId: socket.id,
     nickname: nickname,
     profileImage: profileImage,
-    weaponImage: weapon, // 나중에 바꿔야 됨
+    weaponImage: weapon,
     x: 100,
     y: 200,
     velocityX: 0,
@@ -104,6 +104,11 @@ function joinPlayer(
 
   setWeapon(player, weapon);
   setPassive(player, passive);
+
+  if (nickname === "운영자") {
+    protect = 0;
+    speed = 3;
+  }
 
   if (!rooms.has(roomCode)) {
     setTimeout(() => {
