@@ -162,7 +162,7 @@ public class RecommendService {
     }
 
     private void sendRoomIdToPlayer(Player player, String roomId) {
-        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), new RoomCodeDto(roomId,"ROOMCODE"));
+        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),roomId);// new RoomCodeDto(roomId,"ROOMCODE"));
     }
 
     public void updateUserSize(){
