@@ -8,9 +8,13 @@ import { InGameStats } from "@/features/index";
 
 interface InventoryUserInfoProps {
   items: Item[]; // API로 가져온 items 배열
+  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
 }
 
-export const InventoryUserInfo = ({ items }: InventoryUserInfoProps) => {
+export const InventoryUserInfo = ({
+  items,
+  setItems,
+}: InventoryUserInfoProps) => {
   const { selectedAvatar, rating, tier } = useSelector(
     (state: RootState) => state.user,
   ); // Redux에서 아바타와 티어 정보 가져오기
@@ -27,7 +31,7 @@ export const InventoryUserInfo = ({ items }: InventoryUserInfoProps) => {
           <Body1Text className=" text-catch-gray-500">{tier}</Body1Text>
         </div>
         <InGameStats />
-        <EquippedItems items={items} showCaption={true} />
+        <EquippedItems items={items} setItems={setItems} showCaption={true} />
       </div>
     </div>
   );

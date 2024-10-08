@@ -2,8 +2,8 @@ import { ResultLayout } from "@/shared/ui";
 import {
   ItemResultButtons,
   ResultButtonsProps,
-} from "../item/item-result-buttons";
-import { ItemFailContent } from "../item/item-fail-content";
+  ItemFailContent,
+} from "@entities/index";
 
 export const FailComponent = ({ behavior, isSuccess }: ResultButtonsProps) => {
   return (

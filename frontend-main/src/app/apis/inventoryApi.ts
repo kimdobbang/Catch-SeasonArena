@@ -42,3 +42,63 @@ export const fetchUserItems = async (accessToken: string): Promise<Item[]> => {
     };
   });
 };
+
+// 장착 API 호출 함수
+export const equipUserItem = async (
+  accessToken: string,
+  inventoryId: number,
+): Promise<void> => {
+  const response = await fetch(
+    `${config.API_BASE_URL}/api/auth/inventories/items/equipment/${inventoryId}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("아이템 장착 실패");
+  }
+};
+
+// 해제 API 호출 함수
+export const unequipUserItem = async (
+  accessToken: string,
+  inventoryId: number,
+): Promise<void> => {
+  const response = await fetch(
+    `${config.API_BASE_URL}/api/auth/inventories/items/unequipment/${inventoryId}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("아이템 해제 실패");
+  }
+};
+
+// 아이템 삭제 API 호출 함수
+export const deleteUserItem = async (
+  accessToken: string,
+  inventoryId: number,
+): Promise<void> => {
+  const response = await fetch(
+    `${config.API_BASE_URL}/api/auth/inventories/items/${inventoryId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("아이템 삭제 실패");
+  }
+};

@@ -106,18 +106,33 @@ export const fetchUserInfo = async (
     rating: data.rating,
     selectedAvatar: Number(data.selectedAvatar),
     equipment: {
-      weapon: {
-        inventoryId: data.equipment.weapon.inventoryId,
-        itemId: data.equipment.weapon.itemId,
-      },
-      active: {
-        inventoryId: data.equipment.active.inventoryId,
-        itemId: data.equipment.active.itemId,
-      },
-      passive: {
-        inventoryId: data.equipment.passive.inventoryId,
-        itemId: data.equipment.passive.itemId,
-      },
+      weapon: data.equipment.weapon
+        ? {
+            inventoryId: data.equipment.weapon.inventoryId || null,
+            itemId: data.equipment.weapon.itemId || null,
+          }
+        : {
+            inventoryId: null,
+            itemId: null,
+          },
+      active: data.equipment.active
+        ? {
+            inventoryId: data.equipment.active.inventoryId || null,
+            itemId: data.equipment.active.itemId || null,
+          }
+        : {
+            inventoryId: null,
+            itemId: null,
+          },
+      passive: data.equipment.passive
+        ? {
+            inventoryId: data.equipment.passive.inventoryId || null,
+            itemId: data.equipment.passive.itemId || null,
+          }
+        : {
+            inventoryId: null,
+            itemId: null,
+          },
     },
   };
 };

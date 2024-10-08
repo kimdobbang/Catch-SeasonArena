@@ -1,8 +1,7 @@
 // 책임 분리
 // 각 컴포넌트: 상태관리, 스토리지 관리, API 처리 책임
 // Api: API 호출과 서버 통신 책임, 데이터 통신(여기서 상태관리x)
-// import config from "@/config";
-
+import config from "@/config";
 import axios from "axios";
 
 // 수집 api 관련 타입
@@ -53,11 +52,17 @@ const base64ToBlob = (base64Data: string, contentType: string = "") => {
   return new Blob(byteArrays, { type: contentType });
 };
 
-export const sendImagesToServer = async (capturedImages: string[]) => {
+export const sendImagesToServer = async ({
+  capturedImages,
+  email,
+}: {
+  capturedImages: string[];
+  email: string;
+}) => {
   const formData = new FormData();
 
   // 이메일을 formData에 추가
-  formData.append("email", "s@dd"); // 이메일을 "email"이라는 key로 추가
+  formData.append("email", email); // 이메일을 "email"이라는 key로 추가
 
   // 이미지 배열의 각 이미지 URL을 Blob 형태로 변환하여 FormData에 추가
   capturedImages.forEach((image, index) => {
@@ -81,8 +86,8 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
 
   try {
     const response = await axios.post(
-      "http://192.168.31.251:8000/api/ai/collections",
-      formData, // 이미지 파일 배열과 이메일을 포함한 FormData 전송
+      `${config.API_BASE_URL}/api/ai/collections`,
+      formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -97,7 +102,11 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
   }
 };
 
-export const sendPublicImagesToServer = async () => {
+export const sendPublicImagesToServer = async ({
+  email,
+}: {
+  email: string;
+}) => {
   const imagePaths = [
     "/collect-test/image1.png", // public 폴더 내 이미지 경로
     "/collect-test/image2.png", // 추가적인 이미지 경로
@@ -108,7 +117,7 @@ export const sendPublicImagesToServer = async () => {
 
   const formData = new FormData();
   // 이메일을 formData에 추가
-  formData.append("email", "s@dd"); // 이메일을 "email"이라는 key로 추가
+  formData.append("email", email); // 이메일을 "email"이라는 key로 추가
 
   try {
     // 각 이미지 경로에 대해 이미지 로드 및 Blob으로 변환
@@ -122,9 +131,10 @@ export const sendPublicImagesToServer = async () => {
       console.log("formDATA: ", formData);
     }
 
+    console.log("formDATA: ", formData);
     // 서버로 이미지 전송
     const serverResponse = await axios.post(
-      "http://192.168.31.251:8000/api/ai/collections", // 실제 서버 URL로 변경
+      `${config.API_BASE_URL}/api/ai/collections`, // 실제 서버 URL로 변경
       formData,
       {
         headers: {

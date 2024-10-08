@@ -7,9 +7,11 @@ import { RootState } from "@/app/redux/store";
 
 export const EquippedItems = ({
   items = [],
+  setItems,
   showCaption = true,
 }: {
   items?: Item[]; // API로 가져온 items 배열 (optional로 변경)
+  setItems?: React.Dispatch<React.SetStateAction<Item[]>>;
   showCaption: boolean;
 }) => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -52,7 +54,7 @@ export const EquippedItems = ({
     <div className="flex justify-around">
       {equippedItemList.map(({ type, equippedItem, matchedItem }) => (
         <EquippedCell
-          key={equippedItem.inventoryId}
+          key={`${type}-${matchedItem?.inventoryId ?? "empty"}`}
           inventoryId={equippedItem?.inventoryId ?? null}
           itemId={equippedItem?.itemId ?? null}
           itemType={type as keyof typeof equippedItems}
@@ -64,9 +66,15 @@ export const EquippedItems = ({
           }
         />
       ))}
-
+      {isModalOpen && (
+        <div className="fixed inset-0 z-40 bg-opacity-50 backdrop-blur-sm"></div>
+      )}
       {isModalOpen && selectedItem && (
-        <InventoryItemCard item={selectedItem} onClose={handleCloseModal} />
+        <InventoryItemCard
+          item={selectedItem}
+          onClose={handleCloseModal}
+          setItems={setItems}
+        />
       )}
     </div>
   );
