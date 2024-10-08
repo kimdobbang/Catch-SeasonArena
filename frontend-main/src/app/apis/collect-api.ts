@@ -108,17 +108,18 @@ export const sendPublicImagesToServer = async ({
   email: string;
 }) => {
   const imagePaths = [
-    "/collect-test/image1.png", // public 폴더 내 이미지 경로
-    "/collect-test/image2.png", // 추가적인 이미지 경로
-    "/collect-test/image3.png",
-    "/collect-test/image4.png",
-    "/collect-test/image5.png",
+    "/collect-test/image-sol1.jfif", // public 폴더 내 이미지 경로
+    "/collect-test/image-sol2.jpg", // 추가적인 이미지 경로
+    "/collect-test/image-sol3.jpg",
+    "/collect-test/image-sol4.jpg",
+    "/collect-test/image-sol5.jpg",
   ];
 
   const formData = new FormData();
   // 이메일을 formData에 추가
   formData.append("email", email); // 이메일을 "email"이라는 key로 추가
 
+  console.log("fornDATA: ", formData);
   try {
     // 각 이미지 경로에 대해 이미지 로드 및 Blob으로 변환
     for (let i = 0; i < imagePaths.length; i++) {

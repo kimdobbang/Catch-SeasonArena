@@ -12,7 +12,7 @@ export const FailComponent = ({ behavior, isSuccess }: ResultButtonsProps) => {
       contentComponent={<ItemFailContent behavior={behavior} />}
       buttonComponent={<ItemResultButtons isSuccess={isSuccess} />}
       behavior={behavior} // 합성 또는 수집에 따른 분기 처리
-      isSuccess={false} // 실패 여부 전달
+      isSuccess={isSuccess} // 실패 여부 전달
     />
   );
 };
