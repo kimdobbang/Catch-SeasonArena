@@ -1,4 +1,6 @@
 import { useRef, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CameraButton } from "./camera-button";
@@ -13,6 +15,7 @@ import { setSuccess } from "@/app/redux/slice/successSlice";
 export const Collect = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userEmail = useSelector((state: RootState) => state.user.email);
 
   const handleSuccessResponse = (responseData: ResponseCollectData) => {
     const processedResult = {
@@ -140,7 +143,15 @@ export const Collect = () => {
 
   const handleSendImages = async () => {
     try {
-      const response = await sendImagesToServer(capturedImagesRef.current);
+      if (capturedImagesRef.current.length < 5) {
+        console.log("이미지가 충분하지 않습니다.");
+        return;
+      }
+      const response = await sendImagesToServer({
+        capturedImages: capturedImagesRef.current,
+        email: userEmail,
+      });
+
       if (response.status === "failure") {
         alert(`API 디텍션 실패 응답: ${response.message}`);
       } else if (response.state === "success") {
@@ -155,7 +166,9 @@ export const Collect = () => {
 
   const successTest = async () => {
     try {
-      const response = await sendPublicImagesToServer();
+      const response = await sendPublicImagesToServer({
+        email: userEmail,
+      });
       if (response.status === "success") {
         console.log("호출 성공!");
         console.log("Response Data:", response); // 응답 데이터 구조 확인

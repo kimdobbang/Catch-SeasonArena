@@ -52,11 +52,17 @@ const base64ToBlob = (base64Data: string, contentType: string = "") => {
   return new Blob(byteArrays, { type: contentType });
 };
 
-export const sendImagesToServer = async (capturedImages: string[]) => {
+export const sendImagesToServer = async ({
+  capturedImages,
+  email,
+}: {
+  capturedImages: string[];
+  email: string;
+}) => {
   const formData = new FormData();
 
   // 이메일을 formData에 추가
-  formData.append("email", "s@dd"); // 이메일을 "email"이라는 key로 추가
+  formData.append("email", email); // 이메일을 "email"이라는 key로 추가
 
   // 이미지 배열의 각 이미지 URL을 Blob 형태로 변환하여 FormData에 추가
   capturedImages.forEach((image, index) => {
@@ -81,7 +87,7 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
   try {
     const response = await axios.post(
       `${config.API_BASE_URL}/api/ai/collections`,
-      formData, // 이미지 파일 배열과 이메일을 포함한 FormData 전송
+      formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -96,7 +102,11 @@ export const sendImagesToServer = async (capturedImages: string[]) => {
   }
 };
 
-export const sendPublicImagesToServer = async () => {
+export const sendPublicImagesToServer = async ({
+  email,
+}: {
+  email: string;
+}) => {
   const imagePaths = [
     "/collect-test/image1.png", // public 폴더 내 이미지 경로
     "/collect-test/image2.png", // 추가적인 이미지 경로
@@ -107,7 +117,7 @@ export const sendPublicImagesToServer = async () => {
 
   const formData = new FormData();
   // 이메일을 formData에 추가
-  formData.append("email", "s@dd"); // 이메일을 "email"이라는 key로 추가
+  formData.append("email", email); // 이메일을 "email"이라는 key로 추가
 
   try {
     // 각 이미지 경로에 대해 이미지 로드 및 Blob으로 변환
@@ -121,6 +131,7 @@ export const sendPublicImagesToServer = async () => {
       console.log("formDATA: ", formData);
     }
 
+    console.log("formDATA: ", formData);
     // 서버로 이미지 전송
     const serverResponse = await axios.post(
       `${config.API_BASE_URL}/api/ai/collections`, // 실제 서버 URL로 변경
