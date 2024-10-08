@@ -20,3 +20,4 @@ export { CollectionbookPage } from "@/pages/collectionbook-page";
 export { MatchingPage } from "@/pages/matching-page";
 export { ItemResultPage } from "@/pages/item-result-page";
 export { TestPage } from "@/pages/test-page";
+export { GameResultPage } from "@/pages/game-result-page";
