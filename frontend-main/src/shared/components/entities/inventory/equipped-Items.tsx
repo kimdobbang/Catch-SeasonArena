@@ -11,7 +11,7 @@ export const EquippedItems = ({
   showCaption = true,
 }: {
   items?: Item[]; // API로 가져온 items 배열 (optional로 변경)
-  setItems: React.Dispatch<React.SetStateAction<Item[]>>;
+  setItems?: React.Dispatch<React.SetStateAction<Item[]>>;
   showCaption: boolean;
 }) => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
