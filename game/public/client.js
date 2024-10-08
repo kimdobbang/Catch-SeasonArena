@@ -281,62 +281,70 @@ function create() {
   });
 
   // <<스킬 버튼>>
-  if (skill !== 0) {
-    const skillButton = this.add
-      .circle(320, 600, 25, 0xf8d18f)
-      .setInteractive()
-      .setScrollFactor(0);
-    cooldownText = this.add
-      .text(320, 600, "", { fontSize: "16px", fill: "#ffffff" })
-      .setOrigin(0.5)
-      .setScrollFactor(0);
+  const skillButton = this.add
+    .circle(320, 600, 25, 0xf8d18f)
+    .setInteractive()
+    .setScrollFactor(0);
+  cooldownText = this.add
+    .text(320, 600, "", { fontSize: "16px", fill: "#ffffff" })
+    .setOrigin(0.5)
+    .setScrollFactor(0);
+  cooldownText.setVisible(false);
+  let skillImage;
+  // skillImageKey가 "none"인 경우 버튼과 텍스트를 숨김
+  if (skillImageKey === "none") {
+    skillButton.setVisible(false);
     cooldownText.setVisible(false);
-    let skillImage;
+  } else {
+    // 3초 대기 후 이미지 표시
     setTimeout(() => {
       skillImage = this.add
         .image(320, 603, skillImageKey)
         .setScale(0.09)
         .setScrollFactor(0);
-    }, 3000); // 3초 대기 후 이미지 표시
-
-    skillButton.on("pointerdown", () => {
-      const currentTime = Date.now();
-
-      // 스킬 쿨타임 확인
-      if (currentTime - lastSkillUsedTime >= skillCooldown) {
-        socket.emit("playerSkill", ROOMCODE);
-        lastSkillUsedTime = currentTime;
-        skillButton.setAlpha(0.5);
-        cooldownText.setText(skillCooldown / 1000);
-        cooldownText.setVisible(true);
-
-        if (skillImage) {
-          skillImage.setVisible(false); // 스킬 이미지 숨기기
-        }
-
-        // 남은 쿨다운 시간을 갱신하는 함수
-        const updateCooldown = setInterval(() => {
-          const elapsedTime = Date.now() - lastSkillUsedTime;
-          const remainingCooldown = Math.ceil(
-            (skillCooldown - elapsedTime) / 1000
-          );
-
-          if (remainingCooldown <= 0) {
-            cooldownText.setVisible(false);
-            skillButton.setAlpha(1);
-            if (skillImage) {
-              skillImage.setVisible(true);
-            }
-            clearInterval(updateCooldown); // 업데이트 중지
-          } else {
-            cooldownText.setText(remainingCooldown);
-          }
-        }, 1000);
-      } else {
-        // 스킬 쿨타임 중일 때 아무 동작도 하지 않음
-      }
-    });
+    }, 3000);
   }
+
+  skillButton.on("pointerdown", () => {
+    const currentTime = Date.now();
+
+    // 스킬 쿨타임 확인
+    if (
+      skillImageKey !== "none" &&
+      currentTime - lastSkillUsedTime >= skillCooldown
+    ) {
+      socket.emit("playerSkill", ROOMCODE);
+      lastSkillUsedTime = currentTime;
+      skillButton.setAlpha(0.5);
+      cooldownText.setText(skillCooldown / 1000);
+      cooldownText.setVisible(true);
+
+      if (skillImage) {
+        skillImage.setVisible(false); // 스킬 이미지 숨기기
+      }
+
+      // 남은 쿨다운 시간을 갱신하는 함수
+      const updateCooldown = setInterval(() => {
+        const elapsedTime = Date.now() - lastSkillUsedTime;
+        const remainingCooldown = Math.ceil(
+          (skillCooldown - elapsedTime) / 1000
+        );
+
+        if (remainingCooldown <= 0) {
+          cooldownText.setVisible(false);
+          skillButton.setAlpha(1);
+          if (skillImage) {
+            skillImage.setVisible(true);
+          }
+          clearInterval(updateCooldown); // 업데이트 중지
+        } else {
+          cooldownText.setText(remainingCooldown);
+        }
+      }, 1000);
+    } else {
+      // 스킬 쿨타임 중일 때 아무 동작도 하지 않음
+    }
+  });
   // <<미니맵 구현>>
   const miniMapWidth = 80;
   const miniMapHeight = 80;
@@ -637,6 +645,9 @@ function setSkill(skill) {
     case "12": // 허수아비
       skillCooldown = 50000;
       skillImageKey = "Sscarecrow";
+      break;
+    default:
+      skillImageKey = "none";
       break;
   }
 }
