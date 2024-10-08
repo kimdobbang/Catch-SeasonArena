@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record MatchingDataDto (
      Integer rating,
-     Long entryTime,
+     Integer entryTime,
      String dayOfWeek,
      Long matchDuration,
      Integer currentUserSize){

@@ -6,6 +6,7 @@ import catchcatch.recommend.domain.recommend.requestdto.EntryRequestDto;
 import catchcatch.recommend.domain.recommend.requestdto.ExitRequestDto;
 import catchcatch.recommend.domain.recommend.requestdto.MatchData;
 import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
+import catchcatch.recommend.domain.recommend.responsedto.ExpectationTimeDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +73,17 @@ public class RecommendService {
     public void entryPlayer(EntryRequestDto requestDto) {
         Player player = Player.createPlayer(requestDto);
         playerStore.getWaitingPlayers().add(player);
+        try {
+            expectationPlayer(player);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         log.info("BE/MATCHING - player size " + playerStore.getWaitingPlayers().size());
+    }
+
+    public void expectationPlayer(Player player) throws Exception{
+        int time = calculateEstimatedMatchTime(player);
+        messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),new ExpectationTimeDto(time, true));
     }
 
     public void exitPlayerByNickname(ExitRequestDto requestDto) {
@@ -165,7 +176,7 @@ public class RecommendService {
 
             MatchingDataDto matchingData = MatchingDataDto.builder()
                     .rating(player.getRating())
-                    .entryTime(player.getEntryTime())
+                    .entryTime(LocalTime.now().getHour())
                     .dayOfWeek(dayOfWeek)
                     .matchDuration(matchDuration)
                     .currentUserSize(USERSIZE)
@@ -180,7 +191,7 @@ public class RecommendService {
         }
     }
     //매칭 예상 소요시간
-    private int calculateEstimatedMatchTime(Player player) {
+    public int calculateEstimatedMatchTime(Player player) throws IOException {
         String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
         int currentHour = LocalTime.now().getHour();
 
@@ -189,14 +200,15 @@ public class RecommendService {
 
         int ratingIndex1 = convertRatingRangeToIndex(ratingRange1);
         int ratingIndex2 = convertRatingRangeToIndex(ratingRange2);
-
+        elasticsearchService.calculateMatchStatistics();
         MatchData data1 = matchStatistics.getMatchedData(dayOfWeek, currentHour, ratingIndex1);
         MatchData data2 = matchStatistics.getMatchedData(dayOfWeek, currentHour, ratingIndex2);
 
         int averageTime = (data1.getTime() + data2.getTime()) / 2;
         int averageSize = (data1.getSize() + data2.getSize()) / 2;
-
-        return (averageSize > 0) ? (averageTime * USERSIZE / averageSize) : averageTime;
+        int res = (USERSIZE < averageSize) ? (averageTime * averageSize / USERSIZE) : (averageTime * USERSIZE / averageSize);
+        res = res > 600? 600: res;
+        return res == 0? 5:res;
     }
 
     private int getRatingRange(int rating) {
@@ -212,6 +224,16 @@ public class RecommendService {
         else if (rating <= 2000) return 3;
         else if (rating <= 2500) return 4;
         else return 5;
+    }
+    public void run(){
+        for (int i = 0; i < 10000; i++) {
+            MatchingDataDto data = elasticsearchService.generateRandomData();
+            try {
+                elasticsearchService.saveMatchData(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

@@ -39,5 +39,4 @@ public class MatchStatistics {
     public MatchData getMatchedData(String day, int hour, int ratingRange) {
         return MATCHED_DATA.get(day)[hour][ratingRange];
     }
-
 }
