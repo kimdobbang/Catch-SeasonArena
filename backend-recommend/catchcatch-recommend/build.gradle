@@ -36,6 +36,8 @@ dependencies {
 	implementation 'com.github.danielwegener:logback-kafka-appender:0.1.0'
 	implementation 'net.logstash.logback:logstash-logback-encoder:6.2'
 	implementation 'org.springframework.kafka:spring-kafka'
+
+	implementation 'co.elastic.clients:elasticsearch-java:8.10.2'
 }
 
 tasks.named('test') {

@@ -1,8 +1,10 @@
 package catchcatch.recommend.domain.recommend.service;
 
+import catchcatch.recommend.domain.recommend.domain.MatchStatistics;
 import catchcatch.recommend.domain.recommend.domain.Player;
 import catchcatch.recommend.domain.recommend.requestdto.EntryRequestDto;
-import catchcatch.recommend.domain.recommend.requestdto.ExitRequestDto;
+import catchcatch.recommend.domain.recommend.requestdto.MatchData;
+import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +31,12 @@ public class RecommendService {
     private final SimpMessagingTemplate messagingTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
     private final HashMap<String, Integer> avatars;
+    private final ElasticsearchService elasticsearchService;
+    private final MatchStatistics matchStatistics;
 
-    @Autowired
     private PlayerStore playerStore;
+
+    private int USERSIZE;
 
     @Value("${rating.range}")
     private Integer RATING_RANGE;
@@ -42,9 +50,12 @@ public class RecommendService {
     @Value("${waiting.time}")
     private Long WAITING_TIME;
 
-    public RecommendService(SimpMessagingTemplate messagingTemplate, RedisTemplate<String, Object> redisTemplate) {
+    public RecommendService(SimpMessagingTemplate messagingTemplate, RedisTemplate<String, Object> redisTemplate, ElasticsearchService elasticsearchService, MatchStatistics matchStatistics, PlayerStore playerStore) {
         this.messagingTemplate = messagingTemplate;
         this.redisTemplate = redisTemplate;
+        this.elasticsearchService = elasticsearchService;
+        this.matchStatistics = matchStatistics;
+        this.playerStore = playerStore;
         this.avatars = new HashMap<>();
 
         initializeAvatars();
@@ -101,6 +112,7 @@ public class RecommendService {
                         .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
                 log.info("BACK/MATCHING - limit player size {}", limitMatchedPlayers.size());
+                saveMattchedLogs(limitMatchedPlayers);
                 notifyPlayers(limitMatchedPlayers);
                 playerStore.getWaitingPlayers().removeAll(limitMatchedPlayers);
                 matchedPlayers.removeAll(limitMatchedPlayers);
@@ -140,4 +152,66 @@ public class RecommendService {
         messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(), roomId);
     }
 
+    public void updateUserSize(){
+        USERSIZE = playerStore.getWaitingPlayers().size();
+    }
+
+    public void saveMattchedLogs(NavigableSet<Player> matchedPlayers) {
+        String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
+
+        for (Player player : matchedPlayers) {
+            long matchDuration = (System.currentTimeMillis() - player.getEntryTime()) / 1000;
+
+            MatchingDataDto matchingData = MatchingDataDto.builder()
+                    .rating(player.getRating())
+                    .entryTime(player.getEntryTime())
+                    .dayOfWeek(dayOfWeek)
+                    .matchDuration(matchDuration)
+                    .currentUserSize(USERSIZE)
+                    .build();
+
+            try {
+                elasticsearchService.saveMatchData(matchingData);
+                log.info("매칭 데이터 Elasticsearch에 저장 완료: {}", matchingData);
+            } catch (IOException e) {
+                log.error("Elasticsearch 저장 실패", e);
+            }
+        }
+    }
+    //매칭 예상 소요시간
+    private int calculateEstimatedMatchTime(Player player) {
+        String dayOfWeek = LocalDate.now().getDayOfWeek().toString();
+        int currentHour = LocalTime.now().getHour();
+
+        int ratingRange1 = getRatingRange(player.getRating());
+        int ratingRange2 = getRatingRange(player.getRating() + 500);
+
+        int ratingIndex1 = convertRatingRangeToIndex(ratingRange1);
+        int ratingIndex2 = convertRatingRangeToIndex(ratingRange2);
+
+        MatchData data1 = matchStatistics.getMatchedData(dayOfWeek, currentHour, ratingIndex1);
+        MatchData data2 = matchStatistics.getMatchedData(dayOfWeek, currentHour, ratingIndex2);
+
+        int averageTime = (data1.getTime() + data2.getTime()) / 2;
+        int averageSize = (data1.getSize() + data2.getSize()) / 2;
+
+        return (averageSize > 0) ? (averageTime * USERSIZE / averageSize) : averageTime;
+    }
+
+    private int getRatingRange(int rating) {
+        if (rating <= 0) return 500;
+        else if (rating >= 2500) return 2500;
+        else return (rating + 499) / 500 * 500;
+    }
+
+    private int convertRatingRangeToIndex(int rating) {
+        if (rating <= 500) return 0;
+        else if (rating <= 1000) return 1;
+        else if (rating <= 1500) return 2;
+        else if (rating <= 2000) return 3;
+        else if (rating <= 2500) return 4;
+        else return 5;
+    }
+
 }
+
