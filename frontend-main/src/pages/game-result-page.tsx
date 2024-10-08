@@ -1,21 +1,31 @@
 // src/pages/game-result-page.tsx
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
+import { updateRatingByGameResult } from "@/app/redux/slice/userSlice";
 import {
   fetchUserGameResult,
   UserGameResult,
-} from "@/app/apis/game-result-apis"; // UserGameResult 타입 가져오기
+} from "@/app/apis/game-result-apis";
 
 export const GameResultPage = () => {
+  const dispatch = useDispatch();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const [gameResult, setGameResult] = useState<UserGameResult | null>(null); // UserGameResult 타입 사용
+  const updatedRating = useSelector((state: RootState) => state.user.rating); // 현재? 합산된? 레이팅 가져오기
+  const [gameResult, setGameResult] = useState<UserGameResult | null>(null);
+  const [winningOrLosing, setWinningOrLosing] = useState<string | null>(null);
 
   useEffect(() => {
     const loadGameResult = async () => {
       try {
         const fetchedGameResult = await fetchUserGameResult(accessToken);
-        setGameResult(fetchedGameResult); // 결과를 상태로 저장
+        setGameResult(fetchedGameResult);
+        dispatch(updateRatingByGameResult(fetchedGameResult.resultRating));
+        if (fetchedGameResult.rank === 1) {
+          setWinningOrLosing("WIN");
+        } else {
+          setWinningOrLosing("LOSE");
+        }
       } catch (error) {
         console.error("게임 결과를 가져오는데 실패했습니다:", error);
       }
@@ -24,18 +34,20 @@ export const GameResultPage = () => {
     if (accessToken) {
       loadGameResult();
     }
-  }, [accessToken]);
+  }, []);
 
   return (
     <div>
       <h1>게임 결과</h1>
       {gameResult ? (
         <div>
+          <p>결과: {winningOrLosing}</p>
           <p>킬 수: {gameResult.kill}</p>
           <p>플레이 수: {gameResult.play}</p>
           <p>순위: {gameResult.rank}</p>
-          <p>현재 레이팅: {gameResult.rating}</p>
+          <p>이전 레이팅: {gameResult.rating}</p>
           <p>레이팅 증감량: {gameResult.resultRating}</p>
+          <p>최종 레이팅: {updatedRating} </p>
         </div>
       ) : (
         <p>게임 결과를 불러오는 중입니다...</p>

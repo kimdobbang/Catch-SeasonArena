@@ -11,12 +11,6 @@ export const initialUserInfo: UserInfo = {
   nickname: "",
 };
 
-export interface UserStat {
-  hp: number;
-  coverage: number;
-  speed: number;
-}
-
 export type UserEquipment = Record<
   ItemType,
   { inventoryId: number | null; itemId: number | null }

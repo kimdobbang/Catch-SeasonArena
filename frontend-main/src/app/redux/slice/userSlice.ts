@@ -2,7 +2,7 @@
 // 유저 관리 상태: 도감, 장비, 아바타, 티어, 닉네임(authSlice참조함)
 // src/app/redux/slice/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserStat, UserInfo } from "@/app/types/userType";
+import { UserInfo } from "@/app/types/userType";
 import { Tier, getTierByRating } from "@/app/types/tier";
 import { setAuthUser, updateAuthNickname } from "./authSlice";
 import { AppThunk } from "@/app/redux/store";
@@ -12,7 +12,6 @@ export interface UserState extends UserInfo {
   rating: number;
   tier: Tier;
   selectedAvatar: number;
-  stats: UserStat;
   equipment: {
     weapon: EquipmentItem;
     active: EquipmentItem;
@@ -26,11 +25,6 @@ const initialState: UserState = {
   rating: 1,
   tier: getTierByRating(1),
   selectedAvatar: 1,
-  stats: {
-    hp: 100,
-    coverage: 10,
-    speed: 10,
-  },
   equipment: {
     weapon: { inventoryId: null, itemId: null },
     active: { inventoryId: null, itemId: null },
@@ -69,16 +63,6 @@ const userSlice = createSlice({
     setPassive: (state, action: PayloadAction<EquipmentItem>) => {
       state.equipment.passive = action.payload;
     },
-    // 유저 스탯 추가
-    setHp: (state, action: PayloadAction<number>) => {
-      state.stats.hp = action.payload;
-    },
-    setCoverage: (state, action: PayloadAction<number>) => {
-      state.stats.coverage = action.payload;
-    },
-    setSpeed: (state, action: PayloadAction<number>) => {
-      state.stats.speed = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(setAuthUser, (state, action) => {
@@ -92,17 +76,18 @@ const userSlice = createSlice({
 export const updateUserAndAuthNickname =
   (nickname: string): AppThunk =>
   (dispatch) => {
-    dispatch(updateAuthNickname(nickname)); // authSlice 업데이트
-    dispatch(updateUserNickname(nickname)); // userSlice 업데이트
+    dispatch(updateAuthNickname(nickname));
+    dispatch(updateUserNickname(nickname));
   };
 
 export const {
   setSelectedAvatar,
+  updateUserNickname,
+  updateRatingByGameResult,
   setRating,
   setWeapon,
   setActive,
   setPassive,
-  updateUserNickname,
 } = userSlice.actions;
 
 export default userSlice.reducer;
