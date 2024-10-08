@@ -208,7 +208,10 @@ public class RecommendService {
 
         int averageTime = (data1.getTime() + data2.getTime()) / 2;
         int averageSize = (data1.getSize() + data2.getSize()) / 2;
-        int res = (USERSIZE < averageSize) ? (averageTime * averageSize / USERSIZE) : (averageTime * USERSIZE / averageSize);
+        int res = 0;
+        if(USERSIZE != 0){
+            res = (USERSIZE < averageSize) ? (averageTime * averageSize / USERSIZE) : (averageTime * USERSIZE / averageSize);
+        }
         res = res > 600? 600: res;
         return res == 0? 5:res;
     }
