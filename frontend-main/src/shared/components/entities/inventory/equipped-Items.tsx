@@ -57,7 +57,6 @@ export const EquippedItems = ({
           itemId={equippedItem?.itemId ?? null}
           itemType={type as keyof typeof equippedItems}
           showCaption={showCaption}
-          // 클릭 이벤트는 items 배열이 있을 때만 적용
           onClick={
             items && matchedItem
               ? () => handleItemClick(matchedItem)
