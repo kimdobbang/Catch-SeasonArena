@@ -1,5 +1,4 @@
 // src/features/matching.tsx
-// 유저한테 보여주는 화면,
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
@@ -22,14 +21,12 @@ export const Matching = () => {
   const [isMatchingStatus, setIsMatchingStatus] = useState(false);
   const [stompClient, setStompClient] = useState<Client | null>(null);
   const [roomcode, setRoomcode] = useState("");
-  const [expectation, setExpectation] = useState("");
   const { nickname, rating, selectedAvatar, equipment } = useSelector(
     (state: RootState) => state.user,
   );
   const goToGame = () => {
     window.location.href = `/game?nickname=${nickname}&rating=${rating}&roomcode=${roomcode}`;
   };
-
   useEffect(() => {
     if (roomcode) {
       goToGame();
@@ -39,17 +36,10 @@ export const Matching = () => {
   const connectAndSendMessage = async () => {
     try {
       const client = await connectToMatching(nickname, (message) => {
-        const parsedMessage = JSON.parse(message);
-        console.log("수신 데이터 :", parsedMessage.data);
-        if (parsedMessage.type === "ROOMCODE") {
-          setRoomcode(parsedMessage.roomId);
-        } else if (parsedMessage.type === "TIME") {
-          setExpectation(parsedMessage.time);
-          // 매칭 예상 소요시간 = parsedMessage.time (seconds)
-        }
+        console.log("서버로부터 수신한 메시지:", message);
+        setRoomcode(message);
       });
 
-      setExpectation(expectation); // 반환 된 예상시간
       setStompClient(client);
       setIsMatchingStatus(true);
 
@@ -122,7 +112,6 @@ export const Matching = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-1">
-              <p>{expectation}</p>
               <PrimaryButton
                 showIcon={false}
                 onClick={disconnect}

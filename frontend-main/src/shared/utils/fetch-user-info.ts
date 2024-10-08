@@ -19,7 +19,6 @@ export const handleLoginSuccess = async (
     dispatch(setToken(accessToken));
 
     const data: UserState = await fetchUserInfo(accessToken);
-    console.log("fetch 유저정보 util", data);
 
     dispatch(setAuthUser({ email: data.email, nickname: data.nickname }));
     dispatch(setRating(data.rating));
