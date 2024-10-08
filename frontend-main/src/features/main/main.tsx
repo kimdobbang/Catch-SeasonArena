@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
@@ -14,10 +15,15 @@ import {
 import Ranking from "@/assets/icons/ranking.svg?react";
 import CollectionBook from "@/assets/icons/collectionbook.svg?react";
 import CardGame from "@/assets/icons/card-game.svg?react";
-import { NavBarBackground } from "@/shared/ui";
+import { BottomNavBar, NavBarBackground } from "@/shared/ui";
+import { CollectTimerModal } from "@/features";
 
 export const Main = () => {
   const navigate = useNavigate();
+  const userAvatar = useSelector(
+    (state: RootState) => state.user.selectedAvatar,
+  );
+  const [timerModalOpen, setTimerModalOpen] = useState(false);
 
   const goToMatchingPage = () => {
     navigate("/matching");
@@ -38,14 +44,18 @@ export const Main = () => {
   const goToAvatarChange = () => {
     navigate("/avatar");
   };
-  const userAvatar = useSelector(
-    (state: RootState) => state.user.selectedAvatar,
-  );
+
+  const handleOpenModal = () => {
+    setTimerModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setTimerModalOpen(false);
+  };
 
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full">
       <div
-        className="w-full h-[30%] flex flex-col items-center justify-center"
+        className="w-full h-[25%] flex flex-col items-center justify-center"
         style={{
           background:
             "linear-gradient(1deg, #FEF8EC -2.21%, rgba(254, 251, 245, 0.53) 51.4%, rgba(255, 255, 255, 0) 99.05%)",
@@ -64,7 +74,7 @@ export const Main = () => {
           </Body1Text>
         </div>
       </div>
-      <div className="w-full h-[70%] flex flex-col items-center gap-6">
+      <div className="w-full h-[40%] flex flex-col items-center gap-6">
         <UserNameContainer className="mt-4" />
         <TierProgressBar />
         <PrimaryButton
@@ -93,7 +103,14 @@ export const Main = () => {
           />
         </div>
       </div>
-      <NavBarBackground className="mt-3" />
+      <div className="w-full h-[35%] relative">
+        <NavBarBackground className="absolute bottom-0 w-full  z-0" />
+        <BottomNavBar
+          className="absolute bottom-0 w-full z-10"
+          onTimerModalOpen={handleOpenModal}
+        />
+      </div>
+      {timerModalOpen && <CollectTimerModal onClose={handleCloseModal} />}
     </div>
   );
 };

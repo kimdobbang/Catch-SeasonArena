@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { createBrowserRouter } from "react-router-dom";
-import { HeaderLayout, Layout, MainLayout } from "@/shared/ui/index";
+import { HeaderLayout, Layout } from "@/shared/ui/index";
 import {
   RootPage,
   NotPwaPage,
@@ -72,19 +72,14 @@ export const AppRouter = () => {
       element: <PrivateRoute />, // PrivateRoute로 감싸서 로그인 필요
       children: [
         {
-          element: <MainLayout />,
+          element: <HeaderLayout />,
           errorElement: <div>에러발생 2</div>,
           children: [
             {
               path: "/main",
               element: <MainPage />,
             },
-          ],
-        },
-        {
-          element: <HeaderLayout />,
-          errorElement: <div>에러발생 3</div>,
-          children: [
+
             {
               path: "/inventory",
               element: <InventoryPage />,
