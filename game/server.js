@@ -491,8 +491,8 @@ async function saveResultToRedis(nickname, result) {
       rank: result.rank,
       rating: result.rating,
     });
-    await redisClient.expire(nickname, 60);
-    console.log(`데이터 저장 성공: ${nickname}`);
+    await redisClient.expire(result.email, 60);
+    console.log(`데이터 저장 성공: ${result.email}`);
   } catch (err) {
     console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
   }
