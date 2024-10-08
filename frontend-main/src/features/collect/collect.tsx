@@ -1,13 +1,13 @@
 import { useRef, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ResponseCollectData } from "@/app/apis/collectApi";
 import { useNavigate } from "react-router-dom";
 import { CameraButton } from "./camera-button";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
 import {
+  ResponseCollectData,
   sendImagesToServer,
   sendPublicImagesToServer,
-} from "@/app/apis/collectApi";
+} from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";
 
 export const Collect = () => {
@@ -15,7 +15,13 @@ export const Collect = () => {
   const dispatch = useDispatch();
 
   const handleSuccessResponse = (responseData: ResponseCollectData) => {
-    dispatch(setSuccess(responseData.data.processed_result)); // processed_result 데이터를 저장
+    const processedResult = {
+      ...responseData.data.processed_result,
+      type: responseData.data.processed_result.type.toLowerCase(), // type을 소문자로 변환
+      grade: responseData.data.processed_result.grade.toLowerCase(), // grade를 소문자로 변환
+    };
+    console.log("Updating Redux with:", processedResult);
+    dispatch(setSuccess(processedResult)); // processed_result 데이터를 저장
   };
 
   // const navigate = useNavigate();
@@ -153,6 +159,7 @@ export const Collect = () => {
       const response = await sendPublicImagesToServer();
       if (response.status === "success") {
         console.log("호출 성공!");
+        console.log("Response Data:", response); // 응답 데이터 구조 확인
         handleSuccessResponse(response);
         navigate("/collect/success");
       } else if (response.status === "failure") {

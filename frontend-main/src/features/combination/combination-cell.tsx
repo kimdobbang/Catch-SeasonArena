@@ -1,27 +1,17 @@
-// src/shared/components/atoms/item-cell
-import { ItemType, ItemGrade, Season } from "@/app/types/common";
+import { AutumnItemImage } from "@atoms/index";
 
-interface ItemCellProps {
+interface CombinationCellProps {
   onClick?: () => void;
-  id?: number;
-  index?: number;
-  name: string;
-  type: ItemType | "unknown";
-  grade?: ItemGrade;
-  skill?: string;
-  season?: Season;
-  description?: string;
-  image?: string;
-  durability?: number;
+  itemId: number;
+  inventoryId?: number;
   className?: string;
 }
 
 export const CombinationCell = ({
   onClick,
-  name,
-  image,
+  itemId,
   className,
-}: ItemCellProps) => {
+}: CombinationCellProps) => {
   return (
     <div
       onClick={onClick}
@@ -30,9 +20,7 @@ export const CombinationCell = ({
       <div
         className={`rounded-md flex items-center w-full h-full justify-center bg-white `}
       >
-        {image ? (
-          <img src={image} alt={name} className="object-contain w-12 h-12" />
-        ) : null}
+        {itemId !== 0 ? <AutumnItemImage itemId={itemId} /> : null}
       </div>
     </div>
   );

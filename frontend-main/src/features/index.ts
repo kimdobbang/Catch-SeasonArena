@@ -20,6 +20,9 @@ export { Ranking } from "@/features/ranking/ranking";
 
 // 합성 관련
 export { Combination } from "@/features/combination/combination";
+export { CombinationItemCard } from "@/features/combination/combination-item-card";
+export { CombinationCell } from "@/features/combination/combination-cell";
+export { CombinationLibrary } from "@/features/combination/combination-library";
 
 // 인벤토리
 export { InventoryUserInfo } from "@/features/inventory/inventory-userinfo";
