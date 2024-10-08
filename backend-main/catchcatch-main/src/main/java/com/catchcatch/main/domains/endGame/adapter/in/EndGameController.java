@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/main/endGame")
+@RequestMapping("/api/main/endgame")
 @Slf4j(topic = "main")
 public class EndGameController {
 
