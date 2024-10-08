@@ -100,6 +100,7 @@ export const fetchUserInfo = async (
     throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
   }
   const { data } = await response.json();
+  console.log("authapi 요청 성공", data);
   return {
     ...data,
     rating: data.rating,

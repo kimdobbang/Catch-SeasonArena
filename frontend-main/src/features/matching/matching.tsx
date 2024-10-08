@@ -51,8 +51,8 @@ export const Matching = () => {
         .filter(
           (equipment) =>
             equipment?.itemId !== null && equipment?.itemId !== undefined,
-        ) // null 또는 undefined를 필터링
-        .map((equipment) => equipment!.itemId as number); // itemId를 number로 강제 변환
+        )
+        .map((equipment) => equipment!.itemId as number);
 
       const requestDto = {
         nickname,
@@ -127,7 +127,7 @@ export const Matching = () => {
           )}
         </div>
       </div>
-      <NavBarBackground className="mt-3" />
+      <NavBarBackground className="mt-3"></NavBarBackground>
     </div>
   );
 };

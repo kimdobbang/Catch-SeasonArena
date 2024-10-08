@@ -59,7 +59,6 @@ export const Main = () => {
           onClick={goToAvatarChange}
         />
         <div className="w-full px-4">
-          {/* w-full로 부모 요소를 꽉 채우고 px-4로 padding 추가 */}
           <Body1Text className="!text-left text-catch-main-400 ">
             2024 Autumn
           </Body1Text>
