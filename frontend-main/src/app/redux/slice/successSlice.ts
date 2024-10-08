@@ -15,7 +15,7 @@ const initialState: ProcessedResultWithTime = {
   type: "WEAPON",
   grade: "NORMAL",
   effect: "사거리 +30%",
-  createdTime: Date.now(),
+  createdTime: 0,
 };
 
 // Redux Slice 생성
