@@ -396,7 +396,7 @@ function create() {
     }
 
     if (socketId === socket.id) {
-      socket.disconnect();
+      window.location.href = "https://j11b106.p.ssafy.io/game-result";
     }
   });
 
