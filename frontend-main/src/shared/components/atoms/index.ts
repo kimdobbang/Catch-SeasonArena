@@ -37,6 +37,7 @@ export { ItemCell } from "@atoms/item-cell";
 export { AutumnItemImage } from "@atoms/symbols/autumn-item-image";
 export { EquipmentItemCaption } from "@/shared/components/atoms/texts/equipmentItem-caption";
 
+// 유저정보 관련
 export { AvatarFace } from "@atoms/symbols/avatars/avatar-face";
 export { AvatarBody } from "@atoms/symbols/avatars/avatar-body";
 export { ProgressBar } from "@atoms/symbols/tiers/progress-bar";
