@@ -9,14 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { Item } from "@/app/types/common";
 import { CombinationCell } from "./combination-cell";
 import { combineItems } from "@/app/apis/combination-api";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { CombinationItemCard } from "./combination-item-card";
-import { setActive, setPassive, setWeapon } from "@/app/redux/slice/userSlice";
 
 export const Combination = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   // 현재 장착된 무기, 패시브, 액티브 아이템을 가져오기
   const equippedWeapon = useSelector(
