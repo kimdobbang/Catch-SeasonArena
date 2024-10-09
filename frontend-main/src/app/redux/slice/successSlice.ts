@@ -8,7 +8,7 @@ export interface CollectSuccess {
   itemId: number;
   type: string;
   grade: string;
-  skill: string;
+  effect: string;
 }
 
 // ProcessedResult 타입에 수집 시간 추가
@@ -22,7 +22,7 @@ const initialState: CollectSuccessWithTime = {
   itemId: 1,
   type: "WEAPON",
   grade: "NORMAL",
-  skill: "사거리 +30%",
+  effect: "사거리 +30%",
   createdTime: 0,
 };
 
@@ -37,7 +37,7 @@ export const successSlice = createSlice({
       state.itemId = action.payload.itemId;
       state.type = action.payload.type;
       state.grade = action.payload.grade;
-      state.skill = action.payload.effect;
+      state.effect = action.payload.effect;
       state.createdTime = Date.now();
     },
     // Success 데이터를 초기화하는 리듀서 (삭제하는 액션)
@@ -46,7 +46,7 @@ export const successSlice = createSlice({
       state.itemId = 0;
       state.type = "";
       state.grade = "";
-      state.skill = "";
+      state.effect = "";
       state.createdTime = 0;
     },
   },
