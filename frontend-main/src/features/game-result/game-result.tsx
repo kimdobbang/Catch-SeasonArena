@@ -42,7 +42,7 @@ export const GameResult = () => {
     if (accessToken) {
       loadGameResult();
     }
-  }, [dispatch]);
+  }, []);
 
   if (!gameResult) {
     return <p>게임 결과를 불러오는 중입니다...</p>;
