@@ -133,7 +133,7 @@ export const AppRouter = () => {
           path: "test", // 동적 파라미터 추가
           element: <TestPage />,
         },
-        { path: "game-result", element: <GameResultPage /> },
+        { path: "/game-result", element: <GameResultPage /> },
       ],
     },
   ]);

@@ -53,7 +53,6 @@ const userSlice = createSlice({
       state.rating += action.payload;
       state.tier = getTierByRating(state.rating);
     },
-    // 개별 장비 업데이트 액션 추가
     setWeapon: (state, action: PayloadAction<EquipmentItem>) => {
       state.equipment.weapon = action.payload;
     },

@@ -9,7 +9,6 @@ export const GameResultStatBox = ({
 }) => {
   return (
     <div className="flex flex-col items-center">
-      {/* 박스 내부 */}
       <div className="flex items-center justify-center w-20 h-20 border rounded-lg border-catch-sub-200">
         <Body1Text>{value}</Body1Text>
       </div>
