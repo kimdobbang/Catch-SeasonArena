@@ -78,14 +78,11 @@ export const Combination = () => {
   }, []);
 
   const checkEquippedItem = (item: Item) => {
-    // Redux 상태에서 장착된 아이템 해제
-    if (
-      equippedWeapon.inventoryId === item.inventoryId ||
-      equippedPassive.inventoryId === item.inventoryId ||
-      equippedActive.inventoryId === item.inventoryId
-    )
-      return true;
-    else return false;
+    return (
+      equippedWeapon?.inventoryId === item.inventoryId ||
+      equippedPassive?.inventoryId === item.inventoryId ||
+      equippedActive?.inventoryId === item.inventoryId
+    );
   };
 
   const handleCombine = async () => {
@@ -94,6 +91,7 @@ export const Combination = () => {
       return;
     }
 
+    // 아이템 1 또는 아이템 2가 장착된 경우 합성 금지
     if (checkEquippedItem(combineItem1)) {
       alert(`장착된 아이템(${combineItem1.name})은 합성할 수 없어요!`);
       return;

@@ -81,19 +81,25 @@ export const InventoryItemCard = ({
             await unequipUserItem(accessToken, equippedWeapon.inventoryId);
           }
           await equipUserItem(accessToken, item.inventoryId);
-          dispatch(setWeapon(item));
+          dispatch(
+            setWeapon({ inventoryId: item.inventoryId, itemId: item.itemId }),
+          );
         } else if (type === "passive") {
           if (equippedPassive.inventoryId !== null) {
             await unequipUserItem(accessToken, equippedPassive.inventoryId);
           }
           await equipUserItem(accessToken, item.inventoryId);
-          dispatch(setPassive(item));
+          dispatch(
+            setPassive({ inventoryId: item.inventoryId, itemId: item.itemId }),
+          );
         } else if (type === "active") {
           if (equippedActive.inventoryId !== null) {
             await unequipUserItem(accessToken, equippedActive.inventoryId);
           }
           await equipUserItem(accessToken, item.inventoryId);
-          dispatch(setActive(item));
+          dispatch(
+            setActive({ inventoryId: item.inventoryId, itemId: item.itemId }),
+          );
         }
       }
       onClose(); // 모달 닫기
