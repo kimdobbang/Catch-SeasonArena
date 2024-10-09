@@ -7,11 +7,16 @@ import {
   fetchUserGameResult,
   UserGameResult,
 } from "@/app/apis/game-result-api";
+import { GameWinContent, GameLoseContent } from "@/features/index";
 
 export const GameResult = () => {
   const dispatch = useDispatch();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const updatedRating = useSelector((state: RootState) => state.user.rating); // 현재? 합산된? 레이팅 가져오기
+  // const updatedRating = useSelector((state: RootState) => state.user.rating); // 현재? 합산된? 레이팅 가져오기
+  const selectedAvatar = useSelector(
+    (state: RootState) => state.user.selectedAvatar,
+  );
+
   const [gameResult, setGameResult] = useState<UserGameResult | null>(null);
   const [winningOrLosing, setWinningOrLosing] = useState<string | null>(null);
 
@@ -19,13 +24,16 @@ export const GameResult = () => {
     const loadGameResult = async () => {
       try {
         const fetchedGameResult = await fetchUserGameResult(accessToken);
+        // const fetchedGameResult = await fetchUserGameResult(); //mocking
         setGameResult(fetchedGameResult);
-        dispatch(updateRatingByGameResult(fetchedGameResult.resultRating));
+
+        console.log(fetchedGameResult);
         if (fetchedGameResult.rank === 1) {
           setWinningOrLosing("WIN");
         } else {
           setWinningOrLosing("LOSE");
         }
+        dispatch(updateRatingByGameResult(fetchedGameResult.resultRating));
       } catch (error) {
         console.error("게임 결과를 가져오는데 실패했습니다:", error);
       }
@@ -34,23 +42,33 @@ export const GameResult = () => {
     if (accessToken) {
       loadGameResult();
     }
-  }, []);
+  }, [dispatch]);
+
+  if (!gameResult) {
+    return <p>게임 결과를 불러오는 중입니다...</p>;
+  }
+  const emotion = winningOrLosing === "WIN" ? "normal" : "sad";
 
   return (
     <div>
-      <h1>게임 결과 test 페이지</h1>
-      {gameResult ? (
-        <div>
-          <p>결과: {winningOrLosing}</p>
-          <p>킬 수: {gameResult.kill}</p>
-          <p>플레이 수: {gameResult.play}</p>
-          <p>순위: {gameResult.rank}</p>
-          <p>이전 레이팅: {gameResult.rating}</p>
-          <p>레이팅 증감량: {gameResult.resultRating}</p>
-          <p>최종 레이팅: {updatedRating} </p>
-        </div>
+      {winningOrLosing === "WIN" ? (
+        <GameWinContent
+          ratingChange={gameResult.resultRating}
+          kills={gameResult.kill}
+          rank={gameResult.rank}
+          time={gameResult.time}
+          avatarNumber={selectedAvatar}
+          emotion={emotion}
+        />
       ) : (
-        <p>게임 결과를 불러오는 중입니다...</p>
+        <GameLoseContent
+          kills={gameResult.kill}
+          rank={gameResult.rank}
+          time={gameResult.time}
+          ratingChange={gameResult.resultRating}
+          avatarNumber={selectedAvatar}
+          emotion={emotion}
+        />
       )}
     </div>
   );

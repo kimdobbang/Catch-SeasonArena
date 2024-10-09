@@ -7,6 +7,7 @@ interface PrimaryButtonProps {
   size: "small" | "big"; // 크기
   children?: React.ReactNode; // 버튼 텍스트
   showIcon: boolean; // 아이콘 유무
+  className?: string; // 추가 클래스 속성
 }
 
 const getColor = (color: string) => {
