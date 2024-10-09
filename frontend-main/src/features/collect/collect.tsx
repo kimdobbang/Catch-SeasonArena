@@ -165,12 +165,6 @@ export const Collect = () => {
 
         // 15장 모두 처리한 후
         if (capturedImagesRef.current.length >= 15) {
-          // bestResultRef가 없는 경우, 실패 페이지로 이동
-          if (!bestResultRef.current) {
-            navigate("/collect/fail");
-            return;
-          }
-
           // 신뢰도가 가장 높은 결과를 Redux에 저장하고 성공 페이지로 이동
           if (bestResultRef.current) {
             const processedResult = bestResultRef.current.data.processed_result;
