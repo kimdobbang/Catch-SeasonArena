@@ -1,6 +1,5 @@
-import { FailComponent, SuccessComponent } from "@/shared/components/entities";
+import { FailComponent, SuccessComponent, ItemProps } from "@entities/index";
 import { useParams, useLocation } from "react-router-dom";
-import { ItemProps } from "@entities/index";
 import { ItemGrade, ItemType } from "@/app/types/common";
 
 export const ItemResultPage = () => {
