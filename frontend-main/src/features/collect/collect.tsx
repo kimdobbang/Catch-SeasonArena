@@ -111,6 +111,7 @@ export const Collect = () => {
           });
 
           if (capturedImagesRef.current.length % 5 === 0) {
+            // 배치별로 전송을 위한 startIndex와 endIndex 설정
             const startIndex = capturedImagesRef.current.length - 5;
             const endIndex = capturedImagesRef.current.length;
             handleSendImages(startIndex, endIndex);
@@ -125,6 +126,9 @@ export const Collect = () => {
       }
     }, 100); // 100ms마다 캡처
   };
+
+  // 3번의 API 응답 처리가 끝난 후 한 번에 페이지를 이동하기 위해 응답 상태를 관리
+  const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
 
   // 이미지를 5장씩 전송하는 함수
   const handleSendImages = async (startIndex: number, endIndex: number) => {
@@ -144,12 +148,6 @@ export const Collect = () => {
         // 감지 실패 또는 no detection 경우 카운트 증가
         console.log(`API 디텍션 실패 응답: ${response.message}`);
         noDetectionCountRef.current += 1;
-
-        // no detection 카운트가 3 이상이면 실패 페이지로 이동
-        if (noDetectionCountRef.current >= 3) {
-          navigate("/collect/fail");
-          return;
-        }
       } else {
         const detectResult = response.data.detect_result;
         drawDetectionResult(detectResult); // 캔버스에 디텍션 결과 표시
@@ -162,23 +160,26 @@ export const Collect = () => {
         ) {
           bestResultRef.current = response;
         }
+      }
 
-        // 15장 모두 처리한 후
-        if (capturedImagesRef.current.length >= 15) {
-          // 신뢰도가 가장 높은 결과를 Redux에 저장하고 성공 페이지로 이동
-          if (bestResultRef.current) {
-            const processedResult = bestResultRef.current.data.processed_result;
+      totalResponsesRef.current += 1; // 응답 수 증가
 
-            // grade와 type을 소문자로 변환하고 itemGrade와 itemType으로 저장
-            const formattedResult = {
-              ...processedResult,
-              grade: processedResult.grade.toLowerCase() as ItemGrade, // grade를 소문자로 변환하여 itemGrade로 저장
-              type: processedResult.type.toLowerCase() as ItemType, // type을 소문자로 변환하여 itemType으로 저장
-            };
+      // 모든 응답을 받은 후 처리
+      if (totalResponsesRef.current === 3) {
+        if (noDetectionCountRef.current >= 3 || !bestResultRef.current) {
+          navigate("/collect/fail"); // 모두 실패했을 경우
+        } else {
+          const processedResult = bestResultRef.current.data.processed_result;
 
-            dispatch(setSuccess(formattedResult)); // Redux에 저장
-            navigate("/collect/success"); // 성공 페이지로 이동
-          }
+          // grade와 type을 소문자로 변환하고 itemGrade와 itemType으로 저장
+          const formattedResult = {
+            ...processedResult,
+            grade: processedResult.grade.toLowerCase() as ItemGrade,
+            type: processedResult.type.toLowerCase() as ItemType,
+          };
+
+          dispatch(setSuccess(formattedResult)); // Redux에 저장
+          navigate("/collect/success"); // 성공 페이지로 이동
         }
       }
     } catch (error) {
