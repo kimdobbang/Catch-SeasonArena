@@ -26,10 +26,10 @@ export const UserNameContainer = ({ className }: UserNameContainerProps) => {
       </div>
 
       <div className="pl-3 w-[70%] h-full flex flex-col justify-center">
-        <Body2Text className="!text-left text-catch-gray-000">
+        <Body2Text className="!text-left !text-catch-gray-000">
           {nickname}
         </Body2Text>
-        <Body2Text className="!text-left text-catch-gray-000">
+        <Body2Text className="!text-left !text-catch-gray-000">
           {tier} · {rating}
         </Body2Text>
       </div>

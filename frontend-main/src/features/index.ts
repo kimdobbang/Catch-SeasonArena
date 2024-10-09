@@ -13,6 +13,7 @@ export { Main } from "@/features/main/main";
 export { Collect } from "@/features/collect/collect";
 // export { CollectionBook} "@/features/collectionbook/collectionbook"
 export { Inventory } from "@/features/inventory/inventory";
+export { CollectTimerModal } from "@/features/collect/collect-timer-modal";
 
 // 메인 관련
 export { Avatar } from "@/features/main/avatar";

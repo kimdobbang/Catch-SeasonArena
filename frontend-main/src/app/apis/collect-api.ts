@@ -108,11 +108,11 @@ export const sendPublicImagesToServer = async ({
   email: string;
 }) => {
   const imagePaths = [
-    "/collect-test/image-sol1.jfif", // public 폴더 내 이미지 경로
-    "/collect-test/image-sol2.jpg", // 추가적인 이미지 경로
-    "/collect-test/image-sol3.jpg",
-    "/collect-test/image-sol4.jpg",
-    "/collect-test/image-sol5.jpg",
+    "/collect-test/image1.png", // public 폴더 내 이미지 경로
+    "/collect-test/image2.png", // 추가적인 이미지 경로
+    "/collect-test/image3.png",
+    "/collect-test/image4.png",
+    "/collect-test/image5.png",
   ];
 
   const formData = new FormData();

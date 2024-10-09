@@ -3,18 +3,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProcessedResult } from "@/app/apis/collect-api";
 
+export interface CollectSuccess {
+  name: string;
+  itemId: number;
+  type: string;
+  grade: string;
+  skill: string;
+}
+
 // ProcessedResult 타입에 수집 시간 추가
-export interface ProcessedResultWithTime extends ProcessedResult {
+export interface CollectSuccessWithTime extends CollectSuccess {
   createdTime: number;
 }
 
 // 초기 상태 정의
-const initialState: ProcessedResultWithTime = {
+const initialState: CollectSuccessWithTime = {
   name: "메이플 창",
   itemId: 1,
   type: "WEAPON",
   grade: "NORMAL",
-  effect: "사거리 +30%",
+  skill: "사거리 +30%",
   createdTime: 0,
 };
 
@@ -29,7 +37,7 @@ export const successSlice = createSlice({
       state.itemId = action.payload.itemId;
       state.type = action.payload.type;
       state.grade = action.payload.grade;
-      state.effect = action.payload.effect;
+      state.skill = action.payload.effect;
       state.createdTime = Date.now();
     },
     // Success 데이터를 초기화하는 리듀서 (삭제하는 액션)
@@ -38,7 +46,7 @@ export const successSlice = createSlice({
       state.itemId = 0;
       state.type = "";
       state.grade = "";
-      state.effect = "";
+      state.skill = "";
       state.createdTime = 0;
     },
   },

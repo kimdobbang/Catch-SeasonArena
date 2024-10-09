@@ -8,13 +8,12 @@ export { Copyright } from "./copyright";
 
 // layout
 export { ServiceTitle } from "@ui/service-title";
-export { Header } from "./layout/header";
-export { BottomNavBar } from "./layout/bottom-nav-bar";
-export { NavBarBackground } from "./layout/nav-bar-background";
-export { Layout, HeaderLayout } from "./layout/layouts";
-export { MainLayout } from "./layout/layouts";
-export { Background } from "./layout/background";
-export { ResultLayout } from "./layout/result-layout";
+export { Header } from "@ui/layout/header";
+export { BottomNavBar } from "@ui/layout/bottom-nav-bar";
+export { NavBarBackground } from "@ui/layout/nav-bar-background";
+export { Layout, HeaderLayout } from "@ui/layout/layouts";
+export { Background } from "@ui/layout/background";
+export { ResultLayout } from "@ui/layout/result-layout";
 
 //  ui
 export { TabBar } from "@ui/tab-bar";
