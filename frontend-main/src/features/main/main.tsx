@@ -74,7 +74,7 @@ export const Main = () => {
           </Body1Text>
         </div>
       </div>
-      <div className="w-full h-[40%] flex flex-col items-center gap-6">
+      <div className="w-full h-[45%] flex flex-col items-center gap-6">
         <UserNameContainer className="mt-4" />
         <TierProgressBar />
         <PrimaryButton
@@ -103,10 +103,10 @@ export const Main = () => {
           />
         </div>
       </div>
-      <div className="w-full h-[35%] relative">
-        <NavBarBackground className="absolute bottom-0 w-full  z-0" />
+      <div className="w-full h-[30%] relative">
+        <NavBarBackground className="absolute bottom-0 z-0 w-full" />
         <BottomNavBar
-          className="absolute bottom-0 w-full z-10"
+          className="absolute bottom-0 z-10 w-full"
           onTimerModalOpen={handleOpenModal}
         />
       </div>
