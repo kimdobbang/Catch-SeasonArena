@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { CameraButton } from "./camera-button";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
 import {
-  ProcessedResult,
   ResponseCollectData,
   sendImagesToServer,
 } from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";
+import { ItemGrade, ItemType } from "@/app/types/common";
 
 export const Collect = () => {
   const navigate = useNavigate();
@@ -172,12 +172,19 @@ export const Collect = () => {
           }
 
           // 신뢰도가 가장 높은 결과를 Redux에 저장하고 성공 페이지로 이동
-          dispatch(
-            setSuccess(
-              bestResultRef.current?.data.processed_result as ProcessedResult,
-            ),
-          );
-          navigate("/collect/success");
+          if (bestResultRef.current) {
+            const processedResult = bestResultRef.current.data.processed_result;
+
+            // grade와 type을 소문자로 변환하고 itemGrade와 itemType으로 저장
+            const formattedResult = {
+              ...processedResult,
+              grade: processedResult.grade.toLowerCase() as ItemGrade, // grade를 소문자로 변환하여 itemGrade로 저장
+              type: processedResult.type.toLowerCase() as ItemType, // type을 소문자로 변환하여 itemType으로 저장
+            };
+
+            dispatch(setSuccess(formattedResult)); // Redux에 저장
+            navigate("/collect/success"); // 성공 페이지로 이동
+          }
         }
       }
     } catch (error) {
