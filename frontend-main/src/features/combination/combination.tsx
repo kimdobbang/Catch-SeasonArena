@@ -9,13 +9,25 @@ import { useNavigate } from "react-router-dom";
 import { Item } from "@/app/types/common";
 import { CombinationCell } from "./combination-cell";
 import { combineItems } from "@/app/apis/combination-api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { CombinationItemCard } from "./combination-item-card";
+import { setActive, setPassive, setWeapon } from "@/app/redux/slice/userSlice";
 
 export const Combination = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  // 현재 장착된 무기, 패시브, 액티브 아이템을 가져오기
+  const equippedWeapon = useSelector(
+    (state: RootState) => state.user.equipment.weapon,
+  );
+  const equippedPassive = useSelector(
+    (state: RootState) => state.user.equipment.passive,
+  );
+  const equippedActive = useSelector(
+    (state: RootState) => state.user.equipment.active,
+  );
   const [items, setItems] = useState<Item[]>([]);
   const [combineItem1, setCombineItem1] = useState<Item | null>(null);
   const [combineItem2, setCombineItem2] = useState<Item | null>(null);
@@ -65,9 +77,30 @@ export const Combination = () => {
     }
   }, []);
 
+  const checkEquippedItem = (item: Item) => {
+    // Redux 상태에서 장착된 아이템 해제
+    if (
+      equippedWeapon.inventoryId === item.inventoryId ||
+      equippedPassive.inventoryId === item.inventoryId ||
+      equippedActive.inventoryId === item.inventoryId
+    )
+      return true;
+    else return false;
+  };
+
   const handleCombine = async () => {
     if (!combineItem1?.inventoryId || !combineItem2?.inventoryId) {
       alert("합성할 아이템을 모두 선택하세요");
+      return;
+    }
+
+    if (checkEquippedItem(combineItem1)) {
+      alert(`장착된 아이템(${combineItem1.name})은 합성할 수 없어요!`);
+      return;
+    }
+
+    if (checkEquippedItem(combineItem2)) {
+      alert(`장착된 아이템(${combineItem2.name})은 합성할 수 없어요!`);
       return;
     }
 
