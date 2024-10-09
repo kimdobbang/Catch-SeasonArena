@@ -215,11 +215,11 @@ export const Collect = () => {
     <div className="relative w-full h-full">
       <video className="w-full h-full" ref={videoRef} autoPlay playsInline />
 
-      <div
+      <canvas
         ref={overlayCanvasRef}
         className="absolute top-1/2 left-1/2 w-[320px] h-[320px] border-4 border-opacity-80 border-white"
         style={{ transform: "translate(-50%, -50%)", pointerEvents: "none" }}
-      ></div>
+      />
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
       <CameraButton
