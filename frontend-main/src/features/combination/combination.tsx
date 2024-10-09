@@ -116,8 +116,6 @@ export const Combination = () => {
       setCombineItem1(null);
     } else if (combineItem2?.inventoryId == selectedCombineItem.inventoryId) {
       setCombineItem2(null);
-    } else {
-      console.log("합성을 위해 담은 아이템이 아닙니다");
     }
     setIsModalOpen(false);
   };
@@ -188,6 +186,7 @@ export const Combination = () => {
           onClose={handleCloseModal}
           onSet={setCombinationItem}
           onCancel={cancelCombinationItem}
+          setItems={setItems}
         />
       )}
     </div>
