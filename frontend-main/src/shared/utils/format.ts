@@ -6,3 +6,10 @@ export const getDurability = (grade: string) => {
   else if (grade === "legend") return 15;
   else return 5;
 };
+
+// 분:초로 시간 변환 함수
+export const formatTime = (timeInSeconds: number) => {
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = timeInSeconds % 60;
+  return `${minutes}분 ${seconds}초`;
+};
