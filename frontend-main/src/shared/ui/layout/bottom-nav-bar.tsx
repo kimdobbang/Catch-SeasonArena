@@ -13,19 +13,24 @@ export const BottomNavBar = ({
   onTimerModalOpen,
 }: BottomNavBarProps) => {
   const navigate = useNavigate();
-  const lastCollectTime = useSelector(
-    (state: RootState) => state.success.createdTime,
-  );
+  const collectTime = useSelector((state: RootState) => state.time.collectTime);
 
   const goMain = () => {
     navigate("/main");
   };
 
   const goCollect = () => {
-    /* 수집 후 1분이 지나지 않으면 다시 수집 불가능하게 하는 로직 추가 (모달 열기 등) */
-    if (onTimerModalOpen && lastCollectTime != 0) {
-      onTimerModalOpen();
-    } else navigate("/collect");
+    const now = Date.now();
+    const timeDiff = now - collectTime;
+    const oneMinute = 60 * 1000;
+
+    if (collectTime !== 0 && timeDiff < oneMinute) {
+      if (onTimerModalOpen) {
+        onTimerModalOpen(); // 1분 이내면 모달을 엽니다.
+      }
+    } else {
+      navigate("/collect"); // 1분이 지났다면 수집 페이지로 이동.
+    }
   };
 
   const goInventory = () => {
