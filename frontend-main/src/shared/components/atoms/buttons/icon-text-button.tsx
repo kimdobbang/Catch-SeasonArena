@@ -23,9 +23,9 @@ export const IconTextButton = ({
     <button
       className={`w-20 px-2 py-1 text-caption1 transition duration-200 ease-in border rounded-lg focus:outline-none flex ${
         showIcon ? "items-center" : "text-center"
-      } ${colorClass} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`} // Add styles for disabled state
-      onClick={!disabled ? onClick : undefined} // Prevent click if disabled
-      disabled={disabled} // Disable button functionality
+      } ${colorClass} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      onClick={!disabled ? onClick : undefined}
+      disabled={disabled}
     >
       {showIcon && Icon && (
         <span className="mr-2" style={{ width: iconSize, height: iconSize }}>
