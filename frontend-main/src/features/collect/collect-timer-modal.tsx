@@ -14,7 +14,6 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
     const now = Date.now();
     const oneMinute = 60 * 1000;
     const timeDiff = now - collectTime;
-    alert(`Updated success data: ${JSON.stringify(successData)}`);
 
     if (timeDiff >= oneMinute) {
       onClose(); // 1분이 지나면 모달을 자동으로 닫습니다.
