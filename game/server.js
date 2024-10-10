@@ -245,17 +245,7 @@ io.on("connection", (socket) => {
     rooms.forEach((room, roomCode) => {
       room.players.forEach((player, socketId) => {
         if (player.socketId === socket.id) {
-          io.in(roomCode).emit("playerDeath", player.socketId);
-          room.players.delete(socketId);
-          console.log(
-            `( 연결 종료 ) 소켓ID : ${socketId}, 방 코드 : ${roomCode}`
-          );
-          if (room.players.size === 0) {
-            rooms.delete(roomCode);
-            console.log(
-              `( 방 삭제 ) ${roomCode} 방의 플레이어가 존재하지 않습니다.`
-            );
-          }
+          player.hp = 0;
         }
       });
     });
@@ -353,8 +343,10 @@ setInterval(() => {
       playersMap.forEach((player, socketId) => {
         // 1명만 남으면 방을 끝내고 사망처리
         if (playersMap.size === 1) {
-          room.isEnd = true;
-          player.hp = 0;
+          setTimeout(() => {
+            room.isEnd = true;
+            player.hp = 0;
+          }, 2000);
         }
         // 플레이어 이동 반영
         if (player.canMove) {
