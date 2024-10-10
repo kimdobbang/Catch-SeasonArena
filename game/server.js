@@ -389,7 +389,7 @@ setInterval(() => {
           const nickname = player.nickname;
           const kill = player.kill;
           const time = Math.round((Date.now() - room.startTime) / 1000);
-          const rank = room.players.size;
+          let rank = room.players.size;
           const rating = player.rating;
           const email = player.email;
 
