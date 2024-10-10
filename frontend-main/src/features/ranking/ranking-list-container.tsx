@@ -23,8 +23,8 @@ export const RankingListContainer = ({ className }: { className?: string }) => {
   };
 
   return (
-    <div className={`${className} flex flex-col w-full h-full p-3`}>
-      <div className="flex flex-row h-[10%] items-center">
+    <div className={`${className} flex flex-col w-full h-full`}>
+      <div className="flex flex-row h-[10%] items-center p-3">
         <div className="flex flex-row gap-3 h-full w-[50%]">
           {tabs.map((el, idx) => (
             <RankingTabButton
@@ -44,8 +44,8 @@ export const RankingListContainer = ({ className }: { className?: string }) => {
       <div className="w-full h-[65%]">{tabs[activeTab].content}</div>
       <div className="h-[25%]">
         <BottomNavBar
-          className="!h-[150px]"
           onTimerModalOpen={handleTimerOpenModal}
+          className="absolute bottom-0 z-10"
         />
       </div>
       {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}

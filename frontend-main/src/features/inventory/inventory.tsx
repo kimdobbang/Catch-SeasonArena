@@ -42,7 +42,7 @@ export const Inventory = () => {
       <ItemLibrary items={items} setItems={setItems}>
         <BottomNavBar
           onTimerModalOpen={handleTimerOpenModal}
-          className="absolute bottom-0 z-10 h-[30%] w-full"
+          className="absolute bottom-0 z-10 h-[30%]"
         />
       </ItemLibrary>
       {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}

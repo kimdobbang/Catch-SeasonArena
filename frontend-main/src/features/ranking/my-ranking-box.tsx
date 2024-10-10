@@ -58,11 +58,11 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
       </div>
       <div className="justify-around items-center flex flex-row w-full h-[50%]">
         <Body2Text className="font-bold text-white">
-          전체 {myRanking ? `Top ${myRanking.totalRanking}` : "25"}위
+          전체 {myRanking ? `Top ${myRanking.tierRanking}` : "25"}위
         </Body2Text>
         <Body2Text className="font-bold text-white">
           {myRanking ? getTierByRating(myRanking.rating) : "Bronze"} Tier{" "}
-          {myRanking ? `Top ${myRanking.tierRanking}` : "10"}위
+          {myRanking ? `Top ${myRanking.totalRanking}` : "10"}위
         </Body2Text>
       </div>
     </div>

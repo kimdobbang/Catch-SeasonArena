@@ -216,7 +216,7 @@ export const Combination = () => {
         <CombinationLibrary items={items} handleItemClick={handleItemClick}>
           <BottomNavBar
             onTimerModalOpen={handleTimerOpenModal}
-            className="absolute bottom-0 z-10 w-full"
+            className="absolute bottom-0 z-10"
           />
         </CombinationLibrary>
       </div>
