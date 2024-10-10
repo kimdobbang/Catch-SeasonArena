@@ -5,10 +5,9 @@ import { RootState } from "@/app/redux/store";
 
 interface HeaderProps {
   className?: string;
-  onClick?: () => void;
 }
 
-export const Header = ({ className, onClick }: HeaderProps) => {
+export const Header = ({ className }: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -53,10 +52,7 @@ export const Header = ({ className, onClick }: HeaderProps) => {
     >
       {/* showBackIcon이 true인 경우 아이콘과 onClick 동작 설정 */}
       {showBackIcon && (
-        <Arrow
-          className="ml-[24px] cursor-pointer"
-          onClick={onClick || handleBackClick}
-        />
+        <Arrow className="ml-[24px] cursor-pointer" onClick={handleBackClick} />
       )}
       <h1>{title}</h1>
     </header>

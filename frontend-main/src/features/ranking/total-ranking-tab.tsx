@@ -16,16 +16,16 @@ export const TotalRankingTab = () => {
 
   useEffect(() => {
     const loadRankings = async () => {
+      if (loading || !hasMore) return; // 이미 로딩 중이거나 데이터가 없으면 중단
       setLoading(true);
-      const newRankings = await fetchTotalRankings(page, accessToken); // 전체 랭킹 API 호출
+      const newRankings = await fetchTotalRankings(page, accessToken);
       if (newRankings.length > 0) {
-        setRankings((prevRankings) => [...prevRankings, ...newRankings]); // 이전 데이터에 새 데이터 추가
+        setRankings((prev) => [...prev, ...newRankings]);
       } else {
-        setHasMore(false); // 더 이상 불러올 데이터가 없으면 중단
+        setHasMore(false); // 더 이상 데이터가 없으면 무한스크롤 중단
       }
       setLoading(false);
     };
-
     if (hasMore) {
       loadRankings(); // 더 불러올 데이터가 있을 때만 호출
     }
@@ -35,11 +35,18 @@ export const TotalRankingTab = () => {
   useEffect(() => {
     if (!observerRef.current || !hasMore) return; // 더 불러올 데이터가 없으면 중단
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !loading) {
-        setPage((prevPage) => prevPage + 1); // 페이지를 증가시켜 다음 데이터 로딩
-      }
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      {
+        root: null, // 뷰포트를 기준으로 감지
+        rootMargin: "0px", // 감지할 때 여유 범위 설정
+        threshold: 1.0, // 대상 요소가 100% 보일 때만 감지
+      },
+    );
 
     observer.observe(observerRef.current);
 

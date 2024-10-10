@@ -32,8 +32,10 @@ export const UserRankingBox = ({
           className="bg-catch-sub-200"
         />
       </div>
-      <div className="w-[45%]">
+      <div className="w-[45%] overflow-hidden relative">
         <Body1Text className="text-white">{nickname}</Body1Text>
+        {/* Fade 효과 */}
+        <div className="absolute top-0 bottom-0 right-0 w-6 bg-gradient-to-l from-catch-sub-300 to-transparent" />
       </div>
       <div className="w-[25%] flex flex-row items-center justify-center">
         <Caption1Text className="mr-2 text-white">{rating} </Caption1Text>
