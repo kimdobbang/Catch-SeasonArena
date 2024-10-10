@@ -245,6 +245,7 @@ io.on("connection", (socket) => {
     rooms.forEach((room, roomCode) => {
       room.players.forEach((player, socketId) => {
         if (player.socketId === socket.id) {
+          io.in(roomCode).emit("playerDeath", player.socketId);
           room.players.delete(socketId);
           console.log(
             `( 연결 종료 ) 소켓ID : ${socketId}, 방 코드 : ${roomCode}`
