@@ -54,9 +54,9 @@ export const fetchTotalRankings = async (page: number, accessToken: string) => {
       },
     );
 
-    if (response.data.tierRanks.length > 0) {
+    if (response.data.allRanks?.length > 0) {
       // avatar를 string에서 number로 변환
-      const rankings = response.data.tierRanks.map((rank: any) => ({
+      const rankings = response.data.allRanks.map((rank: any) => ({
         ...rank,
         avatar: parseInt(rank.avatar, 10), // avatar를 숫자로 변환하여 저장
       }));
