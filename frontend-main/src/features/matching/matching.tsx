@@ -11,6 +11,7 @@ import {
 } from "@entities/index";
 import { NavBarBackground } from "@ui/index";
 import { useMatching } from "@/app/hooks/useMatching";
+import { Timer } from "@/features/index";
 
 const CircleAvatarMemo = React.memo(CircleAvatar);
 const UserNameContainerMemo = React.memo(UserNameContainer);
@@ -26,8 +27,13 @@ export const Matching = () => {
     .filter((item) => item?.itemId !== null && item?.itemId !== undefined)
     .map((item) => item!.itemId as number);
 
-  const { isMatchingStatus, expectation, connectAndSendMessage, disconnect } =
-    useMatching(email, nickname, rating, userEquipments, selectedAvatar); // userEquipments 전달
+  const {
+    isMatchingStatus,
+    expectation,
+    connectAndSendMessage,
+    disconnect,
+    error,
+  } = useMatching(email, nickname, rating, userEquipments, selectedAvatar);
 
   const [remainingTime, setRemainingTime] = useState<number>(
     expectation ? Number(expectation) : 0,
@@ -73,12 +79,15 @@ export const Matching = () => {
       </div>
 
       <div className="w-full h-[20%] gap-3 flex flex-col items-center">
+        {error && <div className="error-message">{error}</div>}
         <div className="w-full px-4">
           <Body1Text className="text-catch-main-400">2024 Autumn</Body1Text>
         </div>
+
+        <Timer remainingTime={remainingTime} />
+
         <MatchingButtons
           isMatchingStatus={isMatchingStatus}
-          remainingTime={remainingTime}
           onConnect={handleConnect}
           onDisconnect={handleDisconnect}
         />
