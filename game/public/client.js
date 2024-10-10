@@ -404,7 +404,7 @@ function create() {
     }
 
     if (socketId === socket.id) {
-      window.location.href = "https://j11b106.p.ssafy.io/game-result";
+      window.location.href = "https://j11b106.p.ssafy.io/arena-result";
     }
   });
 
