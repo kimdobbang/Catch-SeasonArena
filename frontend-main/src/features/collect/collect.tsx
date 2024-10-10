@@ -21,14 +21,14 @@ export const Collect = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null); // 디텍션 결과 그릴 캔버스
-  const [capturedImages, setCapturedImages] = useState<string[]>([]);
+  const [, setCapturedImages] = useState<string[]>([]);
   const capturedImagesRef = useRef<string[]>([]); // 이미지 배열을 추적
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
   const bestResultRef = useRef<ResponseCollectData | null>(null); // 가장 높은 신뢰도를 추적
   const noDetectionCountRef = useRef(0); // no detection 카운트
   // 3번의 API 응답 처리가 끝난 후 한 번에 페이지를 이동하기 위해 응답 상태를 관리
   // const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
-  const [debugInfo, setDebugInfo] = useState<string>(""); // 디버그 정보 상태
+  // const [debugInfo, setDebugInfo] = useState<string>(""); // 디버그 정보 상태
 
   let interval: ReturnType<typeof setInterval> | undefined;
 
@@ -159,12 +159,12 @@ export const Collect = () => {
         }
       }
 
-      // 디버그 정보를 화면에 출력
-      setDebugInfo(`
-        Response: ${JSON.stringify(response)}
-        No Detection Count: ${noDetectionCountRef.current}
-        Best Result: ${JSON.stringify(bestResultRef.current)}
-      `);
+      // // 디버그 정보를 화면에 출력
+      // setDebugInfo(`
+      //   Response: ${JSON.stringify(response)}
+      //   No Detection Count: ${noDetectionCountRef.current}
+      //   Best Result: ${JSON.stringify(bestResultRef.current)}
+      // `);
 
       if (noDetectionCountRef.current >= 3) {
         navigate("/collect/fail");
@@ -182,7 +182,8 @@ export const Collect = () => {
         navigate("/collect/success");
       }
     } catch (error: any) {
-      setDebugInfo(`Error sending images: ${error.message}`);
+      // setDebugInfo(`Error sending images: ${error.message}`);
+      console.log(`Error sending images: ${error.message}`);
       navigate("/collect/fail");
     }
   };
@@ -241,6 +242,8 @@ export const Collect = () => {
       >
         <CameraChangeIcon />
       </button>
+      {/* 
+      // 디버그 정보 표시
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
         <h3 className="text-lg font-bold">Captured Images:</h3>
         <div className="flex flex-wrap gap-2">
@@ -255,10 +258,10 @@ export const Collect = () => {
           ))}
         </div>
       </div>
-      {/* 디버그 정보를 화면에 표시 */}
+ 
       <div className="absolute bottom-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
         <pre>{debugInfo}</pre>
-      </div>
+      </div> */}
     </div>
   );
 };

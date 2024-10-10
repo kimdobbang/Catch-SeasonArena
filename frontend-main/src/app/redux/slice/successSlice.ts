@@ -18,11 +18,11 @@ export interface CollectSuccessWithTime extends CollectSuccess {
 
 // 초기 상태 정의
 const initialState: CollectSuccessWithTime = {
-  name: "메이플 창",
-  itemId: 1,
-  type: "WEAPON",
-  grade: "NORMAL",
-  effect: "사거리 +30%",
+  name: "",
+  itemId: 0,
+  type: "",
+  grade: "",
+  effect: "",
   createdTime: 0,
 };
 
