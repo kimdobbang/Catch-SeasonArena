@@ -20,22 +20,24 @@ export default defineConfig({
       strategies: "injectManifest", // injectManifest를 사용하여 직접 만든 Service Worker에 설정을 주입
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
-        name: "캐치캐치! 시즌아레나 by 시즌핑",
+        name: "캐치캐치! 시즌아레나 by시즌핑",
         short_name: "캐치! 시즌핑",
         theme_color: "#ffffff",
+        display: "standalone", // 전체 화면 모드로 실행
+        start_url: "/",
         icons: [
           {
-            src: "pwa-76x76.png",
+            src: "/pwa-76x76.png",
             sizes: "76x76",
             type: "image/png",
           },
           {
-            src: "pwa-192x192.png",
+            src: "/pwa-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "pwa-310x310.png",
+            src: "/pwa-310x310.png",
             sizes: "310x310",
             type: "image/png",
             purpose: "any",
