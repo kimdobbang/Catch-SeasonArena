@@ -3,21 +3,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProcessedResult } from "@/app/apis/collect-api";
 
-export interface CollectSuccess {
-  name: string;
-  itemId: number;
-  type: string;
-  grade: string;
-  effect: string;
-}
-
 // ProcessedResult 타입에 수집 시간 추가
-export interface CollectSuccessWithTime extends CollectSuccess {
+export interface ProcessedResultWithTime extends ProcessedResult {
   createdTime: number;
 }
 
 // 초기 상태 정의
-const initialState: CollectSuccessWithTime = {
+const initialState: ProcessedResultWithTime = {
   name: "",
   itemId: 0,
   type: "",
@@ -33,6 +25,8 @@ export const successSlice = createSlice({
   reducers: {
     // Success 데이터를 받아서 state에 저장하는 리듀서
     setSuccess: (state, action: PayloadAction<ProcessedResult>) => {
+      alert(`Action payload: ${JSON.stringify(action.payload)}`);
+
       state.name = action.payload.name;
       state.itemId = action.payload.itemId;
       state.type = action.payload.type;

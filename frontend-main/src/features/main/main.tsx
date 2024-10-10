@@ -45,10 +45,10 @@ export const Main = () => {
     navigate("/avatar");
   };
 
-  const handleOpenModal = () => {
+  const handleTimerOpenModal = () => {
     setTimerModalOpen(true);
   };
-  const handleCloseModal = () => {
+  const handleTimerCloseModal = () => {
     setTimerModalOpen(false);
   };
 
@@ -107,10 +107,10 @@ export const Main = () => {
         <NavBarBackground className="absolute bottom-0 z-0 w-full" />
         <BottomNavBar
           className="absolute bottom-0 z-10 w-full"
-          onTimerModalOpen={handleOpenModal}
+          onTimerModalOpen={handleTimerOpenModal}
         />
       </div>
-      {timerModalOpen && <CollectTimerModal onClose={handleCloseModal} />}
+      {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}
     </div>
   );
 };

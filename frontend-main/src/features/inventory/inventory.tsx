@@ -29,10 +29,10 @@ export const Inventory = () => {
     }
   }, []);
 
-  const handleOpenModal = () => {
+  const handleTimerOpenModal = () => {
     setTimerModalOpen(true);
   };
-  const handleCloseModal = () => {
+  const handleTimerCloseModal = () => {
     setTimerModalOpen(false);
   };
 
@@ -40,9 +40,9 @@ export const Inventory = () => {
     <div className="w-full h-full">
       <InventoryUserInfo items={items} setItems={setItems} />
       <ItemLibrary items={items} setItems={setItems}>
-        <BottomNavBar onTimerModalOpen={handleOpenModal} />
+        <BottomNavBar onTimerModalOpen={handleTimerOpenModal} />
       </ItemLibrary>
-      {timerModalOpen && <CollectTimerModal onClose={handleCloseModal} />}
+      {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}
     </div>
   );
 };

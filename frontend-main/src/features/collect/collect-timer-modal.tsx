@@ -1,18 +1,34 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { Body1Text, Body2Text } from "@/shared/components/atoms";
 import { AutumnItemImage } from "@atoms/index";
+import { useEffect } from "react";
+import { clearSuccess } from "@/app/redux/slice/successSlice";
 
 export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
+  const dispatch = useDispatch();
   const { name, itemId } = useSelector((state: RootState) => state.success);
   // timeSlice 상태에서 collectTime 가져오기
   const collectTime = useSelector((state: RootState) => state.time.collectTime);
 
-  // collectTime이 0이면 모달을 열지 않음
-  if (collectTime === 0) {
-    onClose();
-    return null; // 모달을 렌더링하지 않음
-  }
+  useEffect(() => {
+    const now = Date.now();
+    const oneMinute = 60 * 1000;
+    const timeDiff = now - collectTime;
+
+    if (timeDiff >= oneMinute) {
+      dispatch(clearSuccess());
+      onClose(); // 1분이 지나면 모달을 자동으로 닫습니다.
+    } else {
+      const remainingTime = oneMinute - timeDiff;
+      const timer = setTimeout(() => {
+        dispatch(clearSuccess());
+        onClose();
+      }, remainingTime);
+
+      return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머 해제
+    }
+  }, [collectTime, onClose, dispatch]);
 
   return (
     <div
