@@ -1,6 +1,8 @@
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { PrimaryButton, Body1Text, Caption2Text } from "@atoms/index";
+import { Body1Text } from "@atoms/index";
+import { MatchingButtons } from "@/features/index";
 import {
   TierProgressBar,
   UserNameContainer,
@@ -8,21 +10,55 @@ import {
   EquippedItems,
 } from "@entities/index";
 import { NavBarBackground } from "@ui/index";
-import { formatTime } from "@/shared/utils/format";
 import { useMatching } from "@/app/hooks/useMatching";
 
+const CircleAvatarMemo = React.memo(CircleAvatar);
+const UserNameContainerMemo = React.memo(UserNameContainer);
+const TierProgressBarMemo = React.memo(TierProgressBar);
+const EquippedItemsMemo = React.memo(EquippedItems);
+
 export const Matching = () => {
-  const { nickname, rating, selectedAvatar, equipment } = useSelector(
+  const { email, nickname, rating, selectedAvatar, equipment } = useSelector(
     (state: RootState) => state.user,
   );
 
+  const userEquipments = [equipment.weapon, equipment.active, equipment.passive]
+    .filter((item) => item?.itemId !== null && item?.itemId !== undefined)
+    .map((item) => item!.itemId as number);
+
   const { isMatchingStatus, expectation, connectAndSendMessage, disconnect } =
-    useMatching(nickname, rating, equipment, selectedAvatar);
+    useMatching(email, nickname, rating, userEquipments, selectedAvatar); // userEquipments 전달
+
+  const [remainingTime, setRemainingTime] = useState<number>(
+    expectation ? Number(expectation) : 0,
+  );
+
+  useEffect(() => {
+    if (isMatchingStatus && remainingTime > 0) {
+      const timer = setInterval(() => {
+        setRemainingTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isMatchingStatus, remainingTime]);
+
+  useEffect(() => {
+    setRemainingTime(expectation ? Number(expectation) : 0);
+  }, [expectation]);
+
+  const handleConnect = useCallback(() => {
+    connectAndSendMessage();
+  }, [connectAndSendMessage]);
+
+  const handleDisconnect = useCallback(() => {
+    disconnect();
+  }, [disconnect]);
 
   return (
     <div className="w-full h-full">
       <div className="w-full h-[20%] flex flex-col items-center justify-center">
-        <CircleAvatar
+        <CircleAvatarMemo
           avatarIcon={true}
           number={selectedAvatar}
           emotion="normal"
@@ -31,49 +67,24 @@ export const Matching = () => {
       </div>
 
       <div className="w-full h-[35%] flex flex-col items-center gap-6">
-        <UserNameContainer className="mt-4" />
-        <TierProgressBar />
-        <EquippedItems showCaption={true} />
+        <UserNameContainerMemo className="mt-4" />
+        <TierProgressBarMemo />
+        <EquippedItemsMemo showCaption={true} />
       </div>
 
       <div className="w-full h-[20%] gap-3 flex flex-col items-center">
         <div className="w-full px-4">
           <Body1Text className="text-catch-main-400">2024 Autumn</Body1Text>
         </div>
-        <div className="flex items-center justify-center">
-          {!isMatchingStatus ? (
-            <div>
-              <PrimaryButton
-                showIcon={true}
-                onClick={connectAndSendMessage}
-                size="small"
-                color="main"
-              >
-                매칭시작
-              </PrimaryButton>
-              <Caption2Text className="text-catch-gray-300">
-                배틀에 사용할 장착 수집물을 확인하세요
-              </Caption2Text>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-1">
-              <p>예상 매칭 시간: {formatTime(expectation)}</p>
-              <PrimaryButton
-                showIcon={false}
-                onClick={disconnect}
-                size="small"
-                color="white"
-              >
-                매칭 취소
-              </PrimaryButton>
-              <Caption2Text className="text-catch-gray-300">
-                주의! 매칭 완료 후 탈주하면 레이팅이 감소해요
-              </Caption2Text>
-            </div>
-          )}
-        </div>
+        <MatchingButtons
+          isMatchingStatus={isMatchingStatus}
+          remainingTime={remainingTime}
+          onConnect={handleConnect}
+          onDisconnect={handleDisconnect}
+        />
       </div>
-      <NavBarBackground className="mt-3"></NavBarBackground>
+
+      <NavBarBackground className="mt-3" />
     </div>
   );
 };

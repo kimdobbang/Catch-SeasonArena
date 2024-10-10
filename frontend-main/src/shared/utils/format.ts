@@ -8,14 +8,8 @@ export const getDurability = (grade: string) => {
 };
 
 // 분:초로 시간 변환 함수
-export const formatTime = (timeInSeconds: string | number) => {
-  const time =
-    typeof timeInSeconds === "string"
-      ? parseInt(timeInSeconds, 10)
-      : timeInSeconds;
-
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-
+export const formatTime = (timeInSeconds: number) => {
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = timeInSeconds % 60;
   return `${minutes}분 ${seconds}초`;
 };
