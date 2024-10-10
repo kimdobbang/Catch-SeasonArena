@@ -36,7 +36,6 @@ export { Collectionbook } from "@/features/collectionbook/collectionbook";
 export { Matching } from "@/features/matching/matching";
 export { GameResult } from "@/features/game-result/game-result";
 export { UserRankingSkeletonBox } from "@/features/ranking/user-ranking-skeleton-box";
-export {
-  GameWinContent,
-  GameLoseContent,
-} from "@/features/game-result/game-result-content";
+export { MatchingButtons } from "@/features/matching/matchig-buttons";
+export { GameResultContainer } from "@/features/game-result/game-result-content";
+export { GameResultStatBox } from "@/features/game-result/result-stat-box";
