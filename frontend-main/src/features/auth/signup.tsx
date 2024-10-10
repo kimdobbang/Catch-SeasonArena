@@ -42,7 +42,7 @@ export const Signup = () => {
       return;
     }
     if (!emailAvailable) {
-      setSignupErrorMessage("이메일 중복 확인을 해주세요.");
+      setSignupErrorMessage("아이디 중복 확인을 해주세요.");
       return;
     }
 
@@ -67,13 +67,12 @@ export const Signup = () => {
   return (
     <div className="flex flex-col justify-around h-screen bg-catch-sub-100">
       <ServiceTitle />
-      {/* 가입정보 입력 필드 */}
       <div className="flex flex-col w-full max-w-xs mx-auto space-y-6">
         <div className="flex items-center space-x-2">
           <InputField
-            label="Email"
-            placeholder="youremail@adress.com"
-            type="email"
+            label="ID"
+            placeholder="아이디를 입력해주세요"
+            type="ID"
             value={email}
             onChange={setEmail}
           />
@@ -84,14 +83,14 @@ export const Signup = () => {
         )}
         <InputField
           label="Password"
-          placeholder="Password 8자 이상"
+          placeholder="비밀번호를 입력해주세요"
           type="password"
           value={password}
           onChange={setPassword}
         />
         <InputField
           label="Password 확인"
-          placeholder="비밀번호를 확인 해주세요"
+          placeholder="입력한 비밀번호를 확인 해주세요"
           type="password"
           value={checkPassword}
           onChange={setCheckPassword}
@@ -103,7 +102,6 @@ export const Signup = () => {
         )}
       </div>
 
-      {/* 회원가입 버튼 */}
       <div className="flex justify-center mb-4">
         <SignupButton
           onClick={handleSignup}

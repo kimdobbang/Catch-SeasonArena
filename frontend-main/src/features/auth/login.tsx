@@ -53,15 +53,15 @@ export const Login = () => {
       <ServiceTitle />
       <div className="flex flex-col w-full max-w-xs mx-auto space-y-4">
         <InputField
-          label="Email"
-          placeholder="youremail@adress.com"
-          type="email"
+          label="ID"
+          placeholder="아이디를 입력해주세요"
+          type="id"
           value={email}
           onChange={setEmail}
         />
         <InputField
           label="Password"
-          placeholder="Password"
+          placeholder="비밀번호를 입력해주세요"
           type="password"
           value={password}
           onChange={setPassword}
