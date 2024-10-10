@@ -1,15 +1,12 @@
 import { useRef, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { CameraButton } from "./camera-button";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
-import {
-  ResponseCollectData,
-  sendImagesToServer,
-} from "@/app/apis/collect-api";
+import { sendImagesToServer } from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";
+import { setTimeSlice, clearTimeSlice } from "@/app/redux/slice/timeSlice"; // 추가된 import
 import { ItemGrade, ItemType } from "@/app/types/common";
 import Arrow from "@/assets/icons/arrow-left.svg?react";
 
@@ -21,16 +18,9 @@ export const Collect = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null); // 디텍션 결과 그릴 캔버스
-  const [, setCapturedImages] = useState<string[]>([]);
-  const capturedImagesRef = useRef<string[]>([]); // 이미지 배열을 추적
+  const [capturedImages, setCapturedImages] = useState<string[]>([]); // 5장만 관리
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
-  const bestResultRef = useRef<ResponseCollectData | null>(null); // 가장 높은 신뢰도를 추적
-  const noDetectionCountRef = useRef(0); // no detection 카운트
-  // 3번의 API 응답 처리가 끝난 후 한 번에 페이지를 이동하기 위해 응답 상태를 관리
-  // const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
-  // const [debugInfo, setDebugInfo] = useState<string>(""); // 디버그 정보 상태
-
-  let interval: ReturnType<typeof setInterval> | undefined;
+  const [isCapturing, setIsCapturing] = useState(false); // 사진 촬영 중 상태 관리
 
   useEffect(() => {
     const initCamera = async () => {
@@ -50,13 +40,11 @@ export const Collect = () => {
     initCamera();
 
     return () => {
-      // 페이지를 떠날 때 카메라 트랙을 중지하여 빨간 줄이 안 나오도록 처리
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
         tracks.forEach((track) => track.stop());
         videoRef.current.srcObject = null; // 명확하게 카메라 스트림 해제
       }
-      if (interval) clearInterval(interval);
     };
   }, [facingMode]);
 
@@ -64,9 +52,11 @@ export const Collect = () => {
     setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
   };
 
-  // 이미지 15장을 100ms마다 찍고, 5개씩 모아서 서버에 전송
+  // 이미지 5장을 찍고 서버에 전송하는 로직
   const autoCapture = () => {
-    interval = setInterval(() => {
+    setIsCapturing(true); // 촬영 시작 시 문구 표시
+    let captureCount = 0;
+    const interval = setInterval(() => {
       if (videoRef.current && canvasRef.current && overlayCanvasRef.current) {
         const context = canvasRef.current.getContext("2d");
         if (context) {
@@ -111,35 +101,27 @@ export const Collect = () => {
 
           const imageUrl = canvasRef.current.toDataURL("image/png");
 
-          // 상태와 ref 둘 다 업데이트
-          setCapturedImages((prevCapturedImages) => {
-            const updatedImages = [...prevCapturedImages, imageUrl];
-            capturedImagesRef.current = updatedImages;
-            return updatedImages;
-          });
+          setCapturedImages((prevCapturedImages) => [
+            ...prevCapturedImages,
+            imageUrl,
+          ]);
+          captureCount += 1;
 
-          if (capturedImagesRef.current.length % 5 === 0) {
-            // 배치별로 전송을 위한 startIndex와 endIndex 설정
-            const startIndex = capturedImagesRef.current.length - 5;
-            const endIndex = capturedImagesRef.current.length;
-            handleSendImages(startIndex, endIndex);
-          }
-
-          // 15장이면 캡처 중단
-          if (capturedImagesRef.current.length === 15) {
-            clearInterval(interval); // 15장의 이미지가 찍히면 중단
-            console.log("Captured 15 images, stopping.");
+          // 5장 캡처 완료 후 전송
+          if (captureCount === 5) {
+            clearInterval(interval); // 5장의 이미지가 찍히면 중단
+            console.log("Captured 5 images, sending to server.");
+            handleSendImages();
           }
         }
       }
     }, 100); // 100ms마다 캡처
   };
 
-  const handleSendImages = async (startIndex: number, endIndex: number) => {
+  const handleSendImages = async () => {
     try {
-      const imageBatch = capturedImagesRef.current.slice(startIndex, endIndex);
       const response = await sendImagesToServer({
-        capturedImages: imageBatch,
+        capturedImages,
         email: userEmail,
       });
 
@@ -147,71 +129,35 @@ export const Collect = () => {
         response.status === "failure" ||
         response.data.detect_result.itemId === 0
       ) {
-        noDetectionCountRef.current += 1;
-      } else {
-        const detectResult = response.data.detect_result;
-        if (
-          !bestResultRef.current ||
-          detectResult.confidence >
-            bestResultRef.current?.data.detect_result.confidence
-        ) {
-          bestResultRef.current = response;
-        }
-      }
-
-      // // 디버그 정보를 화면에 출력
-      // setDebugInfo(`
-      //   Response: ${JSON.stringify(response)}
-      //   No Detection Count: ${noDetectionCountRef.current}
-      //   Best Result: ${JSON.stringify(bestResultRef.current)}
-      // `);
-
-      if (noDetectionCountRef.current >= 3) {
         navigate("/collect/fail");
-      } else if (
-        capturedImagesRef.current.length >= 15 &&
-        bestResultRef.current
-      ) {
-        const processedResult = bestResultRef.current.data.processed_result;
+      } else {
+        const processedResult = response.data.processed_result;
+
         const formattedResult = {
           ...processedResult,
           grade: processedResult.grade.toLowerCase() as ItemGrade,
           type: processedResult.type.toLowerCase() as ItemType,
         };
+
+        // timeSlice와 successSlice에 결과 저장
         dispatch(setSuccess(formattedResult));
+        dispatch(setTimeSlice(Date.now()));
+
+        // 1분 후 timeSlice 비우기
+        setTimeout(() => {
+          dispatch(clearTimeSlice());
+          console.log("timeSlice cleared after 5 seconds.");
+        }, 5000); // 5초 후에 삭제
+
         navigate("/collect/success");
       }
+
+      setIsCapturing(false); // 촬영 완료 후 문구 숨기기
     } catch (error: any) {
-      // setDebugInfo(`Error sending images: ${error.message}`);
       console.log(`Error sending images: ${error.message}`);
       navigate("/collect/fail");
     }
   };
-
-  // // DetectResult 좌표를 캔버스에 그리는 함수
-  // const drawDetectionResult = (detectResult: ResponseCollectData) => {
-  //   if (overlayCanvasRef.current) {
-  //     const context = overlayCanvasRef.current.getContext("2d");
-  //     if (context) {
-  //       context.clearRect(
-  //         0,
-  //         0,
-  //         overlayCanvasRef.current.width,
-  //         overlayCanvasRef.current.height,
-  //       );
-  //       context.strokeStyle = "red";
-  //       context.lineWidth = 2;
-  //       context.strokeRect(
-  //         detectResult.data.detect_result.xmin,
-  //         detectResult.data.detect_result.ymin,
-  //         detectResult.data.detect_result.xmax -
-  //           detectResult.data.detect_result.xmin,
-  //         detectResult.data.detect_result.ymax -
-  //           detectResult.data.detect_result.ymin,
-  //       );
-  //     }
-  //   }
-  // };
 
   // 기본 뒤로 가기 동작 설정
   const handleBackClick = () => {
@@ -237,30 +183,17 @@ export const Collect = () => {
       />
       <button
         onClick={switchCamera}
-        className="absolute p-2 bg-red-400 text-white transform -translate-x-1/2 bottom-[90%] left-[90%]"
+        className="absolute p-2 bg-catch-sub-300 transform -translate-x-1/2 rounded-lg bottom-[90%] left-[90%]"
       >
         <CameraChangeIcon />
       </button>
-      {/* 
-      // 디버그 정보 표시
-      <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
-        <h3 className="text-lg font-bold">Captured Images:</h3>
-        <div className="flex flex-wrap gap-2">
-          {capturedImages.map((img, index) => (
-            <div key={index} className="relative">
-              <img
-                src={img}
-                alt={`Captured ${index + 1}`}
-                className="w-[80px] h-[80px] object-cover border"
-              />
-            </div>
-          ))}
+
+      {/* 촬영 중일 때 문구를 표시 */}
+      {isCapturing && (
+        <div className="absolute top-0 left-0 w-full p-4 text-center text-white bg-black bg-opacity-50">
+          사진 촬영 중입니다. 정확한 인식을 위해 잠시만 움직이지 말아 주세요.
         </div>
-      </div>
- 
-      <div className="absolute bottom-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
-        <pre>{debugInfo}</pre>
-      </div> */}
+      )}
     </div>
   );
 };
