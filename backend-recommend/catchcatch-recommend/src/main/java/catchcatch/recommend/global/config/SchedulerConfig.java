@@ -20,7 +20,6 @@ public class SchedulerConfig {
         recommendService.matchingGame();
     }
 
-
     @Scheduled(fixedDelay = 500000)
     public void update(){ recommendService.updateUserSize(); }
 }
