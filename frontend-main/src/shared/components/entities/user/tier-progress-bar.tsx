@@ -16,7 +16,7 @@ export const TierProgressBar = ({ className }: TierProgressProps) => {
 
   return (
     <div
-      className={`${className} gap-2 flex flex-row w-full h-auto justify-center`}
+      className={`${className} gap-2 flex flex-row w-full pr-3 pl-3 h-auto justify-center`}
     >
       <div className="mt-1">
         <TierInitial rating={tier ? min : 0} size="big" />

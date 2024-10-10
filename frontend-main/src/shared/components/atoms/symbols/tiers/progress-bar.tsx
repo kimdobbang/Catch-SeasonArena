@@ -55,7 +55,7 @@ export const ProgressBar = ({ className }: ProgressProps) => {
           top: "40px", // 진행 바 아래에 위치시키기 위해 top 조정
         }}
       >
-        {rating} Points
+        {rating}P
       </div>
     </div>
   );

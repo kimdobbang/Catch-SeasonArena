@@ -1,7 +1,6 @@
 import { RootState } from "@/app/redux/store";
 import { useSelector } from "react-redux";
 import {
-  Body1Text,
   Body2Text,
   Caption1Text,
   TierInitial,
@@ -47,7 +46,9 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
           />
         </div>
         <div className="w-[50%]">
-          <Body1Text className="mr-2 text-white">{user.nickname}</Body1Text>
+          <Body2Text className="mr-2 font-bold text-white">
+            {user.nickname}
+          </Body2Text>
         </div>
         <div className="w-[25%]">
           <Caption1Text className="mr-2 text-white">
