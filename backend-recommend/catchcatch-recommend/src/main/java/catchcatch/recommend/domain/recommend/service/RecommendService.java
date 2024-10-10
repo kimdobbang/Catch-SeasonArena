@@ -95,6 +95,7 @@ public class RecommendService {
 
     public void matchingGame(){
         if(playerStore.getWaitingPlayers().size() < PLAYER_SIZE){
+            log.info("BE-MATCHING/ currentUserSize - {} ", playerStore.getWaitingPlayers().size());
             return;
         }
 
