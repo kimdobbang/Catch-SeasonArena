@@ -6,7 +6,7 @@ export interface UserGameResult {
   time: number;
   rank: number;
   rating: number; // 현재 레이팅(게임 전)
-  resultRating: number; // 게임 후 레이팅
+  resultRating: number; // 최신 레이팅(게임 후)
 }
 
 // 게임 결과 조회 API
