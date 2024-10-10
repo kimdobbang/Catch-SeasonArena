@@ -215,16 +215,11 @@ export const Collect = () => {
 
   // 기본 뒤로 가기 동작 설정
   const handleBackClick = () => {
-    navigate(-1);
+    navigate("/main");
   };
 
   return (
     <div className="relative w-full h-full">
-      <header
-        className={`text-body1 flex flex-row gap-2 justify-start items-center h-[65px] font-bold `}
-      >
-        <Arrow className="ml-[24px] cursor-pointer" onClick={handleBackClick} />
-      </header>
       <video className="w-full h-full" ref={videoRef} autoPlay playsInline />
       <canvas
         ref={overlayCanvasRef}
@@ -235,6 +230,10 @@ export const Collect = () => {
       <CameraButton
         onClick={autoCapture}
         className="absolute transform -translate-x-1/2 bottom-5 left-1/2"
+      />
+      <Arrow
+        className="absolute ml-[24px] cursor-pointer bottom-[90%] "
+        onClick={handleBackClick}
       />
       <button
         onClick={switchCamera}
