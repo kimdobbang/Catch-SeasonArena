@@ -98,7 +98,14 @@ public class RecommendService {
         long oneMinuteInMillis = 60 * 1000;
 
         log.info("BE-MATCHING/ before removing old players {} ", playerStore.getWaitingPlayers().size());
-        playerStore.getWaitingPlayers().removeIf(player -> currentTime - player.getEntryTime() > oneMinuteInMillis);
+        Iterator<Player> iterator =  playerStore.getWaitingPlayers().iterator();
+        while (iterator.hasNext()) {
+            Player player = iterator.next();
+            if (currentTime - player.getEntryTime() > oneMinuteInMillis) {
+                messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),"DISCONNECT");
+                iterator.remove();
+            }
+        }
         log.info("BE-MATCHING/ after removing old players {} ", playerStore.getWaitingPlayers().size());
     }
 
