@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { updateRatingByGameResult } from "@/app/redux/slice/userSlice";
+import { setRating } from "@/app/redux/slice/userSlice";
 import {
   fetchUserGameResult,
   UserGameResult,
@@ -27,7 +27,7 @@ export const GameResult = () => {
 
         console.log(fetchedGameResult);
         setWinningOrLosing(fetchedGameResult.rank === 1 ? "WIN" : "LOSE");
-        dispatch(updateRatingByGameResult(fetchedGameResult.resultRating));
+        dispatch(setRating(fetchedGameResult.resultRating));
       } catch (error) {
         console.error("게임 결과를 가져오는데 실패했습니다:", error);
       }
@@ -48,7 +48,8 @@ export const GameResult = () => {
   return (
     <GameResultContainer
       isWin={isWin}
-      ratingChange={gameResult.resultRating}
+      currentRating={gameResult.rating}
+      resultRating={gameResult.resultRating}
       kills={gameResult.kill}
       rank={gameResult.rank}
       time={gameResult.time}
