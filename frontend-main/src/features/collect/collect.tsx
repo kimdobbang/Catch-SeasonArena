@@ -41,14 +41,19 @@ export const Collect = () => {
 
     // 컴포넌트가 언마운트될 때 카메라 스트림 중지
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        const tracks = stream.getTracks(); // 카메라 스트림의 트랙을 가져옴
-        tracks.forEach((track) => track.stop()); // 각 트랙을 중지
-        videoRef.current.srcObject = null; // 스트림 해제
-      }
+      stopCamera();
     };
   }, [facingMode]);
+
+  // 카메라 스트림 중단 함수
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      const tracks = stream.getTracks(); // 모든 트랙을 가져와 중지
+      tracks.forEach((track) => track.stop()); // 트랙 중단
+      videoRef.current.srcObject = null; // 스트림 해제
+    }
+  };
 
   const switchCamera = () => {
     setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
@@ -129,6 +134,7 @@ export const Collect = () => {
         response.status === "failure" ||
         response.data.detect_result.itemId === 0
       ) {
+        stopCamera();
         navigate("/collect/fail");
       } else {
         const processedResult = response.data.processed_result;
@@ -142,7 +148,7 @@ export const Collect = () => {
         // timeSlice와 successSlice에 결과 저장
         dispatch(setSuccess(formattedResult));
         dispatch(setTimeSlice(Date.now()));
-
+        stopCamera();
         navigate("/collect/success");
       }
       setIsCapturing(false); // 촬영 완료 후 문구 숨기기
