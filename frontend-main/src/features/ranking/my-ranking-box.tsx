@@ -60,7 +60,7 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
           전체 {myRanking ? `Top ${myRanking.totalRanking}` : "25"}위
         </Body2Text>
         <Body2Text className="font-bold text-white">
-          {myRanking ? getTierByRating(myRanking?.rating) : "Bronze"} Tier{" "}
+          {myRanking ? getTierByRating(myRanking.rating) : "Bronze"} Tier{" "}
           {myRanking ? `Top ${myRanking.tierRanking}` : "10"}위
         </Body2Text>
       </div>

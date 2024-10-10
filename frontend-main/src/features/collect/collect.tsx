@@ -6,7 +6,7 @@ import { CameraButton } from "./camera-button";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
 import { sendImagesToServer } from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";
-import { setTimeSlice, clearTimeSlice } from "@/app/redux/slice/timeSlice";
+import { setTimeSlice } from "@/app/redux/slice/timeSlice";
 import { ItemGrade, ItemType } from "@/app/types/common";
 import Arrow from "@/assets/icons/arrow-left.svg?react";
 
@@ -143,15 +143,8 @@ export const Collect = () => {
         dispatch(setSuccess(formattedResult));
         dispatch(setTimeSlice(Date.now()));
 
-        // 1분 후 timeSlice 비우기
-        setTimeout(() => {
-          dispatch(clearTimeSlice());
-          console.log("timeSlice cleared after 5 seconds.");
-        }, 10000); // 5초 후에 삭제
-
         navigate("/collect/success");
       }
-
       setIsCapturing(false); // 촬영 완료 후 문구 숨기기
       capturedImagesRef.current = []; // 이미지 배열 초기화
     } catch (error: any) {
