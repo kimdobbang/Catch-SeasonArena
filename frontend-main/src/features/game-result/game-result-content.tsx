@@ -35,9 +35,7 @@ export const GameResultContent = ({
   };
 
   const resultTitle = isWin ? "Win!" : "Lose";
-  const ratingText = isWin
-    ? `+ ${ratingChange} Points`
-    : `${ratingChange} Points`;
+  const ratingText = isWin ? `+ ${ratingChange} P` : `${ratingChange} P`;
 
   return (
     <ResultLayout
@@ -45,18 +43,15 @@ export const GameResultContent = ({
       isWin={isWin}
       contentComponent={
         <div className="flex flex-col items-center">
-          <Body1Text className="mt-3 mb-6 !text-catch-gray-300">
-            {ratingText}
-          </Body1Text>
+          <Body1Text className=" !text-catch-gray-300">{ratingText}</Body1Text>
           <ProgressBar className="mb-6" />
           <AvatarFace
             number={avatarNumber}
             emotion={emotion}
             width={300}
             height={300}
-            className="mt-3 mb-3"
           />
-          <div className="flex justify-between mb-10 space-x-4">
+          <div className="flex justify-between space-x-4">
             <GameResultStatBox value={formatTime(time)} caption="플레이 시간" />
             <GameResultStatBox value={`${rank}위`} caption="순위" />
             <GameResultStatBox value={`${kills}명`} caption="킬" />
@@ -68,8 +63,8 @@ export const GameResultContent = ({
           color="main"
           size="small"
           showIcon={false}
-          className="mt-8"
           onClick={handleCloseButton}
+          className="mt-4"
         >
           닫기
         </PrimaryButton>
