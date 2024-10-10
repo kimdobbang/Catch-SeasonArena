@@ -108,7 +108,7 @@ function joinPlayer(
 
   if (nickname === "운영자") {
     player.protect = 0;
-    player.speed = 5;
+    player.speed = 2.5;
   }
 
   if (!rooms.has(roomCode)) {
