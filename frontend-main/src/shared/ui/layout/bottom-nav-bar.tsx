@@ -39,7 +39,7 @@ export const BottomNavBar = ({
 
   return (
     <div
-      className={`z-10 flex flex-col items-center justify-end h-[170px] ${className}`}
+      className={`flex flex-col items-center justify-end h-[170px] w-[360px] ${className}`}
     >
       <div className="flex flex-row items-end w-full justify-evenly">
         <BottomNavButton shape="square" icon="home" onClick={goMain} />

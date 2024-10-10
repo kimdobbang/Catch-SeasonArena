@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Body1Text } from "@atoms/index";
 import { MatchingButtons } from "@/features/index";
 import {
   TierProgressBar,
@@ -9,7 +8,6 @@ import {
   CircleAvatar,
   EquippedItems,
 } from "@entities/index";
-import { NavBarBackground } from "@ui/index";
 import { useMatching } from "@/app/hooks/useMatching";
 import { Timer } from "@/features/index";
 
@@ -72,17 +70,14 @@ export const Matching = () => {
         />
       </div>
 
-      <div className="w-full h-[35%] flex flex-col items-center gap-6">
+      <div className="w-full h-[35%] flex flex-col items-center gap-6 mb-5">
         <UserNameContainerMemo className="mt-4" />
         <TierProgressBarMemo />
         <EquippedItemsMemo showCaption={true} />
       </div>
 
-      <div className="w-full h-[20%] gap-3 flex flex-col items-center">
+      <div className="w-full h-[45%] gap-6 flex flex-col items-center justify-center bg-catch-sub-100 rounded-t-lg">
         {error && <div className="error-message">{error}</div>}
-        <div className="w-full px-4">
-          <Body1Text className="text-catch-main-400">2024 Autumn</Body1Text>
-        </div>
 
         <Timer remainingTime={remainingTime} />
 
@@ -92,8 +87,6 @@ export const Matching = () => {
           onDisconnect={handleDisconnect}
         />
       </div>
-
-      <NavBarBackground className="mt-3" />
     </div>
   );
 };

@@ -19,7 +19,7 @@ export const Collectionbook = () => {
         <CollectionbookLibrary>
           <BottomNavBar
             onTimerModalOpen={handleTimerOpenModal}
-            className="absolute bottom-0 z-10 w-full"
+            className="absolute bottom-0 z-10"
           />
         </CollectionbookLibrary>
       </div>

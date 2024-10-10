@@ -19,8 +19,8 @@ export const Ranking = () => {
           emotion="normal"
         />
       </div>
-      <Background className="flex flex-col h-[80%]">
-        <RankingListContainer className="h-[80%]" />
+      <Background className="flex flex-col h-[80%] w-full justify-center items-center">
+        <RankingListContainer className="h-[80%] w-full" />
       </Background>
     </div>
   );

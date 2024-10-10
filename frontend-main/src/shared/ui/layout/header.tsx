@@ -51,10 +51,17 @@ export const Header = ({ className }: HeaderProps) => {
       className={`text-body1 flex flex-row gap-2 justify-start items-center h-[65px] font-bold ${className}`}
     >
       {/* showBackIcon이 true인 경우 아이콘과 onClick 동작 설정 */}
-      {showBackIcon && (
-        <Arrow className="ml-[24px] cursor-pointer" onClick={handleBackClick} />
+      {showBackIcon ? (
+        <div className="ml-[12px] flex flex-row items-center mr-3">
+          <Arrow className="cursor-pointer" onClick={handleBackClick} />
+          <h1>{title}</h1>
+        </div>
+      ) : (
+        <div className="ml-[24px]">
+          {" "}
+          <h1>{title}</h1>
+        </div>
       )}
-      <h1>{title}</h1>
     </header>
   );
 };

@@ -1,5 +1,4 @@
 import {
-  Body1Text,
   Body2Text,
   Caption1Text,
   TierInitial,
@@ -34,7 +33,7 @@ export const UserRankingBox = ({
         />
       </div>
       <div className="w-[40%] overflow-hidden relative">
-        <Body1Text className="text-white">{nickname}</Body1Text>
+        <Body2Text className="font-bold text-white">{nickname}</Body2Text>
         {/* Fade 효과 */}
         <div className="absolute top-0 bottom-0 right-0 w-6 bg-gradient-to-l from-catch-sub-300 to-transparent" />
       </div>
