@@ -13,7 +13,8 @@ interface GameResultProps {
   kills: number;
   rank: number;
   time: number;
-  ratingChange: number;
+  currentRating: number;
+  resultRating: number;
   avatarNumber: number;
   emotion: "normal" | "sad";
   isWin: boolean;
@@ -23,7 +24,8 @@ export const GameResultContent = ({
   kills,
   rank,
   time,
-  ratingChange,
+  currentRating,
+  resultRating,
   avatarNumber,
   emotion,
   isWin,
@@ -35,7 +37,9 @@ export const GameResultContent = ({
   };
 
   const resultTitle = isWin ? "Win!" : "Lose";
-  const ratingText = isWin ? `+ ${ratingChange} P` : `${ratingChange} P`;
+  const ratingDifference = resultRating - currentRating;
+  const ratingText =
+    ratingDifference > 0 ? `+ ${ratingDifference} P` : `${ratingDifference} P`;
 
   return (
     <ResultLayout
@@ -44,12 +48,12 @@ export const GameResultContent = ({
       contentComponent={
         <div className="flex flex-col items-center">
           <Body1Text className=" !text-catch-gray-300">{ratingText}</Body1Text>
-          <ProgressBar className="mb-6" />
+          <ProgressBar className="mb-1" />
           <AvatarFace
             number={avatarNumber}
             emotion={emotion}
-            width={300}
-            height={300}
+            width={250}
+            height={250}
           />
           <div className="flex justify-between space-x-4">
             <GameResultStatBox value={formatTime(time)} caption="플레이 시간" />
