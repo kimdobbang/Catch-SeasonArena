@@ -4,7 +4,7 @@ import { UserRankingBox } from "./user-ranking-box";
 import { fetchTotalRankings, RankingProps } from "@/app/apis/rankingApi"; // 전체 순위 API 호출 함수 추가
 import { RootState } from "@/app/redux/store";
 import { useSelector } from "react-redux";
-import { UserRankingSkeletonBox } from "./user-ranking-skeleton-box";
+// import { UserRankingSkeletonBox } from "./user-ranking-skeleton-box";
 
 export const TotalRankingTab = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
@@ -75,8 +75,7 @@ export const TotalRankingTab = () => {
           ))}
 
           {/* 로딩 표시 */}
-          {loading && <UserRankingSkeletonBox />}
-
+          {loading && <div className="w-full h-[10px]">Loading...</div>}
           {/* 이 div에 스크롤이 닿으면 다음 페이지를 로딩 */}
           <div className="w-full h-[20px] bg-red" ref={observerRef} />
         </div>
