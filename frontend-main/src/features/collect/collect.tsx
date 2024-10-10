@@ -11,6 +11,7 @@ import {
 } from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";
 import { ItemGrade, ItemType } from "@/app/types/common";
+import Arrow from "@/assets/icons/arrow-left.svg?react";
 
 export const Collect = () => {
   const navigate = useNavigate();
@@ -25,6 +26,10 @@ export const Collect = () => {
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
   const bestResultRef = useRef<ResponseCollectData | null>(null); // 가장 높은 신뢰도를 추적
   const noDetectionCountRef = useRef(0); // no detection 카운트
+  // 3번의 API 응답 처리가 끝난 후 한 번에 페이지를 이동하기 위해 응답 상태를 관리
+  const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
+  const [debugInfo, setDebugInfo] = useState<string>(""); // 디버그 정보 상태
+
   let interval: ReturnType<typeof setInterval> | undefined;
 
   useEffect(() => {
@@ -130,10 +135,6 @@ export const Collect = () => {
     }, 100); // 100ms마다 캡처
   };
 
-  // 3번의 API 응답 처리가 끝난 후 한 번에 페이지를 이동하기 위해 응답 상태를 관리
-  const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
-
-  // 이미지를 5장씩 전송하는 함수
   const handleSendImages = async (startIndex: number, endIndex: number) => {
     try {
       const imageBatch = capturedImagesRef.current.slice(startIndex, endIndex);
@@ -142,20 +143,13 @@ export const Collect = () => {
         email: userEmail,
       });
 
-      console.log(`Batch ${startIndex + 1} to ${endIndex} Response:`, response);
-
       if (
         response.status === "failure" ||
         response.data.detect_result.itemId === 0
       ) {
-        // 감지 실패 또는 no detection 경우 카운트 증가
-        console.log(`API 디텍션 실패 응답: ${response.message}`);
         noDetectionCountRef.current += 1;
       } else {
         const detectResult = response.data.detect_result;
-        drawDetectionResult(detectResult); // 캔버스에 디텍션 결과 표시
-
-        // 신뢰도 결과 비교 및 저장
         if (
           !bestResultRef.current ||
           detectResult.confidence >
@@ -165,28 +159,30 @@ export const Collect = () => {
         }
       }
 
-      totalResponsesRef.current += 1; // 응답 수 증가
+      // 디버그 정보를 화면에 출력
+      setDebugInfo(`
+        Response: ${JSON.stringify(response)}
+        No Detection Count: ${noDetectionCountRef.current}
+        Best Result: ${JSON.stringify(bestResultRef.current)}
+      `);
 
-      // 모든 응답을 받은 후 처리
-      if (totalResponsesRef.current === 3) {
-        if (noDetectionCountRef.current >= 3 || !bestResultRef.current) {
-          navigate("/collect/fail"); // 모두 실패했을 경우
-        } else {
-          const processedResult = bestResultRef.current.data.processed_result;
-
-          // grade와 type을 소문자로 변환하고 itemGrade와 itemType으로 저장
-          const formattedResult = {
-            ...processedResult,
-            grade: processedResult.grade.toLowerCase() as ItemGrade,
-            type: processedResult.type.toLowerCase() as ItemType,
-          };
-
-          dispatch(setSuccess(formattedResult)); // Redux에 저장
-          navigate("/collect/success"); // 성공 페이지로 이동
-        }
+      if (noDetectionCountRef.current >= 3) {
+        navigate("/collect/fail");
+      } else if (
+        capturedImagesRef.current.length >= 15 &&
+        bestResultRef.current
+      ) {
+        const processedResult = bestResultRef.current.data.processed_result;
+        const formattedResult = {
+          ...processedResult,
+          grade: processedResult.grade.toLowerCase() as ItemGrade,
+          type: processedResult.type.toLowerCase() as ItemType,
+        };
+        dispatch(setSuccess(formattedResult));
+        navigate("/collect/success");
       }
     } catch (error) {
-      console.error("이미지 전송 중 오류 발생: ", error);
+      setDebugInfo(`Error sending images: ${error.message}`);
       navigate("/collect/fail");
     }
   };
@@ -216,29 +212,35 @@ export const Collect = () => {
     }
   };
 
+  // 기본 뒤로 가기 동작 설정
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="relative w-full h-full">
+      <header
+        className={`text-body1 flex flex-row gap-2 justify-start items-center h-[65px] font-bold `}
+      >
+        <Arrow className="ml-[24px] cursor-pointer" onClick={handleBackClick} />
+      </header>
       <video className="w-full h-full" ref={videoRef} autoPlay playsInline />
-
       <canvas
         ref={overlayCanvasRef}
         className="absolute top-1/2 left-1/2 w-[320px] h-[320px] border-4 border-opacity-80 border-white"
         style={{ transform: "translate(-50%, -50%)", pointerEvents: "none" }}
       />
       <canvas ref={canvasRef} style={{ display: "none" }} />
-
       <CameraButton
         onClick={autoCapture}
         className="absolute transform -translate-x-1/2 bottom-5 left-1/2"
       />
-
       <button
         onClick={switchCamera}
         className="absolute p-2 bg-red-400 text-white transform -translate-x-1/2 bottom-[90%] left-[90%]"
       >
         <CameraChangeIcon />
       </button>
-
       <div className="absolute top-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
         <h3 className="text-lg font-bold">Captured Images:</h3>
         <div className="flex flex-wrap gap-2">
@@ -252,6 +254,10 @@ export const Collect = () => {
             </div>
           ))}
         </div>
+      </div>
+      {/* 디버그 정보를 화면에 표시 */}
+      <div className="absolute bottom-0 left-0 m-4 bg-white p-2 max-h-[300px] overflow-y-auto">
+        <pre>{debugInfo}</pre>
       </div>
     </div>
   );
