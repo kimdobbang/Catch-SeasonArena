@@ -99,6 +99,11 @@ public class RankRepositoryAdapter implements SaveRankPort, UpdateTierPort, GetR
 		return redisTemplate.opsForZSet().reverseRank(tier,nickname).intValue();
 	}
 
+	@Override
+	public Integer getAllOfUserRanking(String nickname) {
+		return redisTemplate.opsForZSet().reverseRank("ranking_all", nickname).intValue();
+	}
+
 	public Integer getUserRate(String tier, String nickname) {
 		return redisTemplate.opsForZSet().score(tier, nickname).intValue();
 	}
