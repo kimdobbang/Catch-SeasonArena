@@ -53,7 +53,7 @@ public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 		Integer killScore = 0;
 		killScore += kill * 2;
 		Integer rankScore = 0;
-		rankScore += 5 * ( 4 - rank);
+		rankScore += 5 * ( 5 - rank);
 
 		score = killScore + rankScore;
 		return score;
