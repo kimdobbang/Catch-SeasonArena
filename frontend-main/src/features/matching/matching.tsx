@@ -1,9 +1,5 @@
-// src/features/matching.tsx
-// 유저한테 보여주는 화면,
-import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Client } from "@stomp/stompjs";
 import { PrimaryButton, Body1Text, Caption2Text } from "@atoms/index";
 import {
   TierProgressBar,
@@ -12,80 +8,16 @@ import {
   EquippedItems,
 } from "@entities/index";
 import { NavBarBackground } from "@ui/index";
-import {
-  connectToMatching,
-  sendMatchingRequest,
-  disconnectFromMatching,
-} from "@/app/apis/matchingApi";
+import { formatTime } from "@/shared/utils/format";
+import { useMatching } from "@/app/hooks/useMatching";
 
 export const Matching = () => {
-  const [isMatchingStatus, setIsMatchingStatus] = useState(false);
-  const [stompClient, setStompClient] = useState<Client | null>(null);
-  const [roomcode, setRoomcode] = useState("");
-  const [expectation, setExpectation] = useState("");
   const { nickname, rating, selectedAvatar, equipment } = useSelector(
     (state: RootState) => state.user,
   );
-  const goToGame = () => {
-    window.location.href = `/game?nickname=${nickname}&rating=${rating}&roomcode=${roomcode}`;
-  };
 
-  useEffect(() => {
-    if (roomcode) {
-      goToGame();
-    }
-  }, [roomcode]);
-
-  const connectAndSendMessage = async () => {
-    try {
-      const client = await connectToMatching(nickname, (message) => {
-        const parsedMessage =
-          typeof message === "string" ? JSON.parse(message) : message;
-
-        console.log("수신 parsedMessage :", parsedMessage);
-        console.log("수신 parsedMessage.time :", parsedMessage.time);
-
-        if (parsedMessage.type === "ROOMCODE") {
-          setRoomcode(parsedMessage.roomId);
-        } else if (parsedMessage.type === "TIME") {
-          setExpectation(parsedMessage.time);
-        }
-      });
-
-      setExpectation(expectation); // 반환 된 예상시간
-      setStompClient(client);
-      setIsMatchingStatus(true);
-
-      const userEquipments = [
-        equipment.weapon,
-        equipment.active,
-        equipment.passive,
-      ]
-        .filter(
-          (equipment) =>
-            equipment?.itemId !== null && equipment?.itemId !== undefined,
-        )
-        .map((equipment) => equipment!.itemId as number);
-
-      const requestDto = {
-        nickname,
-        rating,
-        items: userEquipments,
-        avatar: selectedAvatar.toString(),
-      };
-
-      sendMatchingRequest(client, requestDto);
-    } catch (error) {
-      console.error("매칭 연결 중 오류 발생:", error);
-    }
-  };
-
-  const disconnect = () => {
-    if (stompClient) {
-      disconnectFromMatching(stompClient);
-      setIsMatchingStatus(false);
-    }
-  };
+  const { isMatchingStatus, expectation, connectAndSendMessage, disconnect } =
+    useMatching(nickname, rating, equipment, selectedAvatar);
 
   return (
     <div className="w-full h-full">
@@ -125,7 +57,7 @@ export const Matching = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-1">
-              <p>예상 매칭 시간: {expectation}</p>
+              <p>예상 매칭 시간: {formatTime(expectation)}</p>
               <PrimaryButton
                 showIcon={false}
                 onClick={disconnect}
