@@ -21,13 +21,15 @@ body {
 
 /* 모달 창 */
 #modal {
+  width: 100%;
+  height: 100%;
   background-color: #fff;
 }
 
 /* 이미지 스타일 */
 #logo {
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
 }
 
 canvas {
