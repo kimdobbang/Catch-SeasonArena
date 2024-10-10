@@ -40,8 +40,7 @@ public class GetAllRankingUseCaseImpl implements GetAllRankingUseCase {
         log.info("BE-RANK : tier {}", tier);
         Set<ZSetOperations.TypedTuple<Object>> tierRanksSet = getAllRankPort.getAllRank(start);
         List<UserRank> allRanks = tierRank(tierRanksSet, start);
-        Member member = getMemberByEmailPort.getMemberByEmail(email);
-        MyRank myRank = myRank(tier, member.getNickname());
+        MyRank myRank = myRank(tier, email);
         return new MyAllRanking(allRanks, myRank);
     }
 
@@ -67,10 +66,11 @@ public class GetAllRankingUseCaseImpl implements GetAllRankingUseCase {
         return ranks;
     }
 
-    private MyRank myRank(String tier, String nickname) {
-        Integer getMyRank = getMeRankPort.getTierOfUserRaking(tier, nickname) + 1;
-        Integer getMyRate = getMeRankPort.getUserRate(tier, nickname);
+    private MyRank myRank(String tier, String email) {
+        Integer getMyRank = getMeRankPort.getTierOfUserRaking(tier, email) + 1;
+        Integer getMyRate = getMeRankPort.getUserRate(tier, email);
 
-        return MyRank.createMyRank(tier, nickname, getMyRank, getMyRank, getMyRate);
+        Member member = getMemberByEmailPort.getMemberByEmail(email);
+        return MyRank.createMyRank(tier, member.getNickname(), getMyRank, getMyRank, getMyRate);
     }
 }
