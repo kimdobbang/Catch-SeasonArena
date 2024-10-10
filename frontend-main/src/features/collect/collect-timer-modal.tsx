@@ -36,23 +36,23 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
       onClick={onClose}
     >
       <div
-        className={`relative w-[280px] rounded-lg h-[260px] bg-gradient-to-b bg-white`}
+        className={`relative w-[80%] rounded-lg h-[50%] bg-gradient-to-b bg-white`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center justify-center w-full h-full gap-2">
-          <Body1Text className="font-medium">
+          <Body1Text className="font-medium w-full h-[10%]">
             방금 수집한 <b>{name}</b>
           </Body1Text>
-          <div className="w-[50%]">
+          <div className="h-[50%]">
             <AutumnItemImage itemId={itemId} />
           </div>
-          <Body2Text>
+          <Body2Text className="w-full h-[20%]">
             아이템 수집은 <br />
             <b>1분 후</b>에 다시 할 수 있어요!
           </Body2Text>
           <button
             onClick={onClose}
-            className="w-16 h-8 text-white rounded-xl bg-catch-sub-400"
+            className="w-16 h-8 text-white rounded-xl bg-catch-sub-400 "
           >
             확인
           </button>

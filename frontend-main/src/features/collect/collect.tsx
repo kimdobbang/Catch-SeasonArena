@@ -177,41 +177,41 @@ export const Collect = () => {
       {/* 캡처 영역 오버레이 */}
       <div className="absolute top-1/2 left-1/2 w-[320px] h-[320px] transform -translate-x-1/2 -translate-y-1/2">
         {/* 가운데 십자가 */}
-        <div className="absolute w-4 h-4 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <div className="absolute w-12 h-12 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
           {/* 가로선 */}
-          <div className="absolute top-1/2 left-0 w-full h-[2px] bg-white transform -translate-y-1/2" />
+          <div className="absolute top-1/2 left-0 w-full h-[4px] bg-white transform -translate-y-1/2" />
           {/* 세로선 */}
-          <div className="absolute top-0 left-1/2 h-full w-[2px] bg-white transform -translate-x-1/2" />
+          <div className="absolute top-0 left-1/2 h-full w-[4px] bg-white transform -translate-x-1/2" />
         </div>
 
         {/* 네 모서리 직각 선 */}
         {/* 좌상단 */}
-        <div className="absolute top-0 left-0 w-8 h-8">
-          <div className="w-[2px] h-full bg-white" /> {/* 세로선 */}
-          <div className="absolute top-0 right-0 w-full h-[2px] bg-white" />
+        <div className="absolute top-0 left-0 w-16 h-16">
+          <div className="w-[4px] h-full bg-white" /> {/* 세로선 */}
+          <div className="absolute top-0 right-0 w-full h-[4px] bg-white" />
         </div>
 
         {/* 우상단 */}
-        <div className="absolute top-0 right-0 w-8 h-8">
-          <div className="w-[2px] h-full bg-white absolute right-0" />
+        <div className="absolute top-0 right-0 w-16 h-16">
+          <div className="w-[4px] h-full bg-white absolute right-0" />
           {/* 세로선 */}
-          <div className="absolute top-0 right-0 w-full h-[2px] bg-white" />
+          <div className="absolute top-0 right-0 w-full h-[4px] bg-white" />
           {/* 가로선 */}
         </div>
 
         {/* 좌하단 */}
-        <div className="absolute bottom-0 left-0 w-8 h-8">
-          <div className="absolute bottom-0 left-0 w-[2px] h-full bg-white" />
+        <div className="absolute bottom-0 left-0 w-16 h-16">
+          <div className="absolute bottom-0 left-0 w-[4px] h-full bg-white" />
           {/* 세로선 */}
-          <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />
+          <div className="absolute bottom-0 left-0 w-full h-[4px] bg-white" />
           {/* 가로선 */}
         </div>
 
         {/* 우하단 */}
-        <div className="absolute bottom-0 right-0 w-8 h-8">
-          <div className="absolute bottom-0 right-0 w-[2px] h-full bg-white" />
+        <div className="absolute bottom-0 right-0 w-16 h-16">
+          <div className="absolute bottom-0 right-0 w-[4px] h-full bg-white" />
           {/* 세로선 */}
-          <div className="absolute bottom-0 right-0 w-full h-[2px] bg-white" />
+          <div className="absolute bottom-0 right-0 w-full h-[4px] bg-white" />
           {/* 가로선 */}
         </div>
       </div>
@@ -232,16 +232,16 @@ export const Collect = () => {
 
       {/* 뒤로 가기 아이콘 */}
       <Arrow
-        className="absolute w-8 h-8 text-white cursor-pointer top-5 left-5"
+        className="absolute w-12 h-12 text-white cursor-pointer top-5 left-5"
         onClick={handleBackClick}
       />
 
       {/* 카메라 전환 버튼 */}
       <button
         onClick={switchCamera}
-        className="absolute w-12 h-12 p-2 rounded-lg top-5 right-5 bg-catch-sub-300"
+        className="absolute flex items-center justify-center w-12 h-12 p-2 text-center rounded-lg top-5 right-5 bg-catch-sub-300"
       >
-        <CameraChangeIcon />
+        <CameraChangeIcon className="w-8 h-8" />
       </button>
 
       {/* 촬영 중일 때 문구를 표시 */}
