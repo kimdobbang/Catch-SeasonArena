@@ -6,7 +6,7 @@ export interface UserGameResult {
   time: number;
   rank: number;
   rating: number; // 현재 레이팅(게임 전)
-  resultRating: number; // 레이팅 증감량
+  resultRating: number; // 게임 후 레이팅
 }
 
 // 게임 결과 조회 API
@@ -28,7 +28,7 @@ export const fetchUserGameResult = async (
   const { data } = await response.json();
   return data as UserGameResult;
 
-  // // Mock 데이터 반환
+  // Mock 데이터 반환
   // return new Promise((resolve) => {
   //   setTimeout(() => {
   //     resolve({
