@@ -33,6 +33,8 @@ export const successSlice = createSlice({
   reducers: {
     // Success 데이터를 받아서 state에 저장하는 리듀서
     setSuccess: (state, action: PayloadAction<ProcessedResult>) => {
+      alert(`Action payload: ${JSON.stringify(action.payload)}`);
+
       state.name = action.payload.name;
       state.itemId = action.payload.itemId;
       state.type = action.payload.type;
