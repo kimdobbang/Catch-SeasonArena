@@ -3,13 +3,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProcessedResult } from "@/app/apis/collect-api";
 
+export interface CollectSuccess {
+  name: string;
+  itemId: number;
+  type: string;
+  grade: string;
+  effect: string;
+}
+
 // ProcessedResult 타입에 수집 시간 추가
-export interface ProcessedResultWithTime extends ProcessedResult {
+export interface CollectSuccessWithTime extends CollectSuccess {
   createdTime: number;
 }
 
 // 초기 상태 정의
-const initialState: ProcessedResultWithTime = {
+const initialState: CollectSuccessWithTime = {
   name: "메이플 창",
   itemId: 1,
   type: "WEAPON",

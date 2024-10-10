@@ -18,12 +18,12 @@ export const SquareIconButton = ({
   onClick,
 }: SquareIconButtonProps) => {
   return (
-    <div className={`${className} flex flex-col items-center w-auto`}>
+    <div
+      onClick={onClick}
+      className={`${className} flex flex-col items-center w-auto cursor-pointer z-20`}
+    >
       {/* 버튼 아이콘 */}
-      <button
-        onClick={onClick}
-        className="flex items-center justify-center w-[60px] h-[60px] bg-white border-2 rounded-lg border-catch-main-400"
-      >
+      <button className="flex items-center justify-center w-[60px] h-[60px] bg-white border-2 rounded-lg border-catch-main-400">
         {icon}
       </button>
       {/* 텍스트 */}

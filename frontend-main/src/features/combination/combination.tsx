@@ -16,6 +16,16 @@ import { CombinationItemCard } from "./combination-item-card";
 export const Combination = () => {
   const navigate = useNavigate();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  // 현재 장착된 무기, 패시브, 액티브 아이템을 가져오기
+  const equippedWeapon = useSelector(
+    (state: RootState) => state.user.equipment.weapon,
+  );
+  const equippedPassive = useSelector(
+    (state: RootState) => state.user.equipment.passive,
+  );
+  const equippedActive = useSelector(
+    (state: RootState) => state.user.equipment.active,
+  );
   const [items, setItems] = useState<Item[]>([]);
   const [combineItem1, setCombineItem1] = useState<Item | null>(null);
   const [combineItem2, setCombineItem2] = useState<Item | null>(null);
@@ -23,7 +33,7 @@ export const Combination = () => {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   interface combinationApiSuccess {
-    id: number;
+    itemId: number;
     name: string;
     season: string;
     type: string;
@@ -42,7 +52,7 @@ export const Combination = () => {
 
     const resultDTO = {
       name: item.name,
-      itemId: item.id,
+      itemId: item.itemId,
       type: item.type,
       grade: item.grade,
       effect: item.effect,
@@ -65,9 +75,28 @@ export const Combination = () => {
     }
   }, []);
 
+  const checkEquippedItem = (item: Item) => {
+    return (
+      equippedWeapon?.inventoryId === item.inventoryId ||
+      equippedPassive?.inventoryId === item.inventoryId ||
+      equippedActive?.inventoryId === item.inventoryId
+    );
+  };
+
   const handleCombine = async () => {
     if (!combineItem1?.inventoryId || !combineItem2?.inventoryId) {
       alert("합성할 아이템을 모두 선택하세요");
+      return;
+    }
+
+    // 아이템 1 또는 아이템 2가 장착된 경우 합성 금지
+    if (checkEquippedItem(combineItem1)) {
+      alert(`장착된 아이템(${combineItem1.name})은 합성할 수 없어요!`);
+      return;
+    }
+
+    if (checkEquippedItem(combineItem2)) {
+      alert(`장착된 아이템(${combineItem2.name})은 합성할 수 없어요!`);
       return;
     }
 
@@ -116,8 +145,6 @@ export const Combination = () => {
       setCombineItem1(null);
     } else if (combineItem2?.inventoryId == selectedCombineItem.inventoryId) {
       setCombineItem2(null);
-    } else {
-      console.log("합성을 위해 담은 아이템이 아닙니다");
     }
     setIsModalOpen(false);
   };
@@ -188,6 +215,7 @@ export const Combination = () => {
           onClose={handleCloseModal}
           onSet={setCombinationItem}
           onCancel={cancelCombinationItem}
+          setItems={setItems}
         />
       )}
     </div>

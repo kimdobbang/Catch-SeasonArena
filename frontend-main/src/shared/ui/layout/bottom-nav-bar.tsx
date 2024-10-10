@@ -1,19 +1,31 @@
 import { BottomNavButton } from "@/shared/components/atoms/buttons/bottom-nav-button";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 interface BottomNavBarProps {
   className?: string;
+  onTimerModalOpen?: () => void;
 }
 
-export const BottomNavBar = ({ className }: BottomNavBarProps) => {
+export const BottomNavBar = ({
+  className,
+  onTimerModalOpen,
+}: BottomNavBarProps) => {
   const navigate = useNavigate();
+  const lastCollectTime = useSelector(
+    (state: RootState) => state.success.createdTime,
+  );
 
   const goMain = () => {
     navigate("/main");
   };
 
   const goCollect = () => {
-    navigate("/collect");
+    /* 수집 후 1분이 지나지 않으면 다시 수집 불가능하게 하는 로직 추가 (모달 열기 등) */
+    if (onTimerModalOpen && lastCollectTime != 0) {
+      onTimerModalOpen();
+    } else navigate("/collect");
   };
 
   const goInventory = () => {

@@ -31,7 +31,7 @@ export const InventoryItemCard = ({
 }: InventoryItemCardProps) => {
   const dispatch = useDispatch();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const { itemId, name, type, grade, durability, skill } = item;
+  const { itemId, name, type, grade, durability, effect } = item;
   const maxDurability = getDurability(grade as ItemGrade);
 
   // 현재 장착된 무기, 패시브, 액티브 아이템을 가져오기
@@ -81,19 +81,25 @@ export const InventoryItemCard = ({
             await unequipUserItem(accessToken, equippedWeapon.inventoryId);
           }
           await equipUserItem(accessToken, item.inventoryId);
-          dispatch(setWeapon(item));
+          dispatch(
+            setWeapon({ inventoryId: item.inventoryId, itemId: item.itemId }),
+          );
         } else if (type === "passive") {
           if (equippedPassive.inventoryId !== null) {
             await unequipUserItem(accessToken, equippedPassive.inventoryId);
           }
           await equipUserItem(accessToken, item.inventoryId);
-          dispatch(setPassive(item));
+          dispatch(
+            setPassive({ inventoryId: item.inventoryId, itemId: item.itemId }),
+          );
         } else if (type === "active") {
           if (equippedActive.inventoryId !== null) {
             await unequipUserItem(accessToken, equippedActive.inventoryId);
           }
           await equipUserItem(accessToken, item.inventoryId);
-          dispatch(setActive(item));
+          dispatch(
+            setActive({ inventoryId: item.inventoryId, itemId: item.itemId }),
+          );
         }
       }
       onClose(); // 모달 닫기
@@ -172,7 +178,7 @@ export const InventoryItemCard = ({
           {/* 아이템타입, 스킬 */}
           <div className="h-[15%] w-full flex items-center justify-center flex-col gap-1">
             <ItemTypeTag color="gray" type={type as ItemType} />
-            <Caption1Text>{skill}</Caption1Text>
+            <Caption1Text>{effect}</Caption1Text>
           </div>
           {/* 장착해제 토글 */}
           <div className="h-[15%] w-full flex items-center justify-center flex-col gap-1">

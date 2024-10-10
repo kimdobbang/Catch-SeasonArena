@@ -1,6 +1,7 @@
 import { Leave } from "@atoms/index";
+import { ReactNode } from "react";
 
-type NavBarBackgroundProps = { className: string };
+type NavBarBackgroundProps = { className: string; children?: ReactNode };
 
 export const NavBarBackground = ({ className }: NavBarBackgroundProps) => {
   return (
@@ -13,7 +14,7 @@ export const NavBarBackground = ({ className }: NavBarBackgroundProps) => {
         width="33"
       />
       <Leave
-        className="relative fill-catch-sub-200 left-[90%] bottom-[40%] -rotate-12"
+        className="relative fill-catch-sub-200 left-[85%] bottom-[40%] -rotate-12"
         width="44"
       />
     </div>

@@ -31,6 +31,7 @@ export interface Item {
   image: string;
   durability: number;
   isEquipped?: boolean;
+  effect?: string;
 }
 
 export type ItemGrade = "normal" | "rare" | "legend";

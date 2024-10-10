@@ -10,7 +10,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import sessionStorage from "redux-persist/lib/storage/session";
 import authReducer from "./slice/authSlice";
 import userReducer from "./slice/userSlice";
-import successReducer from "./slice/successSlice";
+import successReducer, { clearSuccess } from "./slice/successSlice";
 
 const persistConfig = {
   key: "root",
@@ -52,3 +52,18 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 >;
 
 export const persistor = persistStore(store);
+
+persistor.subscribe(() => {
+  const state = store.getState();
+  const now = Date.now();
+  const oneMinute = 60 * 1000;
+
+  // createdTime이 있고, 1분 이상 지났으면 상태를 clear
+  if (
+    state.success.createdTime != 0 &&
+    now - state.success.createdTime > oneMinute
+  ) {
+    console.log("Success state expired, clearing it...");
+    store.dispatch(clearSuccess());
+  }
+});

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { RankingListContainer } from "./ranking-list-container";
 
-import { Background, BottomNavBar } from "@/shared/ui";
+import { Background } from "@/shared/ui";
 export const Ranking = () => {
   const userAvatar = useSelector(
     (state: RootState) => state.user.selectedAvatar,
@@ -20,8 +20,7 @@ export const Ranking = () => {
         />
       </div>
       <Background className="flex flex-col h-[80%]">
-        <RankingListContainer />
-        <BottomNavBar />
+        <RankingListContainer className="h-[80%]" />
       </Background>
     </div>
   );
