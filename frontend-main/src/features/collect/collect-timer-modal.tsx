@@ -15,13 +15,16 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
     const oneMinute = 60 * 1000;
     const timeDiff = now - collectTime;
 
+    // 남은 시간이 있으면 alert로 데이터 확인
+    if (timeDiff < oneMinute) {
+      alert(
+        `들어온 이름과 itemId: ${name}, ${itemId}\nSuccess Data: ${JSON.stringify(successData)}\nCollect Time: ${collectTime}`,
+      );
+    }
+
     if (timeDiff >= oneMinute) {
       onClose(); // 1분이 지나면 모달을 자동으로 닫습니다.
     } else {
-      alert(
-        `들어온 이름과 itemId: ${name} 그리고 ${itemId} 그리고 successDATA: ${successData}`,
-      );
-
       const remainingTime = oneMinute - timeDiff;
       const timer = setTimeout(() => {
         onClose();
@@ -29,7 +32,7 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
 
       return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머 해제
     }
-  }, [collectTime, onClose, name]);
+  }, [collectTime, onClose, successData, name, itemId]);
 
   return (
     <div
