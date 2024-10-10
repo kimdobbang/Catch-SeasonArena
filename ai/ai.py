@@ -118,9 +118,14 @@ async def detect_objects(
                 }
             }
 
-            final_api_url = f"{base_api_url}/{itemId}/{email}"
-            payload = {"detectResult": detectResult}
-            requests.post(final_api_url, json=payload)
+            # final_api_url = f"{base_api_url}/{itemId}/{email}"
+            # payload = {"detectResult": detectResult}
+            # requests.post(final_api_url, json=payload)
+            
+            send_kafka_message('create_inventory', {
+                "email": email,
+                "itemId": itemId
+            })
 
             return response_data
         else:
