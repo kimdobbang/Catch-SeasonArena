@@ -389,13 +389,9 @@ setInterval(() => {
           const nickname = player.nickname;
           const kill = player.kill;
           const time = Math.round((Date.now() - room.startTime) / 1000);
-          let rank = room.players.size;
+          const rank = room.admin ? room.players.size - 1 : room.player.size;
           const rating = player.rating;
           const email = player.email;
-
-          if (room.admin) {
-            rank--;
-          }
 
           // 데이터셋을 객체로 만들기
           const result = {
