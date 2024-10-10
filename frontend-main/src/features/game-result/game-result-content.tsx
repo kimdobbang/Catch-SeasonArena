@@ -1,8 +1,12 @@
 import { ResultLayout } from "@ui/index";
-import { AvatarFace, PrimaryButton, Body1Text } from "@atoms/index";
-import { ProgressBar } from "@atoms/index";
+import {
+  AvatarFace,
+  PrimaryButton,
+  Body1Text,
+  ProgressBar,
+} from "@atoms/index";
 import { formatTime } from "@/shared/utils/format";
-import { GameResultStatBox } from "@/features/game-result/result-stat-box";
+import { GameResultStatBox } from "@/features/index";
 import { useNavigate } from "react-router-dom";
 
 interface GameResultProps {
@@ -15,7 +19,7 @@ interface GameResultProps {
   isWin: boolean;
 }
 
-const GameResultContent = ({
+export const GameResultContent = ({
   kills,
   rank,
   time,
@@ -30,15 +34,19 @@ const GameResultContent = ({
     navigate("/main");
   };
 
-  // JSX 반환
+  const resultTitle = isWin ? "Win!" : "Lose";
+  const ratingText = isWin
+    ? `+ ${ratingChange} Points`
+    : `${ratingChange} Points`;
+
   return (
     <ResultLayout
-      title={isWin ? "Win!" : "Lose"}
+      title={resultTitle}
       isWin={isWin}
       contentComponent={
         <div className="flex flex-col items-center">
           <Body1Text className="mt-3 mb-6 !text-catch-gray-300">
-            {isWin ? `+ ${ratingChange} Points` : `${ratingChange} Points`}
+            {ratingText}
           </Body1Text>
           <ProgressBar className="mb-6" />
           <AvatarFace
@@ -61,7 +69,7 @@ const GameResultContent = ({
           size="small"
           showIcon={false}
           className="mt-8"
-          onClick={handleCloseButton} // 버튼 클릭 시 실행
+          onClick={handleCloseButton}
         >
           닫기
         </PrimaryButton>
@@ -70,10 +78,8 @@ const GameResultContent = ({
   );
 };
 
-export const GameWinContent = (props: Omit<GameResultProps, "isWin">) => {
-  return <GameResultContent {...props} isWin={true} />;
-};
-
-export const GameLoseContent = (props: Omit<GameResultProps, "isWin">) => {
-  return <GameResultContent {...props} isWin={false} />;
+export const GameResultContainer = (
+  props: Omit<GameResultProps, "isWin"> & { isWin: boolean },
+) => {
+  return <GameResultContent {...props} />;
 };
