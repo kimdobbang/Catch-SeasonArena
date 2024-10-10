@@ -10,7 +10,6 @@ export interface UserGameResult {
 }
 
 // 게임 결과 조회 API
-// Mock 데이터를 사용하는 동안, 인자를 받지 않도록 수정
 // export const fetchUserGameResult = async ()
 export const fetchUserGameResult = async (
   accessToken: string,
