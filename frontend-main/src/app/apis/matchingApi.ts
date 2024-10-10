@@ -1,5 +1,3 @@
-// Api: API 호출과 서버 통신 책임, 데이터 통신(여기서 상태관리x)
-// src/app/api/matchingApi.ts
 import config from "@/config";
 import SockJS from "sockjs-client";
 import { Client, IMessage } from "@stomp/stompjs";
@@ -11,6 +9,7 @@ interface MatchingRequest {
   avatar: string;
 }
 
+// WebSocket 연결
 export const connectToMatching = (
   nickname: string,
   onMessageReceived: (message: string) => void,
@@ -58,7 +57,21 @@ export const sendMatchingRequest = (
   console.log("매칭 요청 메시지 전송:", requestDto);
 };
 
-export const disconnectFromMatching = (client: Client) => {
-  client.deactivate();
-  console.log("연결 해제됨");
+export const disconnectFromMatching = async (
+  client: Client,
+  nickname: string,
+): Promise<void> => {
+  try {
+    client.publish({
+      destination: "/api/matching/pub/exit",
+      body: JSON.stringify({ nickname }),
+    });
+    console.log("매칭 취소 요청 전송 완료:", nickname);
+
+    await client.deactivate();
+    console.log("WebSocket 연결 해제 완료:", nickname);
+  } catch (error) {
+    console.error("매칭 취소 중 오류 발생:", error);
+    throw new Error("매칭 취소 중 문제가 발생했습니다.");
+  }
 };
