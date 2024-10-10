@@ -74,11 +74,12 @@ public class GetTierRankingUseCaseImpl implements GetTierRankingUseCase {
 	}
 
 	private MyRank myRank(String tier, String email) {
-		Integer getMyRank = getMeRankPort.getTierOfUserRaking(tier, email) + 1;
+		Integer getMyTierRank = getMeRankPort.getTierOfUserRaking(tier, email) + 1;
+		Integer getMyAllRank = getMeRankPort.getAllOfUserRanking(email) + 1;
 		Integer getMyRate = getMeRankPort.getUserRate(tier, email);
 
 		Member member = getMemberByEmailPort.getMemberByEmail(email);
-		return MyRank.createMyRank(tier, member.getNickname(), getMyRank, getMyRank, getMyRate);
+		return MyRank.createMyRank(tier, member.getNickname(), getMyTierRank, getMyAllRank, getMyRate);
 	}
 
 }
