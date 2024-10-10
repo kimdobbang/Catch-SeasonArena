@@ -27,7 +27,7 @@ export const Collect = () => {
   const bestResultRef = useRef<ResponseCollectData | null>(null); // 가장 높은 신뢰도를 추적
   const noDetectionCountRef = useRef(0); // no detection 카운트
   // 3번의 API 응답 처리가 끝난 후 한 번에 페이지를 이동하기 위해 응답 상태를 관리
-  const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
+  // const totalResponsesRef = useRef<number>(0); // 총 응답 수를 추적
   const [debugInfo, setDebugInfo] = useState<string>(""); // 디버그 정보 상태
 
   let interval: ReturnType<typeof setInterval> | undefined;
@@ -181,36 +181,36 @@ export const Collect = () => {
         dispatch(setSuccess(formattedResult));
         navigate("/collect/success");
       }
-    } catch (error) {
+    } catch (error: any) {
       setDebugInfo(`Error sending images: ${error.message}`);
       navigate("/collect/fail");
     }
   };
 
-  // DetectResult 좌표를 캔버스에 그리는 함수
-  const drawDetectionResult = (detectResult: ResponseCollectData) => {
-    if (overlayCanvasRef.current) {
-      const context = overlayCanvasRef.current.getContext("2d");
-      if (context) {
-        context.clearRect(
-          0,
-          0,
-          overlayCanvasRef.current.width,
-          overlayCanvasRef.current.height,
-        );
-        context.strokeStyle = "red";
-        context.lineWidth = 2;
-        context.strokeRect(
-          detectResult.data.detect_result.xmin,
-          detectResult.data.detect_result.ymin,
-          detectResult.data.detect_result.xmax -
-            detectResult.data.detect_result.xmin,
-          detectResult.data.detect_result.ymax -
-            detectResult.data.detect_result.ymin,
-        );
-      }
-    }
-  };
+  // // DetectResult 좌표를 캔버스에 그리는 함수
+  // const drawDetectionResult = (detectResult: ResponseCollectData) => {
+  //   if (overlayCanvasRef.current) {
+  //     const context = overlayCanvasRef.current.getContext("2d");
+  //     if (context) {
+  //       context.clearRect(
+  //         0,
+  //         0,
+  //         overlayCanvasRef.current.width,
+  //         overlayCanvasRef.current.height,
+  //       );
+  //       context.strokeStyle = "red";
+  //       context.lineWidth = 2;
+  //       context.strokeRect(
+  //         detectResult.data.detect_result.xmin,
+  //         detectResult.data.detect_result.ymin,
+  //         detectResult.data.detect_result.xmax -
+  //           detectResult.data.detect_result.xmin,
+  //         detectResult.data.detect_result.ymax -
+  //           detectResult.data.detect_result.ymin,
+  //       );
+  //     }
+  //   }
+  // };
 
   // 기본 뒤로 가기 동작 설정
   const handleBackClick = () => {
