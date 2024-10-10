@@ -104,14 +104,14 @@ export const CollectionbookLibrary = ({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full h-full">
       <MemoizedTabBar
         categoryType="Season"
         onCategoryChange={handleCategoryChange}
       />
 
-      <div className="pt-6 bg-catch-sub-100">
-        <div className="grid h-full grid-cols-4 gap-4 mx-6">
+      <div className="w-full h-full pt-6 bg-catch-sub-100">
+        <div className="grid h-[75%] grid-cols-4 gap-4 mx-6">
           {currentItems.map((itemData) => (
             <CollectionbookCell
               key={itemData.item.id}
