@@ -4,6 +4,7 @@ import { TotalRankingTab } from "./total-ranking-tab";
 import { RankingTabButton } from "./ranking-tab-button";
 import { Body1Text } from "@/shared/components/atoms";
 import { BottomNavBar } from "@/shared/ui";
+import { CollectTimerModal } from "@/features";
 
 const tabs = [
   { index: 0, name: "전체 순위", content: <TotalRankingTab /> },
@@ -12,6 +13,14 @@ const tabs = [
 
 export const RankingListContainer = ({ className }: { className?: string }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [timerModalOpen, setTimerModalOpen] = useState(false);
+
+  const handleTimerOpenModal = () => {
+    setTimerModalOpen(true);
+  };
+  const handleTimerCloseModal = () => {
+    setTimerModalOpen(false);
+  };
 
   return (
     <div className={`${className} flex flex-col w-full h-full p-3`}>
@@ -34,8 +43,12 @@ export const RankingListContainer = ({ className }: { className?: string }) => {
       </div>
       <div className="w-full h-[65%]">{tabs[activeTab].content}</div>
       <div className="h-[25%]">
-        <BottomNavBar className="!h-[150px]" />
+        <BottomNavBar
+          className="!h-[150px]"
+          onTimerModalOpen={handleTimerOpenModal}
+        />
       </div>
+      {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}
     </div>
   );
 };

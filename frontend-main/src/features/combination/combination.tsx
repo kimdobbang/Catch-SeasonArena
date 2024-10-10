@@ -12,6 +12,7 @@ import { combineItems } from "@/app/apis/combination-api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { CombinationItemCard } from "./combination-item-card";
+import { CollectTimerModal } from "@/features";
 
 export const Combination = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export const Combination = () => {
   const [combineItem2, setCombineItem2] = useState<Item | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [timerModalOpen, setTimerModalOpen] = useState(false);
 
   interface combinationApiSuccess {
     itemId: number;
@@ -159,6 +161,13 @@ export const Combination = () => {
     setSelectedItem(null);
   };
 
+  const handleTimerOpenModal = () => {
+    setTimerModalOpen(true);
+  };
+  const handleTimerCloseModal = () => {
+    setTimerModalOpen(false);
+  };
+
   const checkIsCombinationSelected = (item: Item) => {
     if (
       item.inventoryId === combineItem1?.inventoryId ||
@@ -205,7 +214,7 @@ export const Combination = () => {
       </div>
       <div className="w-full h-[70%]">
         <CombinationLibrary items={items} handleItemClick={handleItemClick}>
-          <BottomNavBar />
+          <BottomNavBar onTimerModalOpen={handleTimerOpenModal} />
         </CombinationLibrary>
       </div>
       {isModalOpen && selectedItem && (
@@ -218,6 +227,7 @@ export const Combination = () => {
           setItems={setItems}
         />
       )}
+      {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}
     </div>
   );
 };
