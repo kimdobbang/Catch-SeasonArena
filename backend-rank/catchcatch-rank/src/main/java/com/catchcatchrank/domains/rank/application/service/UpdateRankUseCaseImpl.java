@@ -50,9 +50,12 @@ public class UpdateRankUseCaseImpl implements UpdateRankUseCase {
 	private Integer calculateScore(Integer kill, Integer time, Integer rank) {
 		Integer score = 0;
 
-		score += kill * 100;
-		score += 5 - (rank - 1);
+		Integer killScore = 0;
+		killScore += kill * 2;
+		Integer rankScore = 0;
+		rankScore += 5 * ( 4 - rank);
 
+		score = killScore + rankScore;
 		return score;
 	}
 }
