@@ -138,6 +138,7 @@ export const Collect = () => {
           type: processedResult.type.toLowerCase() as ItemType,
         };
 
+        alert(`formattedResult: ${formattedResult}`);
         // timeSlice와 successSlice에 결과 저장
         dispatch(setSuccess(formattedResult));
         dispatch(setTimeSlice(Date.now()));
@@ -146,7 +147,7 @@ export const Collect = () => {
         setTimeout(() => {
           dispatch(clearTimeSlice());
           console.log("timeSlice cleared after 5 seconds.");
-        }, 5000); // 5초 후에 삭제
+        }, 10000); // 5초 후에 삭제
 
         navigate("/collect/success");
       }
