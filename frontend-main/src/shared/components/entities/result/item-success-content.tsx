@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { AutumnItemImage, Body2Text } from "@/shared/components/atoms";
 import { DescriptionBox } from "@entities/index";
 import { ResultButtonsProps } from "./item-result-buttons";
 import { ItemGrade, ItemType } from "@/app/types/common";
 import { GetItemCard } from "@/shared/ui";
-import { clearSuccess } from "@/app/redux/slice/successSlice";
 
 export interface ItemProps {
   name?: string;
@@ -21,7 +20,6 @@ export const ItemSuccessContent = ({
   item,
 }: ResultButtonsProps & { item?: ItemProps }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dispatch = useDispatch();
 
   // Redux에서 값 가져오기 (collect일 때 사용)
   const successState = useSelector((state: RootState) => state.success);
@@ -33,7 +31,6 @@ export const ItemSuccessContent = ({
 
   // 모달 닫기 함수
   const closeModal = () => {
-    dispatch(clearSuccess());
     setIsModalOpen(false);
   };
 
