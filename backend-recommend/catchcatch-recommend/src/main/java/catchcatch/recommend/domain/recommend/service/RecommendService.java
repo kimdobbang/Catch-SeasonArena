@@ -117,6 +117,8 @@ public class RecommendService {
                 matchedPlayers = playerStore.getWaitingPlayers().subSet(lowerPlayer, true, upperPlayer, true);
             }
 
+            log.info("BACK-MATCHING/ matchedPlayers size{} ", matchedPlayers.size());
+
             while(matchedPlayers.size()>=PLAYER_SIZE){
                 NavigableSet<Player> limitMatchedPlayers = matchedPlayers.stream()
                         .limit(PLAYER_SIZE)
@@ -164,6 +166,7 @@ public class RecommendService {
 
     public void updateUserSize(){
         USERSIZE = playerStore.getWaitingPlayers().size();
+        log.info("BACK-MATCHING/ userSize - {} ", USERSIZE);
     }
 
     public void saveMattchedLogs(NavigableSet<Player> matchedPlayers) {
