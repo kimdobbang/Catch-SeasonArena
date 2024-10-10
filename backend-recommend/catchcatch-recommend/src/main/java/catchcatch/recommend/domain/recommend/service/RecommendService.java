@@ -93,9 +93,19 @@ public class RecommendService {
         log.info("BE-MATCHING/ check exit player - {} ", checkExit);
     }
 
+    public void removeOldPlayers() {
+        long currentTime = System.currentTimeMillis();
+        long oneMinuteInMillis = 60 * 1000;
+
+        log.info("BE-MATCHING/ before removing old players {} ", playerStore.getWaitingPlayers().size());
+        playerStore.getWaitingPlayers().removeIf(player -> currentTime - player.getEntryTime() > oneMinuteInMillis);
+        log.info("BE-MATCHING/ after removing old players {} ", playerStore.getWaitingPlayers().size());
+    }
+
     public void matchingGame(){
         if(playerStore.getWaitingPlayers().size() < PLAYER_SIZE){
             log.info("BE-MATCHING/ currentUserSize - {} ", playerStore.getWaitingPlayers().size());
+            removeOldPlayers();
             return;
         }
 
@@ -129,6 +139,9 @@ public class RecommendService {
                 playerStore.getWaitingPlayers().removeAll(limitMatchedPlayers);
                 matchedPlayers.removeAll(limitMatchedPlayers);
             }
+
+
+            removeOldPlayers();
         }
     }
 
