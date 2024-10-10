@@ -123,6 +123,7 @@ export const Collect = () => {
         capturedImages: capturedImagesRef.current, // ref로부터 이미지 배열 전송
         email: userEmail,
       });
+      alert(`Server response: ${JSON.stringify(response.data)}`);
 
       if (
         response.status === "failure" ||
@@ -131,6 +132,7 @@ export const Collect = () => {
         navigate("/collect/fail");
       } else {
         const processedResult = response.data.processed_result;
+        alert(`Processed result: ${JSON.stringify(processedResult)}`);
 
         const formattedResult = {
           ...processedResult,
@@ -138,7 +140,7 @@ export const Collect = () => {
           type: processedResult.type.toLowerCase() as ItemType,
         };
 
-        alert(`formattedResult: ${response.data.processed_result}`);
+        alert(`formattedResult: ${JSON.stringify(formattedResult)}`);
         // timeSlice와 successSlice에 결과 저장
         dispatch(setSuccess(formattedResult));
         dispatch(setTimeSlice(Date.now()));
