@@ -7,9 +7,10 @@ import {
 } from "@/app/apis/matchingApi";
 
 export const useMatching = (
+  email: string,
   nickname: string,
   rating: number,
-  equipment: any,
+  equipment: number[],
   selectedAvatar: number,
 ) => {
   const [isMatchingStatus, setIsMatchingStatus] = useState(false);
@@ -19,9 +20,9 @@ export const useMatching = (
 
   useEffect(() => {
     if (roomcode) {
-      window.location.href = `/game?nickname=${nickname}&rating=${rating}&roomcode=${roomcode}`;
+      window.location.href = `/game?email=${encodeURIComponent(email)}&nickname=${encodeURIComponent(nickname)}&rating=${rating}&roomcode=${encodeURIComponent(roomcode)}`;
     }
-  }, [roomcode, nickname, rating]);
+  }, [roomcode, nickname, rating, email]);
 
   const connectAndSendMessage = async () => {
     try {
@@ -39,18 +40,10 @@ export const useMatching = (
       setStompClient(client);
       setIsMatchingStatus(true);
 
-      const userEquipments = [
-        equipment.weapon,
-        equipment.active,
-        equipment.passive,
-      ]
-        .filter((item) => item?.itemId !== null && item?.itemId !== undefined)
-        .map((item) => item!.itemId as number);
-
       const requestDto = {
         nickname,
         rating,
-        items: userEquipments,
+        items: equipment,
         avatar: selectedAvatar.toString(),
       };
 
