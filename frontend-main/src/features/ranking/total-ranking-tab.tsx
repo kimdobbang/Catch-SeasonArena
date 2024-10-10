@@ -4,7 +4,7 @@ import { UserRankingBox } from "./user-ranking-box";
 import { fetchTotalRankings, RankingProps } from "@/app/apis/rankingApi"; // 전체 순위 API 호출 함수 추가
 import { RootState } from "@/app/redux/store";
 import { useSelector } from "react-redux";
-import { UserRankingSkeletonBox } from "./user-ranking-skeleton-box";
+// import { UserRankingSkeletonBox } from "./user-ranking-skeleton-box";
 
 export const TotalRankingTab = () => {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
@@ -12,19 +12,24 @@ export const TotalRankingTab = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // 더 가져올 데이터가 있는지 확인하는 상태
-  const observerRef = useRef(null); // IntersectionObserver를 위한 ref
+  const observerRef = useRef<HTMLDivElement | null>(null); // IntersectionObserver를 위한 ref
 
   useEffect(() => {
     const loadRankings = async () => {
       if (loading || !hasMore) return; // 이미 로딩 중이거나 데이터가 없으면 중단
       setLoading(true);
-      const newRankings = await fetchTotalRankings(page, accessToken);
-      if (newRankings.length > 0) {
-        setRankings((prev) => [...prev, ...newRankings]);
-      } else {
-        setHasMore(false); // 더 이상 데이터가 없으면 무한스크롤 중단
+      try {
+        const newRankings = await fetchTotalRankings(page, accessToken);
+        if (newRankings.length > 0) {
+          setRankings((prev) => [...prev, ...newRankings]);
+        } else {
+          setHasMore(false); // 더 이상 데이터가 없으면 무한스크롤 중단
+        }
+      } catch (error) {
+        console.error("Failed to fetch rankings:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     if (hasMore) {
       loadRankings(); // 더 불러올 데이터가 있을 때만 호출
@@ -44,7 +49,7 @@ export const TotalRankingTab = () => {
       {
         root: null, // 뷰포트를 기준으로 감지
         rootMargin: "0px", // 감지할 때 여유 범위 설정
-        threshold: 1.0, // 대상 요소가 100% 보일 때만 감지
+        threshold: 0.1, // 대상 요소가 100% 보일 때만 감지
       },
     );
 
@@ -75,8 +80,7 @@ export const TotalRankingTab = () => {
           ))}
 
           {/* 로딩 표시 */}
-          {loading && <UserRankingSkeletonBox />}
-
+          {loading && <div className="w-full h-[10px]">Loading...</div>}
           {/* 이 div에 스크롤이 닿으면 다음 페이지를 로딩 */}
           <div className="w-full h-[20px] bg-red" ref={observerRef} />
         </div>

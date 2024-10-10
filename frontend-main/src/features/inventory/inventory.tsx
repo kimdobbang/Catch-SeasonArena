@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ItemLibrary } from "@entities/index";
-import { InventoryUserInfo } from "@/features/index";
+import { CollectTimerModal, InventoryUserInfo } from "@/features/index";
 import { BottomNavBar } from "@ui/index";
 import { fetchUserItems } from "@/app/apis/inventoryApi";
 import { RootState } from "@/app/redux/store";
@@ -11,6 +11,7 @@ import { Item } from "@/app/types/common";
 export const Inventory = () => {
   const [items, setItems] = useState<Item[]>([]);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const [timerModalOpen, setTimerModalOpen] = useState(false);
 
   useEffect(() => {
     const loadItems = async () => {
@@ -28,12 +29,20 @@ export const Inventory = () => {
     }
   }, []);
 
+  const handleOpenModal = () => {
+    setTimerModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setTimerModalOpen(false);
+  };
+
   return (
     <div className="w-full h-full">
       <InventoryUserInfo items={items} setItems={setItems} />
       <ItemLibrary items={items} setItems={setItems}>
-        <BottomNavBar />
+        <BottomNavBar onTimerModalOpen={handleOpenModal} />
       </ItemLibrary>
+      {timerModalOpen && <CollectTimerModal onClose={handleCloseModal} />}
     </div>
   );
 };

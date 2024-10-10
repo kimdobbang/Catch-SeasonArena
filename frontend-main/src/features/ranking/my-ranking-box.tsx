@@ -9,6 +9,7 @@ import {
 import { CircleAvatar } from "@/shared/components/entities";
 import { fetchMyRanking, MyRankingProps } from "@/app/apis/rankingApi";
 import { useEffect, useState } from "react";
+import { getTierByRating } from "@/app/types/tier";
 
 interface MyRankingBoxProps {
   className?: string;
@@ -56,10 +57,11 @@ export const MyRankingBox = ({ className }: MyRankingBoxProps) => {
       </div>
       <div className="justify-around items-center flex flex-row w-full h-[50%]">
         <Body2Text className="font-bold text-white">
-          Top {myRanking ? `Top ${myRanking.totalRanking}` : "25"}위
+          전체 {myRanking ? `Top ${myRanking.totalRanking}` : "25"}위
         </Body2Text>
         <Body2Text className="font-bold text-white">
-          Gold Tier {myRanking ? `Top ${myRanking.tierRanking}` : "10"}위
+          {myRanking ? getTierByRating(myRanking?.rating) : "Bronze"} Tier{" "}
+          {myRanking ? `Top ${myRanking.tierRanking}` : "10"}위
         </Body2Text>
       </div>
     </div>
