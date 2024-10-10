@@ -344,9 +344,15 @@ setInterval(() => {
         // 1명만 남으면 방을 끝내고 사망처리
         if (playersMap.size === 1) {
           setTimeout(() => {
-            room.isEnd = true;
-            player.hp = 0;
+            if (playersMap && playersMap.has(player.socketId)) {
+              player.hp = 0;
+            }
           }, 2000);
+          setTimeout(() => {
+            if (rooms.has(roomCode)) {
+              room.isEnd = true;
+            }
+          }, 3000);
         }
         // 플레이어 이동 반영
         if (player.canMove) {
@@ -484,7 +490,7 @@ async function saveResultToRedis(nickname, result) {
       rank: result.rank,
       rating: result.rating,
     });
-    await redisClient.expire(result.email, 60);
+    // await redisClient.expire(result.email, 60);
     console.log(`데이터 저장 성공: ${result.email}`);
   } catch (err) {
     console.error(`Redis에 데이터 저장 중 오류 발생: ${err}`);
