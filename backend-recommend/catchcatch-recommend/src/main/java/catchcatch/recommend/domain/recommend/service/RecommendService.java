@@ -99,20 +99,20 @@ public class RecommendService {
             return;
         }
 
-        for(int i=0; i < RATING_MAX; i += RATING_RANGE){
+        for(int i=500; i < RATING_MAX; i += RATING_RANGE){
             Player lowerPlayer = Player.createRangePlayer(i);
-            Player upperPlayer = Player.createRangePlayer(Math.min(i + RATING_RANGE - 1, RATING_MAX));
+            Player upperPlayer = Player.createRangePlayer(i + RATING_RANGE - 1);
 
             NavigableSet<Player> matchedPlayers = playerStore.getWaitingPlayers().subSet(lowerPlayer, true, upperPlayer, true)
                     .stream().sorted(Comparator.comparingLong(Player::getEntryTime))
                     .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
-            if(matchedPlayers.size() == 0) continue;
+            if(matchedPlayers.isEmpty()) continue;
 
             int rating = checkWaitingTime(matchedPlayers.first());
 
             if(matchedPlayers.size() < PLAYER_SIZE && rating != 0){
-                lowerPlayer.extendRating(i==0 ? 0 : -(RATING_RANGE/2)*rating);
+                lowerPlayer.extendRating(-(RATING_RANGE/2)*rating);
                 upperPlayer.extendRating((RATING_RANGE/2)*rating);
                 matchedPlayers = playerStore.getWaitingPlayers().subSet(lowerPlayer, true, upperPlayer, true);
             }
@@ -122,8 +122,8 @@ public class RecommendService {
                         .limit(PLAYER_SIZE)
                         .collect(Collectors.toCollection(ConcurrentSkipListSet::new));
 
-                saveMattchedLogs(limitMatchedPlayers);
                 notifyPlayers(limitMatchedPlayers);
+                saveMattchedLogs(limitMatchedPlayers);
                 playerStore.getWaitingPlayers().removeAll(limitMatchedPlayers);
                 matchedPlayers.removeAll(limitMatchedPlayers);
             }
