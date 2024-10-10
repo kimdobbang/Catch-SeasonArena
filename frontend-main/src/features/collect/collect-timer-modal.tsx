@@ -5,6 +5,7 @@ import { AutumnItemImage } from "@atoms/index";
 import { useEffect } from "react";
 
 export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
+  const successData = useSelector((state: RootState) => state.success);
   const { name, itemId } = useSelector((state: RootState) => state.success);
   // timeSlice 상태에서 collectTime 가져오기
   const collectTime = useSelector((state: RootState) => state.time.collectTime);
@@ -17,7 +18,10 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
     if (timeDiff >= oneMinute) {
       onClose(); // 1분이 지나면 모달을 자동으로 닫습니다.
     } else {
-      console.log(`들어온 이름과 itemId: ${name} 그리고 ${itemId}`);
+      alert(
+        `들어온 이름과 itemId: ${name} 그리고 ${itemId} 그리고 successDATA: ${successData}`,
+      );
+
       const remainingTime = oneMinute - timeDiff;
       const timer = setTimeout(() => {
         onClose();
