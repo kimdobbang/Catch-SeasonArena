@@ -6,7 +6,7 @@ import { CameraButton } from "./camera-button";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
 import { sendImagesToServer } from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";
-import { setTimeSlice, clearTimeSlice } from "@/app/redux/slice/timeSlice"; // 추가된 import
+import { setTimeSlice, clearTimeSlice } from "@/app/redux/slice/timeSlice";
 import { ItemGrade, ItemType } from "@/app/types/common";
 import Arrow from "@/assets/icons/arrow-left.svg?react";
 
@@ -18,7 +18,7 @@ export const Collect = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null); // 디텍션 결과 그릴 캔버스
-  const [capturedImages, setCapturedImages] = useState<string[]>([]); // 5장만 관리
+  const capturedImagesRef = useRef<string[]>([]); // useRef로 이미지 관리
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
   const [isCapturing, setIsCapturing] = useState(false); // 사진 촬영 중 상태 관리
 
@@ -101,10 +101,8 @@ export const Collect = () => {
 
           const imageUrl = canvasRef.current.toDataURL("image/png");
 
-          setCapturedImages((prevCapturedImages) => [
-            ...prevCapturedImages,
-            imageUrl,
-          ]);
+          // useRef를 이용해 이미지 관리
+          capturedImagesRef.current.push(imageUrl);
           captureCount += 1;
 
           // 5장 캡처 완료 후 전송
@@ -120,8 +118,9 @@ export const Collect = () => {
 
   const handleSendImages = async () => {
     try {
+      // capturedImagesRef.current로 이미지 접근
       const response = await sendImagesToServer({
-        capturedImages,
+        capturedImages: capturedImagesRef.current, // ref로부터 이미지 배열 전송
         email: userEmail,
       });
 
@@ -139,6 +138,7 @@ export const Collect = () => {
           type: processedResult.type.toLowerCase() as ItemType,
         };
 
+        alert(`formattedResult: ${formattedResult}`);
         // timeSlice와 successSlice에 결과 저장
         dispatch(setSuccess(formattedResult));
         dispatch(setTimeSlice(Date.now()));
@@ -147,12 +147,13 @@ export const Collect = () => {
         setTimeout(() => {
           dispatch(clearTimeSlice());
           console.log("timeSlice cleared after 5 seconds.");
-        }, 5000); // 5초 후에 삭제
+        }, 10000); // 5초 후에 삭제
 
         navigate("/collect/success");
       }
 
       setIsCapturing(false); // 촬영 완료 후 문구 숨기기
+      capturedImagesRef.current = []; // 이미지 배열 초기화
     } catch (error: any) {
       console.log(`Error sending images: ${error.message}`);
       navigate("/collect/fail");
@@ -190,7 +191,7 @@ export const Collect = () => {
 
       {/* 촬영 중일 때 문구를 표시 */}
       {isCapturing && (
-        <div className="absolute top-0 left-0 w-full p-4 text-center text-white bg-black bg-opacity-50">
+        <div className="absolute top-0 left-0 w-full p-4 text-center text-white bg-black bg-opacity-30">
           사진 촬영 중입니다. 정확한 인식을 위해 잠시만 움직이지 말아 주세요.
         </div>
       )}
