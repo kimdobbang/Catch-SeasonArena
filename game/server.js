@@ -43,7 +43,8 @@ const rooms = new Map();
                               isStarted : false,
                               magnetic : {x : ??, y : ??}, 
                               startTime : 15723987892ms}>,
-                              isEnd : false
+                              isEnd : false,
+                              admin: false,
                               */
 const userRoom = new Map(); // userRoom = <socketId, roomCode>
 
@@ -107,7 +108,7 @@ function joinPlayer(
 
   if (nickname === "운영자") {
     protect = 0;
-    speed = 3;
+    speed = 5;
   }
 
   if (!rooms.has(roomCode)) {
@@ -120,8 +121,19 @@ function joinPlayer(
         rooms.get(roomCode).isStarted = true;
       }
     }, 10000);
+
     setLocation(player, 1);
-    const tempRoom = { players: new Map(), isStarted: false, isEnd: false };
+    const tempRoom = {
+      players: new Map(),
+      isStarted: false,
+      isEnd: false,
+      admin: false,
+    };
+
+    if (player.nickname === "운영자") {
+      tempRoom.admin = true;
+    }
+
     tempRoom.players.set(player.socketId, player);
     rooms.set(roomCode, tempRoom);
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
@@ -129,6 +141,11 @@ function joinPlayer(
     console.log(`( 방 생성 ) 방 번호 : ${roomCode}`);
   } else {
     const room = rooms.get(roomCode);
+
+    if (player.nickname === "운영자") {
+      room.admin = true;
+    }
+
     setLocation(player, room.players.size + 1);
     room.players.set(player.socketId, player); // 해당 방에 플레이어 추가
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
@@ -342,7 +359,7 @@ setInterval(() => {
 
       playersMap.forEach((player, socketId) => {
         // 1명만 남으면 방을 끝내고 사망처리
-        if (playersMap.size === 1) {
+        if ((room.admin && playersMap.size === 2) || playersMap.size === 1) {
           setTimeout(() => {
             if (playersMap && playersMap.has(player.socketId)) {
               player.hp = 0;
@@ -369,6 +386,10 @@ setInterval(() => {
           const rank = room.players.size;
           const rating = player.rating;
           const email = player.email;
+
+          if (room.admin) {
+            rank--;
+          }
 
           // 데이터셋을 객체로 만들기
           const result = {

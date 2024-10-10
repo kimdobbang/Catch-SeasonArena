@@ -599,6 +599,10 @@ function createPlayer(scene, players) {
     // 시야변수 설정 (초기세팅 false)
     clientPlayers[player.socketId].visible = false;
 
+    if (player.nickname === "운영자") {
+      clientPlayers[player.socketId].visible = true;
+    }
+
     // 갤럭시문 변수 설정 (초기세팅 false)
     clientPlayers[player.socketId].galaxymoon = false;
 
