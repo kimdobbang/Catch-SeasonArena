@@ -45,13 +45,13 @@ export const CombinationLibrary = ({
   }, [currentPage]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full h-full">
       <MemoizedTabBar
         categoryType="Season"
         onCategoryChange={handleCategoryChange} // 계절 변경 핸들러
       />
 
-      <div className="pt-6 bg-catch-sub-100">
+      <div className="w-full h-full pt-6 bg-catch-sub-100">
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell

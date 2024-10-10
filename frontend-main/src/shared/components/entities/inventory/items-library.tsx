@@ -11,7 +11,7 @@ const MemoizedTabBar = React.memo(TabBar);
 interface ItemLibraryProps {
   items: Item[];
   setItems: React.Dispatch<React.SetStateAction<Item[]>>;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const ItemLibrary = ({
@@ -60,13 +60,12 @@ export const ItemLibrary = ({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full h-[70%]">
       <MemoizedTabBar
         categoryType="ItemType"
         onCategoryChange={handleCategoryChange}
       />
-
-      <div className="pt-6 bg-catch-sub-100">
+      <div className="w-full h-full pt-6 bg-catch-sub-100">
         <div className="grid grid-cols-4 gap-4 mx-6 h-44">
           {currentItems.map((itemData) => (
             <ItemCell

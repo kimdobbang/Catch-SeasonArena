@@ -6,9 +6,14 @@ export type CategoryType = "Season" | "ItemType";
 interface TabBarProps {
   categoryType: CategoryType;
   onCategoryChange?: (category: string) => void;
+  className?: string;
 }
 
-export const TabBar = ({ categoryType, onCategoryChange }: TabBarProps) => {
+export const TabBar = ({
+  categoryType,
+  onCategoryChange,
+  className,
+}: TabBarProps) => {
   const categories = categoryType === "Season" ? seasonNames : itemTypeNames;
 
   const [activeTab, setActiveTab] = useState<string>("");
@@ -31,7 +36,9 @@ export const TabBar = ({ categoryType, onCategoryChange }: TabBarProps) => {
   };
 
   return (
-    <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+    <div
+      className={`${className} w-full text-sm font-medium text-center text-gray-500 border-b border-gray-200`}
+    >
       <ul className="flex justify-between w-full -mb-px shadow-custom-inset">
         {Object.keys(categories).map((category) => (
           <li key={category} className="flex-grow">
