@@ -362,7 +362,13 @@ setInterval(() => {
         if ((room.admin && playersMap.size === 2) || playersMap.size === 1) {
           setTimeout(() => {
             if (playersMap && playersMap.has(player.socketId)) {
-              player.hp = 0;
+              if (player.nickname !== "운영자") {
+                player.hp = 0;
+              } else {
+                setTimeout(() => {
+                  player.hp = 0;
+                }, 500);
+              }
             }
           }, 2000);
           setTimeout(() => {
