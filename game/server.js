@@ -107,8 +107,8 @@ function joinPlayer(
   setPassive(player, passive);
 
   if (nickname === "운영자") {
-    protect = 0;
-    speed = 5;
+    player.protect = 0;
+    player.speed = 5;
   }
 
   if (!rooms.has(roomCode)) {
