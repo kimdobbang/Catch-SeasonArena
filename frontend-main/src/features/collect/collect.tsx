@@ -187,7 +187,7 @@ export const Collect = () => {
       {/* 촬영 중일 때 문구를 표시 */}
       {isCapturing && (
         <div className="absolute top-0 left-0 w-full p-4 text-center text-white bg-black bg-opacity-30">
-          사진 촬영 중입니다. 정확한 인식을 위해 잠시만 움직이지 말아 주세요.
+          아이템 탐지 중입니다. 정확한 인식을 위해 잠시 움직이지 말아 주세요.
         </div>
       )}
     </div>
