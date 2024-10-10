@@ -20,6 +20,7 @@ export const Collect = () => {
   const overlayCanvasRef = useRef<HTMLCanvasElement | null>(null); // 디텍션 결과 그릴 캔버스
   const [capturedImages, setCapturedImages] = useState<string[]>([]); // 5장만 관리
   const [facingMode, setFacingMode] = useState("environment"); // 기본값: 후면 카메라
+  const [isCapturing, setIsCapturing] = useState(false); // 사진 촬영 중 상태 관리
 
   useEffect(() => {
     const initCamera = async () => {
@@ -39,7 +40,6 @@ export const Collect = () => {
     initCamera();
 
     return () => {
-      // 페이지를 떠날 때 카메라 트랙을 중지하여 빨간 줄이 안 나오도록 처리
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
         tracks.forEach((track) => track.stop());
@@ -54,6 +54,7 @@ export const Collect = () => {
 
   // 이미지 5장을 찍고 서버에 전송하는 로직
   const autoCapture = () => {
+    setIsCapturing(true); // 촬영 시작 시 문구 표시
     let captureCount = 0;
     const interval = setInterval(() => {
       if (videoRef.current && canvasRef.current && overlayCanvasRef.current) {
@@ -145,11 +146,13 @@ export const Collect = () => {
         // 1분 후 timeSlice 비우기
         setTimeout(() => {
           dispatch(clearTimeSlice());
-          alert("timeSlice cleared after 5 seconds.");
+          console.log("timeSlice cleared after 5 seconds.");
         }, 5000); // 5초 후에 삭제
 
         navigate("/collect/success");
       }
+
+      setIsCapturing(false); // 촬영 완료 후 문구 숨기기
     } catch (error: any) {
       console.log(`Error sending images: ${error.message}`);
       navigate("/collect/fail");
@@ -180,10 +183,17 @@ export const Collect = () => {
       />
       <button
         onClick={switchCamera}
-        className="absolute p-2 bg-red-400 text-white transform -translate-x-1/2 bottom-[90%] left-[90%]"
+        className="absolute p-2 bg-catch-sub-300 transform -translate-x-1/2 rounded-lg bottom-[90%] left-[90%]"
       >
         <CameraChangeIcon />
       </button>
+
+      {/* 촬영 중일 때 문구를 표시 */}
+      {isCapturing && (
+        <div className="absolute top-0 left-0 w-full p-4 text-center text-white bg-black bg-opacity-50">
+          사진 촬영 중입니다. 정확한 인식을 위해 잠시만 움직이지 말아 주세요.
+        </div>
+      )}
     </div>
   );
 };
