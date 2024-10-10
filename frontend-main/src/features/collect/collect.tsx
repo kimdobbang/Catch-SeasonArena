@@ -138,7 +138,7 @@ export const Collect = () => {
           type: processedResult.type.toLowerCase() as ItemType,
         };
 
-        alert(`formattedResult: ${formattedResult}`);
+        alert(`formattedResult: ${response.data.processed_result}`);
         // timeSlice와 successSlice에 결과 저장
         dispatch(setSuccess(formattedResult));
         dispatch(setTimeSlice(Date.now()));
