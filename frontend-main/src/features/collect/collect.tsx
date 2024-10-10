@@ -39,11 +39,13 @@ export const Collect = () => {
 
     initCamera();
 
+    // 컴포넌트가 언마운트될 때 카메라 스트림 중지
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
-        const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
-        tracks.forEach((track) => track.stop());
-        videoRef.current.srcObject = null; // 명확하게 카메라 스트림 해제
+        const stream = videoRef.current.srcObject as MediaStream;
+        const tracks = stream.getTracks(); // 카메라 스트림의 트랙을 가져옴
+        tracks.forEach((track) => track.stop()); // 각 트랙을 중지
+        videoRef.current.srcObject = null; // 스트림 해제
       }
     };
   }, [facingMode]);
@@ -238,8 +240,9 @@ export const Collect = () => {
 
       {/* 촬영 중일 때 문구를 표시 */}
       {isCapturing && (
-        <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full text-white bg-black bg-opacity-30">
-          아이템 탐지 중입니다. 정확한 인식을 위해 잠시 움직이지 말아 주세요.
+        <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full text-center text-white bg-black bg-opacity-30">
+          아이템 탐지 중입니다. <br /> 정확한 인식을 위해 <br />
+          잠시 움직이지 말아 주세요.
         </div>
       )}
     </div>
