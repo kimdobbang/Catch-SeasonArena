@@ -19,6 +19,7 @@ export const UserRankingBox = ({
   rank,
   avatar,
 }: UserRankingProps) => {
+  console.log("Rendering UserRankingBox with avatar:", avatar); // avatar 값을 확인
   return (
     <div className="flex flex-row items-center bg-catch-sub-300 rounded-lg w-[90%] h-[45px] ">
       <div className="w-[25%] flex flex-row gap-2 items-center justify-center">
