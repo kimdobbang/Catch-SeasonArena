@@ -45,10 +45,13 @@ export const Collect = () => {
     initCamera();
 
     return () => {
+      // 페이지를 떠날 때 카메라 트랙을 중지하여 빨간 줄이 안 나오도록 처리
       if (videoRef.current && videoRef.current.srcObject) {
         const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
         tracks.forEach((track) => track.stop());
+        videoRef.current.srcObject = null; // 명확하게 카메라 스트림 해제
       }
+      if (interval) clearInterval(interval);
     };
   }, [facingMode]);
 
