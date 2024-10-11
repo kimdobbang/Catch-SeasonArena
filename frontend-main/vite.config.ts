@@ -22,9 +22,10 @@ export default defineConfig({
       manifest: {
         name: "캐치캐치! 시즌아레나 by시즌핑",
         short_name: "캐치! 시즌핑",
-        theme_color: "#ffffff",
-        display: "standalone", // 전체 화면 모드로 실행
         start_url: "/",
+        theme_color: "#FFFFFF",
+        display: "standalone",
+        id: "/",
         icons: [
           {
             src: "/pwa-76x76.png",
@@ -40,12 +41,13 @@ export default defineConfig({
             src: "/pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any maskable",
           },
           {
             src: "/pwa-310x310.png",
             sizes: "310x310",
             type: "image/png",
-            purpose: "any",
+            purpose: "any maskable",
           },
         ],
       },
@@ -56,18 +58,18 @@ export default defineConfig({
       "@": "/src",
       "@app": "/src/app",
       "@assets": "/src/assets",
-      "@featrues": "/src/featrues",
+      "@features": "/src/features",
       "@atoms": "/src/shared/components/atoms",
       "@entities": "/src/shared/components/entities",
       "@pages": "/src/pages",
       "@ui": "/src/shared/ui",
     },
   },
-  base: "/", // base 경로를 절대 경로로 수정. 배포시 base는 아래주석 예시처럼 .env로 관리
+  base: "/", // base 경로를 절대 경로로 수정. 배포시 base는 .env로 관리
   // base: process.env.VITE_BASE_URL || "/",
   // base: import.meta.env.VITE_BASE_URL || "/",
   server: {
-    host: "0.0.0.0", // 외부 네트워크에서 접근 가능하도록 설정(배포시 보안상 검토필요)
+    host: "0.0.0.0", // 외부 네트워크에서 접근 가능하도록 설정 (배포시 보안상 검토 필요)
     port: 3000, // 포트를 명시적으로 설정
     strictPort: true, // 사용하려는 포트를 고정 (다른 포트로 변경되지 않도록)
   },
