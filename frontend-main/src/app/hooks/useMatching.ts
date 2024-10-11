@@ -35,6 +35,10 @@ export const useMatching = (
             setRoomcode(parsedMessage.roomId);
           } else if (parsedMessage.type === "TIME") {
             setExpectation(parsedMessage.time);
+          } else if (parsedMessage.type === "DISCONNECTION") {
+            // 여기를 수정
+            console.log("DISCONNECTION 메시지 수신, 연결 해제 중...");
+            disconnect(); // 연결 해제 함수 호출
           }
         } catch (err) {
           console.error("메시지 처리 중 오류:", err);
@@ -74,6 +78,7 @@ export const useMatching = (
   };
 };
 
+// 공통 메시지 파싱 함수
 const parseMessage = (message: string) => {
   return typeof message === "string" ? JSON.parse(message) : message;
 };
