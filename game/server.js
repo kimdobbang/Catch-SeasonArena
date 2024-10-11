@@ -76,6 +76,20 @@ function joinPlayer(
   rating,
   email
 ) {
+  const room = rooms.get(roomCode);
+
+  // 중복된 닉네임 체크
+  if (room) {
+    const isNicknameTaken = Array.from(room.players.values()).some(
+      (player) => player.nickname === nickname
+    );
+
+    if (isNicknameTaken) {
+      socket.emit("nicknameTaken", nickname); // 클라이언트에 닉네임 중복 알림
+      return;
+    }
+  }
+
   // 플레이어 객체 생성
   const player = {
     socketId: socket.id,
@@ -139,7 +153,7 @@ function joinPlayer(
     userRoom.set(player.socketId, roomCode); // 유저의 방코드 매핑
 
     console.log(`( 방 생성 ) 방 번호 : ${roomCode}`);
-  } else {
+  } else if (!rooms.get(roomCode).isStarted) {
     const room = rooms.get(roomCode);
 
     if (player.nickname === "운영자") {
@@ -407,6 +421,8 @@ setInterval(() => {
           saveResultToRedis(nickname, result); // 레디스에 저장
 
           getAllPlayers(roomCode).delete(player.socketId);
+          userRoom.delete(player.socketId);
+
           io.in(roomCode).emit("playerDeath", player.socketId);
         }
       });
