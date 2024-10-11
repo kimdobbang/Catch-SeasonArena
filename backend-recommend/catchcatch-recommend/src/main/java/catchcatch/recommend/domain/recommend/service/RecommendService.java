@@ -117,7 +117,7 @@ public class RecommendService {
             return;
         }
 
-        for(int i=500; i < RATING_MAX; i += RATING_RANGE){
+        for(int i=400; i < RATING_MAX; i += RATING_RANGE){
             Player lowerPlayer = Player.createRangePlayer(i);
             Player upperPlayer = Player.createRangePlayer(i + RATING_RANGE - 1);
 
