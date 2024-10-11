@@ -18,7 +18,7 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
 
     if (timeDiff >= oneMinute) {
       dispatch(clearSuccess());
-      onClose(); // 1분이 지나면 모달을 자동으로 닫습니다.
+      onClose();
     } else {
       const remainingTime = oneMinute - timeDiff;
       const timer = setTimeout(() => {
@@ -26,7 +26,7 @@ export const CollectTimerModal = ({ onClose }: { onClose: () => void }) => {
         onClose();
       }, remainingTime);
 
-      return () => clearTimeout(timer); // 컴포넌트가 언마운트되면 타이머 해제
+      return () => clearTimeout(timer);
     }
   }, [collectTime, onClose, dispatch]);
 
