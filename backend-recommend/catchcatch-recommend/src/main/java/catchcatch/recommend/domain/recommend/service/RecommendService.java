@@ -110,6 +110,11 @@ public class RecommendService {
         log.info("BE-MATCHING/ after removing old players {} ", playerStore.getWaitingPlayers().size());
     }
 
+    public void removeAllPlayers(){
+        playerStore.getWaitingPlayers().removeAll(playerStore.getWaitingPlayers());
+        log.info("BE-MATCHING/remove all players {} ", playerStore.getWaitingPlayers().size());
+    }
+
     public void matchingGame(){
         if(playerStore.getWaitingPlayers().size() < PLAYER_SIZE){
             log.info("BE-MATCHING/ currentUserSize - {} ", playerStore.getWaitingPlayers().size());
