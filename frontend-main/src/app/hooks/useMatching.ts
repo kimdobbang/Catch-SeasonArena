@@ -27,7 +27,7 @@ export const useMatching = (
 
   const connectAndSendMessage = useCallback(async () => {
     try {
-      const client = await connectToMatching(nickname, (message) => {
+      const client = await connectToMatching(nickname, async (message) => {
         try {
           const parsedMessage = parseMessage(message);
 
@@ -37,8 +37,11 @@ export const useMatching = (
             setExpectation(parsedMessage.time);
           } else if (parsedMessage.type === "DISCONNECTION") {
             console.log("DISCONNECTION 메시지 수신, 연결 해제 중...");
-            disconnect();
-            console.log("웹소켓 해제 완료");
+
+            if (client) {
+              await client.deactivate(); // WebSocket 직접 해제
+              console.log("웹소켓 해제 완료");
+            }
           }
         } catch (err) {
           console.error("메시지 처리 중 오류:", err);
@@ -78,6 +81,7 @@ export const useMatching = (
   };
 };
 
+// 공통 메시지 파싱 함수
 const parseMessage = (message: string) => {
   return typeof message === "string" ? JSON.parse(message) : message;
 };
