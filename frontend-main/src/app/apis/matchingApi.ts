@@ -68,6 +68,7 @@ export const disconnectFromMatching = async (
     });
     console.log("매칭 취소 요청 전송 완료:", nickname);
 
+    client.forceDisconnect();
     await client.deactivate();
     console.log("WebSocket 연결 해제 완료:", nickname);
   } catch (error) {
