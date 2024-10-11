@@ -11,7 +11,6 @@ export const NumberPagination = ({
   onNextPage,
   onPrevPage,
 }: NumberPaginationProps) => {
-  // 페이지가 하나뿐일 때는 버튼을 비활성화
   const isSinglePage = totalPages <= 1;
 
   return (
