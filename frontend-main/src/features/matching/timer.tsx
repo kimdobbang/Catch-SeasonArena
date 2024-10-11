@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { formatTime } from "@/shared/utils/format";
-import { Body1Text } from "@/shared/components/atoms";
+import { Body2Text } from "@/shared/components/atoms";
 
 export const Timer = memo(({ remainingTime }: { remainingTime: number }) => {
   return (
-    <Body1Text className="font-bold">
-      예상 매칭 시간: {formatTime(remainingTime)}
-    </Body1Text>
+    <Body2Text className="text-catch-sub-400">
+      예상 매칭 시간 {formatTime(remainingTime)}
+    </Body2Text>
   );
 });

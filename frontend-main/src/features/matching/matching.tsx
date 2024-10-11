@@ -9,7 +9,6 @@ import {
   EquippedItems,
 } from "@entities/index";
 import { useMatching } from "@/app/hooks/useMatching";
-import { Timer } from "@/features/index";
 
 const CircleAvatarMemo = React.memo(CircleAvatar);
 const UserNameContainerMemo = React.memo(UserNameContainer);
@@ -70,7 +69,7 @@ export const Matching = () => {
         />
       </div>
 
-      <div className="w-full h-[35%] flex flex-col items-center gap-5 mb-5">
+      <div className="w-full h-[35%] flex flex-col items-center gap-7 mb-5">
         <UserNameContainerMemo className="mt-4" />
         <TierProgressBarMemo />
         <EquippedItemsMemo showCaption={true} />
@@ -79,10 +78,9 @@ export const Matching = () => {
       <div className="w-full h-[45%] gap-6 flex flex-col items-center justify-center bg-catch-sub-100 rounded-t-lg">
         {error && <div className="error-message">{error}</div>}
 
-        <Timer remainingTime={remainingTime} />
-
         <MatchingButtons
           isMatchingStatus={isMatchingStatus}
+          remainingTime={remainingTime}
           onConnect={handleConnect}
           onDisconnect={handleDisconnect}
         />

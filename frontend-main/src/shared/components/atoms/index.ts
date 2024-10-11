@@ -44,3 +44,6 @@ export { ProgressBar } from "@atoms/symbols/tiers/progress-bar";
 
 export { TierBadge } from "./symbols/tiers/tier-badge";
 export { TierInitial } from "./symbols/tiers/tier-initial";
+
+// 게임 관련
+export { RemainingDays } from "@/shared/components/atoms/texts/remaining-days";

@@ -11,5 +11,14 @@ export const getDurability = (grade: string) => {
 export const formatTime = (timeInSeconds: number) => {
   const minutes = Math.floor(timeInSeconds / 60);
   const seconds = timeInSeconds % 60;
-  return `${minutes}: ${seconds}`;
+  return `${minutes} : ${seconds}`;
+};
+
+export const SeasonRemainingDays = (): number => {
+  const now = new Date();
+  const endOfNovember = new Date(now.getFullYear(), 10, 30);
+  const timeDiff = endOfNovember.getTime() - now.getTime();
+  const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+  return daysDiff > 0 ? daysDiff : 0;
 };
