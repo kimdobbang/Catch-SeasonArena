@@ -463,7 +463,10 @@ function create() {
           players[key].x,
           players[key].y
         );
-        if (tempDist < 850 || clientPlayers[socket.id].visible) {
+        if (
+          clientPlayers[socket.id] &&
+          (tempDist < 850 || clientPlayers[socket.id].visible)
+        ) {
           const pointX = players[key].x / (5000 / 80) + 300;
           const pointY = players[key].y / (5000 / 80) + 20;
           if (tempDist === 0) {
