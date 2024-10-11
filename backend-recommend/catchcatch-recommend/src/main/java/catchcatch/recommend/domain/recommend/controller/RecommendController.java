@@ -39,4 +39,9 @@ public class RecommendController {
         log.info("BACK-RECOMMEND/ exit player: {}", requestDto);
         recommendService.exitPlayerByNickname(requestDto);
     }
+
+    @MessageMapping("/remove")
+    public void removePlayer(){
+        recommendService.removeAllPlayers();
+    }
 }
