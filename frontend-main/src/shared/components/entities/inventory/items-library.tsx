@@ -60,7 +60,7 @@ export const ItemLibrary = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-[70%]">
+    <div className="flex flex-col h-[70%] w-full justify-center relative ">
       <MemoizedTabBar
         categoryType="ItemType"
         onCategoryChange={handleCategoryChange}

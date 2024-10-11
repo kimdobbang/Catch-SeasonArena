@@ -2,7 +2,7 @@ import { Collect } from "@/features/collect/collect";
 
 export const CollectPage = () => {
   return (
-    <div className="w-full h-full">
+    <div className="relative w-full h-full">
       <Collect />
     </div>
   );

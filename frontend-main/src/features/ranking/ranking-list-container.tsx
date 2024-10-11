@@ -42,7 +42,7 @@ export const RankingListContainer = ({ className }: { className?: string }) => {
         </div>
       </div>
       <div className="w-full h-[65%]">{tabs[activeTab].content}</div>
-      <div className="h-[25%]">
+      <div className="h-[25%] w-full justify-center flex items-center">
         <BottomNavBar
           onTimerModalOpen={handleTimerOpenModal}
           className="absolute bottom-0 z-10"
