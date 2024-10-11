@@ -21,7 +21,7 @@ export const Collectionbook = () => {
             onTimerModalOpen={handleTimerOpenModal}
             className="absolute bottom-0 z-10 ml-auto mr-auto"
           />
-        </CollectionbookLibrary>
+        </CollectionbookLibrary>{" "}
       </div>
       {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}
     </div>

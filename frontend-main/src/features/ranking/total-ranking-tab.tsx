@@ -13,6 +13,15 @@ export const TotalRankingTab = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // 더 가져올 데이터가 있는지 확인하는 상태
   const observerRef = useRef<HTMLDivElement | null>(null); // IntersectionObserver를 위한 ref
+  const scrollableRef = useRef<HTMLDivElement | null>(null); // 스크롤 컨테이너를 위한 ref
+
+  // 스크롤 위치를 맨 위로 설정하는 useEffect 추가
+  useEffect(() => {
+    // 페이지가 처음 로드되거나 리셋될 때, 스크롤 가능한 컨테이너의 스크롤 위치를 맨 위로 이동
+    if (scrollableRef.current) {
+      scrollableRef.current.scrollTo(0, 0);
+    }
+  }, []);
 
   useEffect(() => {
     const loadRankings = async () => {
@@ -67,7 +76,10 @@ export const TotalRankingTab = () => {
         <div className="w-full h-[1px] bg-catch-gray-200 mt-2 mb-2"></div>
       </div>
       {/* 스크롤 가능한 영역 */}
-      <div className="h-[85%] flex flex-col items-center flex-grow overflow-y-auto justify-evenly">
+      <div
+        ref={scrollableRef}
+        className="h-[85%] flex flex-col items-center flex-grow overflow-y-auto justify-evenly p-1"
+      >
         <div className="flex flex-col items-center w-full gap-5 ">
           {rankings.map((ranking, index) => (
             <UserRankingBox
