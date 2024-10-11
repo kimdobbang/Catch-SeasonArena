@@ -123,6 +123,7 @@ function joinPlayer(
   if (nickname === "운영자") {
     player.protect = 0;
     player.speed = 2.5;
+    player.invincibility = true;
   }
 
   if (!rooms.has(roomCode)) {
