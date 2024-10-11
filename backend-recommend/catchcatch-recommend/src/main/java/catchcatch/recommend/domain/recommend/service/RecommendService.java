@@ -6,6 +6,7 @@ import catchcatch.recommend.domain.recommend.requestdto.EntryRequestDto;
 import catchcatch.recommend.domain.recommend.requestdto.ExitRequestDto;
 import catchcatch.recommend.domain.recommend.requestdto.MatchData;
 import catchcatch.recommend.domain.recommend.requestdto.MatchingDataDto;
+import catchcatch.recommend.domain.recommend.responsedto.DisconnectionDto;
 import catchcatch.recommend.domain.recommend.responsedto.ExpectationTimeDto;
 import catchcatch.recommend.domain.recommend.responsedto.RoomCodeDto;
 import lombok.extern.slf4j.Slf4j;
@@ -102,7 +103,7 @@ public class RecommendService {
         while (iterator.hasNext()) {
             Player player = iterator.next();
             if (currentTime - player.getEntryTime() > oneMinuteInMillis) {
-                messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),"DISCONNECT");
+                messagingTemplate.convertAndSend("/api/matching/sub/game/" + player.getNickname(),new DisconnectionDto("DISCONNECTION"));
                 iterator.remove();
             }
         }
