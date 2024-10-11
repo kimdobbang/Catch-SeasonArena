@@ -12,7 +12,7 @@ export const MatchingButtons = memo(
     onDisconnect: () => void;
   }) => {
     return (
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col items-center justify-center gap-5">
         {isMatchingStatus ? (
           <>
             <PrimaryButton

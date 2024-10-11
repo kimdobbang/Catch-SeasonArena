@@ -24,7 +24,8 @@ body {
 }
 
 #root {
-  max-width: 440px; /* 중앙 정렬 및 최대 너비 설정 */
+  max-width: 420px; /* 중앙 정렬 및 최대 너비 설정 */
+  width: 100%;
   margin: 0 auto; /* 수평 중앙 정렬 */
   background-color: #fff; /* 배경색 설정 */
 }

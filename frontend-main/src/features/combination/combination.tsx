@@ -179,7 +179,7 @@ export const Combination = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="w-full h-[30%] flex flex-col">
+      <div className="w-full h-[35%] flex flex-col">
         <div className="flex items-center flex-row justify-center gap-5 w-full h-[70%]">
           {combineItem1 ? (
             <CombinationCell
@@ -212,9 +212,12 @@ export const Combination = () => {
           </PrimaryButton>
         </div>
       </div>
-      <div className="w-full h-[70%]">
+      <div className="w-full h-[65%]">
         <CombinationLibrary items={items} handleItemClick={handleItemClick}>
-          <BottomNavBar onTimerModalOpen={handleTimerOpenModal} />
+          <BottomNavBar
+            onTimerModalOpen={handleTimerOpenModal}
+            className="absolute bottom-0 z-10"
+          />
         </CombinationLibrary>
       </div>
       {isModalOpen && selectedItem && (

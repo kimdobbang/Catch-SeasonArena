@@ -117,7 +117,7 @@ export const CombinationItemCard = ({
           </div>
           {/* 이미지, 아이템 이름, 내구도 */}
           <div className="h-[65%] w-full flex flex-col justify-center gap-2 items-center">
-            <div className="w-[100px] h-[100px] rounded-xl">
+            <div className="w-[100px] h-[100px] rounded-xl flex items-center justify-center">
               <AutumnItemImage itemId={itemId} />
             </div>
             <Body1Text className="!text-catch-gray-300">{name}</Body1Text>
