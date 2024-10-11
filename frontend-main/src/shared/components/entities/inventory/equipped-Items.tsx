@@ -51,7 +51,7 @@ export const EquippedItems = ({
   );
 
   return (
-    <div className="flex flex-row items-center justify-evenly gap-9">
+    <div className="flex flex-row items-center gap-12 justify-evenly">
       {equippedItemList.map(({ type, equippedItem, matchedItem }) => (
         <EquippedCell
           key={`${type}-${matchedItem?.inventoryId ?? "empty"}`}

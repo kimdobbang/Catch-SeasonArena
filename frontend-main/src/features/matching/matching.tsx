@@ -60,17 +60,17 @@ export const Matching = () => {
   }, [disconnect]);
 
   return (
-    <div className="w-full h-full">
+    <div className="flex flex-col w-full h-full">
       <div className="w-full h-[20%] flex flex-col items-center justify-center">
         <CircleAvatarMemo
-          avatarIcon={true}
+          avatarIcon={false}
           number={selectedAvatar}
           emotion="normal"
           width={96}
         />
       </div>
 
-      <div className="w-full h-[35%] flex flex-col items-center gap-6 mb-5">
+      <div className="w-full h-[35%] flex flex-col items-center gap-5 mb-5">
         <UserNameContainerMemo className="mt-4" />
         <TierProgressBarMemo />
         <EquippedItemsMemo showCaption={true} />

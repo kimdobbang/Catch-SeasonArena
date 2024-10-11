@@ -37,12 +37,12 @@ export const Inventory = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="relative flex flex-col items-center justify-center w-full h-full">
       <InventoryUserInfo items={items} setItems={setItems} />
       <ItemLibrary items={items} setItems={setItems}>
         <BottomNavBar
           onTimerModalOpen={handleTimerOpenModal}
-          className="absolute bottom-0 z-10 h-[30%]"
+          className="absolute bottom-0 z-10 items-center"
         />
       </ItemLibrary>
       {timerModalOpen && <CollectTimerModal onClose={handleTimerCloseModal} />}
