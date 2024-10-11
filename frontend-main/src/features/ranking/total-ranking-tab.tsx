@@ -78,7 +78,7 @@ export const TotalRankingTab = () => {
       {/* 스크롤 가능한 영역 */}
       <div
         ref={scrollableRef}
-        className="h-[85%] flex flex-col items-center flex-grow overflow-y-auto justify-evenly"
+        className="h-[85%] flex flex-col items-center flex-grow overflow-y-auto justify-evenly p-1"
       >
         <div className="flex flex-col items-center w-full gap-5 ">
           {rankings.map((ranking, index) => (
