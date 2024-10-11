@@ -1,0 +1,56 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.catchcatch'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Kafka에 로그를 전송하기 위해 Logback에 Kafka Appender를 추가
+	implementation 'com.github.danielwegener:logback-kafka-appender:0.1.0'
+
+// Logstash에서 처리할 수 있는 JSON 형식으로 로그 메시지를 인코딩
+	implementation 'net.logstash.logback:logstash-logback-encoder:6.2'
+
+	//KAFKA
+	implementation 'com.github.danielwegener:logback-kafka-appender:0.1.0'
+	implementation 'net.logstash.logback:logstash-logback-encoder:6.2'
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1' // 버전은 실제 사용하는 Kafka와 호환되는 버전으로 변경
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.15.1'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
