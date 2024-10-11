@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Pretendard;
+}
+
+#root {
+  max-width: 420px; /* 중앙 정렬 및 최대 너비 설정 */
+  width: 100%;
+  margin: 0 auto; /* 수평 중앙 정렬 */
+  background-color: #fff; /* 배경색 설정 */
+}
