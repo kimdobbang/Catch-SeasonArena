@@ -164,6 +164,7 @@ export const Combination = () => {
   const handleTimerOpenModal = () => {
     setTimerModalOpen(true);
   };
+
   const handleTimerCloseModal = () => {
     setTimerModalOpen(false);
   };
@@ -216,7 +217,7 @@ export const Combination = () => {
         <CombinationLibrary items={items} handleItemClick={handleItemClick}>
           <BottomNavBar
             onTimerModalOpen={handleTimerOpenModal}
-            className="absolute bottom-0 z-10"
+            className="absolute bottom-0 "
           />
         </CombinationLibrary>
       </div>

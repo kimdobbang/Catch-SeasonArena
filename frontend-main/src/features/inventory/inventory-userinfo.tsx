@@ -29,7 +29,7 @@ export const InventoryUserInfo = ({
           className="relative right-6"
         />
       </div>
-      <div className="flex flex-col w-full gap-2 ml-6 mr-2">
+      <div className="flex flex-col w-[70%] gap-2 ml-6 mr-2">
         <div className="flex items-center">
           <TierBadge rating={rating} />
           <Body1Text className=" text-catch-gray-500">{tier}</Body1Text>
