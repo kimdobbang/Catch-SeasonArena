@@ -62,20 +62,20 @@ export const Matching = () => {
     <div className="flex flex-col w-full h-full">
       <div className="w-full h-[20%] flex flex-col items-center justify-center">
         <CircleAvatarMemo
-          avatarIcon={false}
+          avatarIcon={true}
           number={selectedAvatar}
           emotion="normal"
           width={96}
         />
       </div>
 
-      <div className="w-full h-[35%] flex flex-col items-center gap-7 mb-5">
+      <div className="w-full h-[40%] flex flex-col items-center gap-4 mb-5">
         <UserNameContainerMemo className="mt-4" />
         <TierProgressBarMemo />
         <EquippedItemsMemo showCaption={true} />
       </div>
 
-      <div className="w-full h-[45%] gap-6 flex flex-col items-center justify-center bg-catch-sub-100 rounded-t-lg">
+      <div className="w-full h-[40%] gap-6 flex flex-col items-center justify-center bg-catch-sub-100 rounded-t-lg">
         {error && <div className="error-message">{error}</div>}
 
         <MatchingButtons

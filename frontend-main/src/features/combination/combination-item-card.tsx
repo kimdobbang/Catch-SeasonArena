@@ -1,18 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import {
-  Body1Text,
-  Caption1Text,
-  CircleTag,
-  ItemTypeTag,
-  AutumnItemImage,
-  Body2Text,
-} from "@atoms/index";
-import { Line } from "@ui/index";
+import { CircleTag } from "@atoms/index";
 import { Item, ItemGrade, ItemType, getDurability } from "@/app/types/common";
 import { deleteUserItem } from "@/app/apis/inventoryApi";
 import { setActive, setPassive, setWeapon } from "@/app/redux/slice/userSlice";
 import { useEffect } from "react";
+import { CombinationCardItemInfo } from "./combination-card-item-info";
+import { CombinationCardEffect } from "./combination-card-effect";
+import { CombinationActionButtons } from "./combination-action-buttons";
 
 interface CombinationItemCardProps {
   item: Item;
@@ -33,7 +28,7 @@ export const CombinationItemCard = ({
   setItems,
 }: CombinationItemCardProps) => {
   const dispatch = useDispatch();
-  const { itemId, name, type, grade, durability, effect } = item;
+  const { type, grade, effect } = item;
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const maxDurability = getDurability(grade as ItemGrade);
 
@@ -52,6 +47,7 @@ export const CombinationItemCard = ({
     console.log("아이템; ", item);
   }, []);
 
+  // 아이템 삭제
   const handleDeleteClick = async () => {
     try {
       if (!accessToken) {
@@ -112,49 +108,32 @@ export const CombinationItemCard = ({
           <div className="h-[5%] w-full justify-end flex p-2 mt-2">
             <CircleTag
               grade={grade as ItemGrade}
-              className="bg-catch-gray-300"
+              className={
+                grade === "normal"
+                  ? "bg-catch-gray-300"
+                  : grade === "rare"
+                    ? "bg-catch-tier-Gold"
+                    : "bg-catch-tier-Diamond"
+              }
             />
           </div>
-          {/* 이미지, 아이템 이름, 내구도 */}
-          <div className="h-[65%] w-full flex flex-col justify-center gap-2 items-center">
-            <div className="w-[100px] h-[100px] rounded-xl flex items-center justify-center">
-              <AutumnItemImage itemId={itemId} />
-            </div>
-            <Body1Text className="!text-catch-gray-300">{name}</Body1Text>
-            <Line className="bg-catch-gray-200" />
-            <Caption1Text>
-              {durability}/{maxDurability} hp
-            </Caption1Text>
-          </div>
-          {/* 아이템타입, 스킬 */}
-          <div className="h-[15%] w-full flex items-center justify-center flex-col gap-1">
-            <ItemTypeTag color="gray" type={type as ItemType} />
-            <Caption1Text>{effect}</Caption1Text>
-          </div>
-          {/* 장착해제 토글 */}
-          <div className="h-[15%] w-full flex items-center justify-center flex-col gap-1">
-            <div className="flex flex-row items-center justify-around w-full h-full">
-              {/* 합성 */}
-              {isCombinationSelected ? (
-                <button onClick={() => onCancel(item)}>
-                  <Body2Text className="font-bold text-catch-gray-500">
-                    합성 취소
-                  </Body2Text>
-                </button>
-              ) : (
-                <button onClick={() => onSet(item)}>
-                  <Body2Text className="font-bold text-catch-gray-500">
-                    합성 추가
-                  </Body2Text>
-                </button>
-              )}
-              <button onClick={() => handleDeleteClick()}>
-                <Body2Text className="font-bold text-catch-system-color-error">
-                  삭제
-                </Body2Text>
-              </button>
-            </div>
-          </div>
+          {/* 아이템 정보 섹션 */}
+          <CombinationCardItemInfo item={item} maxDurability={maxDurability} />
+
+          {/* 아이템 효과 섹션 */}
+          <CombinationCardEffect
+            type={type as ItemType}
+            effect={effect || "스킬"}
+          />
+
+          {/* 합성 및 삭제 버튼 섹션 */}
+          <CombinationActionButtons
+            isCombinationSelected={isCombinationSelected || false}
+            onSet={onSet}
+            onCancel={onCancel}
+            handleDeleteClick={handleDeleteClick}
+            item={item}
+          />
         </div>
       </div>
     </div>

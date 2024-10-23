@@ -41,10 +41,6 @@ export const Main = () => {
     navigate("/combination");
   };
 
-  const goToAvatarChange = () => {
-    navigate("/avatar");
-  };
-
   const handleTimerOpenModal = () => {
     setTimerModalOpen(true);
   };
@@ -66,7 +62,6 @@ export const Main = () => {
           number={userAvatar}
           emotion="normal"
           width={96}
-          onClick={goToAvatarChange}
         />
         <div className="w-full px-4">
           <Body1Text className="!text-left text-catch-main-400 ">

@@ -24,6 +24,9 @@ export { Combination } from "@/features/combination/combination";
 export { CombinationItemCard } from "@/features/combination/combination-item-card";
 export { CombinationCell } from "@/features/combination/combination-cell";
 export { CombinationLibrary } from "@/features/combination/combination-library";
+export { CombinationCardItemInfo } from "@/features/combination/combination-card-item-info";
+export { CombinationCardEffect } from "@/features/combination/combination-card-effect";
+export { CombinationActionButtons } from "@/features/combination/combination-action-buttons";
 
 // 인벤토리
 export { InventoryUserInfo } from "@/features/inventory/inventory-userinfo";

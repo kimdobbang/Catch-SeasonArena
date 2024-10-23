@@ -1,4 +1,5 @@
 //AvatarFace 파일 크기 수정가능하게 바꿔야 함 (지금은 안됨 ㅠ)
+import { useNavigate } from "react-router-dom";
 import { AvatarFace, CircleTag } from "../../atoms";
 
 interface CircleAvatarProps {
@@ -18,8 +19,12 @@ export const CircleAvatar = ({
   width = 96, // 기본 width
   height = 96, // 기본 height
   className,
-  onClick,
 }: CircleAvatarProps) => {
+  const navigate = useNavigate();
+  const goToAvatarChange = () => {
+    navigate("/avatar");
+  };
+
   return (
     <div className="w-auto h-auto">
       <div
@@ -36,7 +41,7 @@ export const CircleAvatar = ({
         <CircleTag
           icon="person"
           className="relative left-16 bottom-6 bg-catch-sub-400"
-          onClick={onClick}
+          onClick={goToAvatarChange}
         />
       )}
     </div>

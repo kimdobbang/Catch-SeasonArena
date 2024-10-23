@@ -13,9 +13,10 @@ export const AutumnItemImage = ({ itemId }: { itemId: number | null }) => {
     <LazyLoadImage
       src={imagePath}
       alt={`ItemId ${itemId}`}
-      className="object-contain w-[80%] h-[80%]"
+      className="w-[80%] h-[80%] mt-1 ml-[6px]"
       effect="blur"
       placeholderSrc="/path/to/placeholder-image.jpg"
+      wrapperClassName="w-full h-full flex justify-center items-center"
     />
   );
 };

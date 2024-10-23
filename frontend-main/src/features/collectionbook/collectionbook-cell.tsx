@@ -1,5 +1,6 @@
 // src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
+import { AutumnItemImage } from "@/shared/components/atoms";
 import { Caption2Text } from "@/shared/components/atoms/texts/caption2-text";
 
 interface ItemCellProps {
@@ -19,7 +20,6 @@ interface ItemCellProps {
 
 export const CollectionbookCell = ({
   onClick,
-  name,
   image,
   className,
   id,
@@ -30,7 +30,9 @@ export const CollectionbookCell = ({
         className={`flex items-center justify-center w-16 h-24 rounded-sm bg-catch-gray-000 ${className}`}
       >
         {image ? (
-          <img src={image} alt={name} className="object-contain w-12 h-12" />
+          <div className="object-contain w-14 h-14">
+            <AutumnItemImage itemId={id} key={id} />
+          </div>
         ) : (
           <Caption2Text>soon..</Caption2Text>
         )}

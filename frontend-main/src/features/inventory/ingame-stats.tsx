@@ -32,7 +32,7 @@ export const InGameStats = () => {
   const currentStats = calculateStats();
 
   return (
-    <div className="flex-col mb-3">
+    <div className="flex-col mb-3 mr-2">
       <div className="flex items-center">
         <div className="text-sm text-gray-600 w-14">체력</div>
         <div className="w-full bg-gray-200 rounded-full h-2.5">
