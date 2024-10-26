@@ -150,41 +150,57 @@ AWS EC2, Docker, Jenkins, NginX, Ubuntu, Kafka, Docker compose, Jenkins, Monitor
 
 ### 프론트엔드
 
-- FSD 아키텍쳐 도입
+- FSD 아키텍쳐 도입: 각 레이어에 비즈니스 지향적인 고유 책임 영역 부여하여 계층적으로 설계
 - 아토믹 디자인패턴 도입
 
 ```
-app/
-├── store.ts                # Redux store 및 미들웨어 설정
-├── types.ts                # 공통 타입 정의
-└── slices/                 # 전역적으로 사용되는 상태 slice
-assets/
-├── icons/                  # 아이콘 파일들
-├── images/                 # 이미지 파일들
-└── fonts/                  # 폰트 파일들
-features/
-├── auth/                   # 인증 관련 기능
-│   ├── auth-slice.ts       # Redux slice
-│   ├── types.ts            # 인증 관련 타입
-│   └── services.ts         # API 호출 등 서비스 로직
-└── profile/                # 사용자 프로필 관련 기능
-    ├── profile-slice.ts    # Redux slice
-    ├── types.ts            # 프로필 관련 타입
-    └── services.ts         # API 호출 등 서비스 로직
-pages/
-├── LoginPage.tsx           # 로그인 페이지
-├── HomePage.tsx            # 홈 페이지
-└── ProfilePage.tsx         # 프로필 페이지
-shared/
-├── components/             # 공통적으로 사용되는 컴포넌트
-│   ├── Button.tsx
-│   └── Modal.tsx
-├── ui/                     # UI 요소들
-│   └── formatDate.ts
-├── hooks/                  # 커스텀 훅
-│   └── useFetch.ts
-└──  utils/                 # 유틸리티 함수 모음
-    └── formatDate.ts
+src/
+ app/                        # 애플리케이션 로직이 초기화되는 곳으로 프로바이더, 라우터, 전역 스타일, 전역 타입 선언
+ ├── redux                   # Redux store 및 미들웨어 설정
+ │   ├── store               
+ │   └── slices              # 전역적으로 사용되는 상태 slice
+ ├── apis                    # API 호출과 통식 로직 분리
+ ├── hooks                   # 커스텀훅
+ ├── types                   # 공통 타입 정의
+ └── app-router      
+ assets/
+ ├── icons/                  # 아이콘 파일들
+ ├── images/                 
+ └── symbols/               
+ features/                   # 사용자의 비즈니스 시나리오와 기능 단위의 컴포넌트(atomic design의 templetes단위)
+ ├── auth/                   # 인증 관련 기능
+ │   ├── auth-slice.ts       # Redux slice
+ │   ├── types.ts            # 인증 관련 타입
+ │   └── services.ts         # API 호출 등 서비스 로직
+ └── inventory/              # 아이템 인벤토리 관련 기능
+ │   ├── profile-slice.ts    # Redux slice
+ │   ├── types.ts            # 프로필 관련 타입
+ │   └── services.ts         # API 호출 등 서비스 로직
+ └── index.ts                # 공개 API
+ pages/                      # 애플리케이션의 페이지가 포함되는 레이어atomic design의 page 단위
+ ├── LoginPage.tsx           # 로그인 페이지
+ ├── MainPage.tsx            # 메인 페이지
+ └── index.ts                # 공개 API
+ shared/                     # 특정 비즈니스 로직에 종속되지 않은 재사용 가능한 컴포넌트와 유틸리티
+ ├── components/             # 공통적으로 사용되는 컴포넌트
+ │   ├── atoms               # atomic design의 atom에 해당
+ │   │   ├── buttons
+ │   │   ├── symbols
+ │   │   │   └── tier
+ │   │   └── index.ts        # 공개 API
+ │   ├── entities            # 비즈니스 엔티티로서 atomic design의 melecules, organism 단위
+ │   │   ├── inventory
+ │   │   ├── result
+ │   │   ├── user-info
+ │   │   └── index.ts        # 공개 API
+ │   └── index.ts            # 공개 API
+ ├── widget/                 # 페이지에 사용되는 독립적인 UI 컴포넌트입니다.
+ │   ├── ui                  # 각 layout 구성요소 단위
+ │   └── index.ts            # 공개 API
+ └──  utils/                 # 유틸리티 함수 모음
+     └── format.ts
+config.ts
+custom-sw.ts
 ```
 
 ### 백엔드
