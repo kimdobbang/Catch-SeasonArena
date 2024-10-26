@@ -198,6 +198,7 @@ src/
  │   ├── ui                  # 각 layout 구성요소 단위
  │   └── index.ts            # 공개 API
  └──  utils/                 # 유틸리티 함수 모음
+     ├── fetch-user-info.ts
      └── format.ts
 config.ts
 custom-sw.ts
