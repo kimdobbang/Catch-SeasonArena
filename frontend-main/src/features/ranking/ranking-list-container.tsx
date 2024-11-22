@@ -2,9 +2,9 @@ import { useState } from "react";
 import { TierRankingTab } from "./tier-ranking-tab";
 import { TotalRankingTab } from "./total-ranking-tab";
 import { RankingTabButton } from "./ranking-tab-button";
-import { Body1Text } from "@/shared/components/atoms";
-import { BottomNavBar } from "@/shared/ui";
-import { CollectTimerModal } from "@/features";
+import { Body1Text } from "@atoms/index";
+import { BottomNavBar } from "@ui/index";
+import { CollectTimerModal } from "@/features/index";
 
 const tabs = [
   { index: 0, name: "전체 순위", content: <TotalRankingTab /> },

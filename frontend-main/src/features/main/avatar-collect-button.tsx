@@ -1,4 +1,4 @@
-import { AvatarBody } from "@/shared/components/atoms";
+import { AvatarBody } from "@atoms/index";
 
 interface AvatarCollectButtonProps {
   number: number;

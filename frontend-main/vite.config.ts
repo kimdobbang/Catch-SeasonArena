@@ -63,6 +63,8 @@ export default defineConfig({
       "@entities": "/src/shared/components/entities",
       "@pages": "/src/pages",
       "@ui": "/src/shared/ui",
+      "@widgets": "/src/shared/widgets",
+
     },
   },
   base: "/", // base 경로를 절대 경로로 수정. 배포시 base는 .env로 관리

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { seasonNames, itemTypeNames } from "@/app/types/common";
+import { seasonNames, itemTypeNames } from "@/app/types/common.ts";
 
 export type CategoryType = "Season" | "ItemType";
 

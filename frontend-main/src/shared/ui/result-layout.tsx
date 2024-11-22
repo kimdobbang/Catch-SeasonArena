@@ -1,4 +1,4 @@
-import { TitleText } from "@/shared/components/atoms";
+import { TitleText } from "@atoms/index.ts";
 
 export interface ResultLayoutProps {
   title?: string;

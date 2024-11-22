@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PrimaryButton } from "@/shared/components/atoms";
-import { BottomNavBar } from "@/shared/ui";
+import { PrimaryButton } from "@atoms/index";
+import { BottomNavBar } from "@ui/index";
 import Plus from "@/assets/icons/plus.svg?react";
 import { fetchUserItems } from "@/app/apis/inventoryApi";
 import { CombinationLibrary } from "./combination-library";
@@ -12,7 +12,7 @@ import { combineItems } from "@/app/apis/combination-api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { CombinationItemCard } from "./combination-item-card";
-import { CollectTimerModal } from "@/features";
+import { CollectTimerModal } from "@/features/index";
 
 export const Combination = () => {
   const navigate = useNavigate();

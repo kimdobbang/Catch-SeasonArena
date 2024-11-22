@@ -1,5 +1,5 @@
 import ServiceTitleSymbol from "@/assets/symbols/service-title.svg?react";
-import { Leave } from "@atoms/index";
+import { Leave } from "@atoms/index.ts";
 
 export const ServiceTitle = () => {
   return (

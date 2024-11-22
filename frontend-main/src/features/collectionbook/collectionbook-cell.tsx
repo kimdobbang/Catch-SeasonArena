@@ -1,7 +1,7 @@
 // src/shared/components/atoms/item-cell
 import { ItemType, ItemGrade, Season } from "@/app/types/common";
-import { AutumnItemImage } from "@/shared/components/atoms";
-import { Caption2Text } from "@/shared/components/atoms/texts/caption2-text";
+import { AutumnItemImage } from "@atoms/index";
+import { Caption2Text } from "@atoms/index";
 
 interface ItemCellProps {
   onClick?: () => void;

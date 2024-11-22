@@ -1,4 +1,4 @@
-import { Body1Text, PrimaryButton } from "@/shared/components/atoms";
+import { Body1Text, PrimaryButton } from "@atoms/index";
 import { AvatarCollectButton } from "./avatar-collect-button";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";

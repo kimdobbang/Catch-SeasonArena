@@ -1,5 +1,5 @@
 import { ItemType } from "@/app/types/common";
-import { Caption1Text, ItemTypeTag } from "@/shared/components/atoms";
+import { Caption1Text, ItemTypeTag } from "@atoms/index";
 
 export const CombinationCardEffect = ({
   type,

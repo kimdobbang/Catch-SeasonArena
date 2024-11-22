@@ -1,9 +1,9 @@
-import { CircleAvatar } from "@/shared/components/entities";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { RankingListContainer } from "./ranking-list-container";
+import { RankingListContainer } from "@/features/index";
+import { CircleAvatar } from "@entities/index";
+import { Background } from "@widgets/index";
 
-import { Background } from "@/shared/ui";
 export const Ranking = () => {
   const userAvatar = useSelector(
     (state: RootState) => state.user.selectedAvatar,

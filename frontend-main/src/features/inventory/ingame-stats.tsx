@@ -6,9 +6,9 @@ export const InGameStats = () => {
 
   // 장착된 아이템에 따라 체력, 사거리, 속도를 계산하는 함수
   const calculateStats = () => {
-    let hp = 100; // 기본 체력
-    let coverage = 10; // 기본 사거리
-    let speed = 10; // 기본 속도
+    let hp = 100;
+    let coverage = 10;
+    let speed = 10;
 
     if (equipment.weapon.itemId === 1) {
       coverage *= 1.3;

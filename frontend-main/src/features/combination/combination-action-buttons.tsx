@@ -1,5 +1,5 @@
 import { Item } from "@/app/types/common";
-import { Body2Text } from "@/shared/components/atoms";
+import { Body2Text } from "@atoms/index";
 
 // 컴포넌트: 합성 및 삭제 버튼 섹션
 export const CombinationActionButtons = ({

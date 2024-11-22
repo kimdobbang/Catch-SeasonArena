@@ -5,12 +5,12 @@ import {
   CircleTag,
   ItemTypeTag,
   AutumnItemImage,
-} from "@atoms/index";
+} from "@atoms/index.ts";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
-import { Line } from "./line";
-import { ItemGrade, ItemType, getDurability } from "@/app/types/common";
-import { ItemProps } from "@entities/index";
+import { RootState } from "@/app/redux/store.ts";
+import { Line } from "./line.tsx";
+import { ItemGrade, ItemType, getDurability } from "@/app/types/common.ts";
+import { ItemProps } from "@entities/index.ts";
 export const GetItemCard = ({
   behavior,
   onClose,

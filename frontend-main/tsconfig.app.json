@@ -8,7 +8,8 @@
       "@/*": ["./src/*"],
       "@atoms/*": ["./src/shared/components/atoms/*"],
       "@entities/*": ["./src/shared/components/entities/*"],
-      "@ui/*": ["./src/shared/ui/*"]
+      "@ui/*": ["./src/shared/ui/*"],
+      "@widgets/*": ["./src/shared/widgets/*"]
     },
     "types": ["vite-plugin-svgr/client"],
     "composite": true,

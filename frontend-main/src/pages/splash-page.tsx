@@ -1,4 +1,4 @@
-import { ServiceTitle } from "@/shared/ui";
+import { ServiceTitle } from "@ui/index";
 export const SplashPage = () => {
   return (
     <div className="flex items-center justify-center w-full h-full bg-catch-sub-100">

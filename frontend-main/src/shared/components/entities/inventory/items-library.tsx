@@ -2,7 +2,8 @@
 import React, { useState, useCallback } from "react";
 import { Item } from "@/app/types/common";
 import { ItemCell } from "@atoms/index";
-import { TabBar, NumberPagination } from "@ui/index";
+import { TabBar } from "@ui/index";
+import { NumberPagination } from "@widgets/index"
 import { useItemFilter } from "@/features/index";
 import { InventoryItemCard } from "@entities/index";
 

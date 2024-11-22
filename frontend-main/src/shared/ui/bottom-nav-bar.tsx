@@ -1,7 +1,7 @@
-import { BottomNavButton } from "@/shared/components/atoms/buttons/bottom-nav-button";
+import { BottomNavButton } from "@atoms/buttons/bottom-nav-button.tsx";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
+import { RootState } from "@/app/redux/store.ts";
 
 interface BottomNavBarProps {
   className?: string;

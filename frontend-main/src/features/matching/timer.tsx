@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { formatTime } from "@/shared/utils/format";
-import { Body2Text } from "@/shared/components/atoms";
+import { Body2Text } from "@atoms/index";
 
 export const Timer = memo(({ remainingTime }: { remainingTime: number }) => {
   return (

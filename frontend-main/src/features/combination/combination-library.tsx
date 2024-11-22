@@ -3,7 +3,8 @@ import React, { useState, useCallback } from "react";
 import { Item } from "@/app/types/common";
 import { ItemCell } from "@atoms/index";
 import { useSeasonFilter } from "@/features/index";
-import { TabBar, NumberPagination } from "@ui/index";
+import { TabBar } from "@ui/index";
+import { NumberPagination } from "@widgets/index"
 
 const MemoizedTabBar = React.memo(TabBar);
 

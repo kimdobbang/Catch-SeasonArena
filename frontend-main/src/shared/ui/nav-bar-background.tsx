@@ -1,4 +1,4 @@
-import { Leave } from "@atoms/index";
+import { Leave } from "@atoms/index.ts";
 import { ReactNode } from "react";
 
 type NavBarBackgroundProps = { className: string; children?: ReactNode };

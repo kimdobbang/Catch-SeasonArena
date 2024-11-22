@@ -6,17 +6,17 @@ import {
   Body1Text,
   PrimaryButton,
   SquareIconButton,
-} from "@/shared/components/atoms";
+} from "@atoms/index";
 import {
   TierProgressBar,
   UserNameContainer,
   CircleAvatar,
-} from "@/shared/components/entities";
+} from "@entities/index";
 import Ranking from "@/assets/icons/ranking.svg?react";
 import CollectionBook from "@/assets/icons/collectionbook.svg?react";
 import CardGame from "@/assets/icons/card-game.svg?react";
-import { BottomNavBar, NavBarBackground } from "@/shared/ui";
-import { CollectTimerModal } from "@/features";
+import { BottomNavBar, NavBarBackground } from "@ui/index";
+import { CollectTimerModal } from "@/features/index";
 
 export const Main = () => {
   const navigate = useNavigate();

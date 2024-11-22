@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Body1Text, Body2Text } from "@/shared/components/atoms";
-import { AutumnItemImage } from "@atoms/index";
+import { Body1Text, Body2Text, AutumnItemImage } from "@atoms/index";
 import { useEffect } from "react";
 import { clearSuccess } from "@/app/redux/slice/successSlice";
 
