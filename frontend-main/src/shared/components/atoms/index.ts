@@ -11,6 +11,7 @@ export { IconTextButton } from "./buttons/icon-text-button";
 export { PrimaryButton } from "@atoms/buttons/primary-button";
 export { BottomNavButton } from "@atoms/buttons/bottom-nav-button";
 export { SquareIconButton } from "@atoms/buttons/square-icon-button";
+export { CameraButton } from "@atoms/buttons/camera-button";
 // input
 
 export { InputField } from "./input/input-field";
@@ -44,5 +45,3 @@ export { ProgressBar } from "@atoms/symbols/tiers/progress-bar";
 
 export { TierBadge } from "./symbols/tiers/tier-badge";
 export { TierInitial } from "./symbols/tiers/tier-initial";
-
-// 게임 관련

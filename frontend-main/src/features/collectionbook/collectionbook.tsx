@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BottomNavBar } from "@/shared/ui";
+import { BottomNavBar } from "@ui/index";
 import { CollectionbookLibrary } from "./collectionbook-library";
 import { CollectTimerModal } from "@/features";
 

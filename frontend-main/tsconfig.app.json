@@ -1,0 +1,38 @@
+// tsconfig.app.json
+//src 파일들에 대한 설정, 보통 jsx, lib, target 등 애플리케이션에 관련된 설정
+
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@atoms/*": ["./src/shared/components/atoms/*"],
+      "@entities/*": ["./src/shared/components/entities/*"],
+      "@ui/*": ["./src/shared/ui/*"],
+      "@widgets/*": ["./src/shared/widgets/*"]
+    },
+    "types": ["vite-plugin-svgr/client"],
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}

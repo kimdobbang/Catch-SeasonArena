@@ -1,3 +1,5 @@
+import ArrowLeft from "@/assets/icons/arrow-left.svg?react";
+
 interface NumberPaginationProps {
   currentPage: number;
   totalPages: number;
@@ -14,9 +16,9 @@ export const NumberPagination = ({
   const isSinglePage = totalPages <= 1;
 
   return (
-    <div className="flex justify-center mt-4">
+    <div className="flex justify-center">
       <button onClick={onPrevPage} disabled={currentPage === 1 || isSinglePage}>
-        이전
+        <ArrowLeft />
       </button>
       <div className="flex justify-center mx-3">
         {currentPage} / {Math.max(totalPages, 1)}
@@ -25,7 +27,7 @@ export const NumberPagination = ({
         onClick={onNextPage}
         disabled={currentPage === totalPages || isSinglePage}
       >
-        다음
+        <ArrowLeft className="rotate-180" />
       </button>
     </div>
   );

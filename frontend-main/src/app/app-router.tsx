@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { createBrowserRouter } from "react-router-dom";
-import { HeaderLayout, Layout } from "@/shared/ui/index";
+import { HeaderLayout, Layout } from "@widgets/index";
 import {
   RootPage,
   NotPwaPage,

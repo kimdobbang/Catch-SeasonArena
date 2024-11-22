@@ -4,8 +4,8 @@ import {
   Body2Text,
   Caption1Text,
   TierInitial,
-} from "@/shared/components/atoms";
-import { CircleAvatar } from "@/shared/components/entities";
+} from "@atoms/index";
+import { CircleAvatar } from "@entities/index";
 import { fetchMyRanking, MyRankingProps } from "@/app/apis/rankingApi";
 import { useEffect, useState } from "react";
 import { getTierByRating } from "@/app/types/tier";

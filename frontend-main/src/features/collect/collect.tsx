@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { useNavigate } from "react-router-dom";
-import { CameraButton } from "./camera-button";
+import { CameraButton } from "@atoms/index";
 import CameraChangeIcon from "@/assets/icons/change-camera.svg?react";
 import { sendImagesToServer } from "@/app/apis/collect-api";
 import { setSuccess } from "@/app/redux/slice/successSlice";

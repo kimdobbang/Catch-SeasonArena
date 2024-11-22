@@ -2,8 +2,8 @@ import {
   Body2Text,
   Caption1Text,
   TierInitial,
-} from "@/shared/components/atoms";
-import { CircleAvatar } from "@/shared/components/entities";
+} from "@atoms/index";
+import { CircleAvatar } from "@entities/index";
 
 export interface UserRankingProps {
   nickname: string;
