@@ -52,7 +52,7 @@ AWS EC2, Docker, Jenkins, NginX, Ubuntu, Kafka, Docker compose, Jenkins, Monitor
 ### FrontEnd (FE)
 
 - **상태 관리 라이브러리 활용:** 게임 아이템, 매칭, 결과 반영을 위한 상태 관리 라이브러리를 사용하여 서버 요청 없이 클라이언트 데이터의 정합성을 보장.
-- **FSD 설계**: FSD설계에 Atomic 디자인 전략 일부를 적용하여 컴포넌트 재사용성을 극대화하고 비즈니스 지향적으로 설계. 기능 분할 설계로 결합도를 낮추고 응집력을 높임. 레이어를 통해 상속, 추상화와 다형성을, 공개 API를 통해 캡슐화 달성. 
+- **FSD 설계**: FSD설계에 Atomic 디자인 전략 일부를 적용하여 컴포넌트 재사용성을 극대화하고 비즈니스 지향적으로 설계. 기능 분할 설계로 결합도를 낮추고 응집력을 높임. 레이어를 통해 상속, 추상화와 다형성을, 공개 API를 통해 캡슐화 달성.
 - **Redux 활용**: 수집, 합성, 유저 정보, 게임, 인벤토리 등 다양한 기능에서 상태 관리를 위해 Redux 라이브러리를 적극 활용.
 - **디자인 토큰과 함께 아토믹 디자인 패턴 방식을 일부 도입**: 일관성 있는 디자인 시스템 구축, 재사용성과 확장성 향상
 
@@ -157,16 +157,16 @@ AWS EC2, Docker, Jenkins, NginX, Ubuntu, Kafka, Docker compose, Jenkins, Monitor
 src/
  app/                        # 애플리케이션 로직이 초기화되는 곳으로 프로바이더, 라우터, 전역 스타일, 전역 타입 선언
  ├── redux                   # Redux store 및 미들웨어 설정
- │   ├── store               
+ │   ├── store
  │   └── slices              # 전역적으로 사용되는 상태 slice
  ├── apis                    # API 호출과 통식 로직 분리
  ├── hooks                   # 커스텀훅
  ├── types                   # 공통 타입 정의
- └── app-router      
+ └── app-router
  assets/
  ├── icons/                  # 아이콘 파일들
- ├── images/                 
- └── symbols/               
+ ├── images/
+ └── symbols/
  features/                   # 사용자의 비즈니스 시나리오와 기능 단위의 컴포넌트(atomic design의 templetes단위)
  ├── auth/                   # 인증 관련 기능
  │   ├── auth-slice.ts       # Redux slice
