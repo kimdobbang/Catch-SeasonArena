@@ -17,7 +17,7 @@ export { CollectTimerModal } from "@/features/collect/collect-timer-modal";
 // 메인
 export { Main } from "@/features/main/main";
 export { Avatar } from "@/features/main/avatar";
-export { NicknameChangeModal } from "@/features/main/check-nickname-modal"
+export { NicknameChangeModal } from "@/shared/components/entities/user/check-nickname-modal"
 
 // 합성
 export { Combination } from "@/features/combination/combination";
