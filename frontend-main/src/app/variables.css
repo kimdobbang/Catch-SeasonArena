@@ -1,0 +1,60 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --catch-tier-bronze: #9d4900;
+  --catch-tier-silver: #c0c0c0;
+  --catch-tier-gold: #ffb028;
+  --catch-tier-platinum: #27e2a4;
+  --catch-tier-dia: #41caff;
+  --catch-tier-ruby: #f5005a;
+  --catch-sub-100: #fef8ec; /* FEF8EC */
+  --catch-sub-200: #fce9c9; /* FCE9C9 */
+  --catch-sub-300: #f8d18f;
+  --catch-sub-400: #f5b354; /* F5B354 */
+  --catch-main-400: #f29627; /* F29627 */
+  --catch-main-700: #ad3910;
+  --catch-gray-100: #f6f6f6; /* (F6F6F6) */
+  --catch-gray-200: #e6e6e6; /* E6E6E6 */
+  --catch-gray-300: #999999;
+  --catch-gray-400: #666666; /* 666666 */
+  --catch-gray-500: #1a1a1a;
+  --catch-gray-999: #000000;
+  --catch-gray-000: #ffffff;
+  --catch-system-color-success: #43b836;
+  --catch-system-color-info: #519ee6;
+  --catch-system-color-error: #e65b5b;
+  --catch-font-families-pretendard: Pretendard;
+  --catch-font-weights-bold: Bold;
+  --catch-font-weights-medium: Medium;
+  --catch-font-size-caption12: 12px;
+  --catch-font-size-caption2: 14px;
+  --catch-font-size-body2: 16px;
+  --catch-font-size-body1: 20px;
+  --catch-font-size-sub2: 24px;
+  --catch-font-size-sub1: 32px;
+  --catch-font-size-title: 36px;
+  --catch-font-size-h2: 48px;
+  --catch-font-size-h1: 64px;
+  --catch-letter-spacing-0: -0.4%;
+  --catch-letter-spacing-1: -2%;
+  --catch-pretendard-h1: Bold 64px Pretendard; /* Heading1.bold.64 */
+  --catch-pretendard-h2: Bold 48px Pretendard; /* Heading2.bold.48 */
+  --catch-pretendard-title: Bold 36px Pretendard; /* Title.bold.36 */
+  --catch-pretendard-c2-bold: Bold 12px Pretendard;
+  --catch-pretendard-c2-medium: Medium 12px Pretendard;
+  --catch-pretendard-c1-bold: Bold 14px Pretendard;
+  --catch-pretendard-c1-medium: Medium 14px Pretendard;
+  --catch-pretendard-b2-bold: Bold 16px Pretendard; /* Body2.bold */
+  --catch-pretendard-b2-medium: Medium 16px Pretendard; /* Body2.medium */
+  --catch-pretendard-b1-bold: Bold 20px Pretendard; /* Body1.bold.20 */
+  --catch-pretendard-b1-medium: Medium 20px Pretendard; /* Body1.medium.20 */
+  --catch-pretendard-sub-big: Bold 32px Pretendard; /* Subtitle.bold.32 */
+  --catch-pretendard-sub-small: Bold 24px Pretendard;
+  --catch-xs: 5px;
+  --catch-sm: 8px;
+  --catch-md: 10px;
+  --catch-lg: 15px;
+  --catch-xl: 20px;
+}

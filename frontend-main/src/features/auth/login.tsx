@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "@/app/apis/authApi";
 import { handleLoginSuccess } from "@/shared/utils/fetch-user-info";
-import { ServiceTitle, Copyright } from "@ui/index";
+import { ServiceTitle } from "@ui/index";
+import { Copyright } from "@widgets/index";
 import {
   InputField,
   IconTextButton,
