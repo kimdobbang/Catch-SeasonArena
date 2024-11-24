@@ -1,7 +1,7 @@
 //src/shared/components/entities/inventory/items-library.tsx
 import React, { useState, useCallback } from "react";
 import { Item } from "@/app/types/common";
-import { ItemCell } from "@atoms/index";
+import { ItemCell } from "@entities/index";
 import { TabBar } from "@ui/index";
 import { NumberPagination } from "@widgets/index"
 import { useItemFilter } from "@/features/index";

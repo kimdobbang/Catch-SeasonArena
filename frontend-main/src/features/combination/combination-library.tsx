@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
-
 import { Item } from "@/app/types/common";
-import { ItemCell } from "@atoms/index";
+import { ItemCell } from "@entities/index";
 import { useSeasonFilter } from "@/features/index";
 import { TabBar } from "@ui/index";
 import { NumberPagination } from "@widgets/index"

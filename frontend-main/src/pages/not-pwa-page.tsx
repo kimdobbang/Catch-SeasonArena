@@ -1,4 +1,4 @@
-import { Copyright } from "@ui/index";
+import { Copyright } from "@widgets/index";
 import { ServiceTitle } from "@ui/index";
 export const NotPwaPage = () => {
   return (

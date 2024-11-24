@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputField, SignupButton, IconTextButton, Leave } from "@atoms/index";
-import { ServiceTitle, Copyright } from "@ui/index";
+import { ServiceTitle } from "@ui/index";
+import { Copyright } from "@widgets/index";
 import { signUpUser, checkEmailExists } from "@/app/apis/authApi";
 import { useDispatch } from "react-redux";
 import { handleLoginSuccess } from "@/shared/utils/fetch-user-info";
