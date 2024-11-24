@@ -8,6 +8,7 @@
       "@/*": ["./src/*"],
       "@atoms/*": ["./src/shared/components/atoms/*"],
       "@entities/*": ["./src/shared/components/entities/*"],
+      "@features": ["./src/features"],
       "@ui/*": ["./src/shared/ui/*"],
       "@widgets/*": ["./src/shared/widgets/*"]
     },

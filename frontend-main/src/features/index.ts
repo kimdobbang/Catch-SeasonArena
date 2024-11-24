@@ -4,7 +4,7 @@
 export { useItemFilter } from "@/app/hooks/useItemFilter";
 export { useSeasonFilter } from "@/app/hooks/useSeasonFilter";
 export { useMatching } from "@/app/hooks/useMatching";
-export { useCollectionbookSeasonFilter } from "@/app/hooks/use-collectionbook-season-filter"
+export { useCollectionbookSeasonFilter } from "@/app/hooks/use-collectionbook-season-filter";
 
 // auth
 export { Login } from "@/features/auth/login";
@@ -17,7 +17,6 @@ export { CollectTimerModal } from "@/features/collect/collect-timer-modal";
 // 메인
 export { Main } from "@/features/main/main";
 export { Avatar } from "@/features/main/avatar";
-export { NicknameChangeModal } from "@/features/main/check-nickname-modal"
 
 // 합성
 export { Combination } from "@/features/combination/combination";
@@ -47,9 +46,7 @@ export { GameResultContainer } from "@/features/game-result/game-result-content"
 export { GameResultStatBox } from "@/features/game-result/result-stat-box";
 
 // 랭킹
-export { Ranking } from "@/features/ranking/ranking"
+export { Ranking } from "@/features/ranking/ranking";
 export { UserRankingSkeletonBox } from "@/features/ranking/user-ranking-skeleton-box";
-export { RankingListContainer } from "@/features/ranking/ranking-list-container"
-export { MyRankingBox } from "@/features/ranking/my-ranking-box"
-
-
+export { RankingListContainer } from "@/features/ranking/ranking-list-container";
+export { MyRankingBox } from "@/features/ranking/my-ranking-box";
